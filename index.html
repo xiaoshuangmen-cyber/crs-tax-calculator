@@ -670,7 +670,8 @@
         <button id="tab-btn-trades" class="tab-btn" onclick="showTab('trades')">🔄 股票买卖与盈亏推演 (<span id="tab-badge-trades">169</span>)</button>
         <button id="tab-btn-dividends" class="tab-btn" onclick="showTab('dividends')">🎁 股息分红明细 (<span id="tab-badge-div">11</span>)</button>
         <button id="tab-btn-interest" class="tab-btn" onclick="showTab('interest')">📈 利息收益明细 (<span id="tab-badge-int">35</span>)</button>
-        <button id="tab-btn-cash" class="tab-btn" onclick="showTab('cash')">🏦 资金存取流水 (<span id="tab-badge-cash">53</span>)</button>
+        <button id="tab-btn-cash" class="tab-btn" onclick="showTab('cash')">🏦 资金存取流水 (<span id="tab-badge-cash">8</span>)</button>
+        <button id="tab-btn-charges" class="tab-btn" onclick="showTab('charges')">🏷️ 其他资金规费明细 (<span id="tab-badge-charges">0</span>)</button>
       </div>
 
       <!-- 1. 历年申报表 -->
@@ -765,22 +766,46 @@
         <div class="pagination-bar no-print" id="int-pagination"></div>
       </div>
 
-      <!-- 5. 资金存取明细 -->
+      <!-- 5. 资金存取明细 (仅纯客户主动入金与出金) -->
       <div id="tab-pane-cash" class="tab-pane">
+        <div style="font-size: 12px; color: var(--slate-500); margin-bottom: 10px;">
+          📌 仅展示客户真实主动的银行转账存入（入金）与支票/电汇提取（出金）记录：
+        </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th>往来日期</th>
-                <th class="text-center">类型</th>
-                <th class="text-right">金额</th>
-                <th>往来备注说明</th>
+                <th class="text-center">资金方向</th>
+                <th class="text-right">存取金额 (HKD)</th>
+                <th>往来凭据 / 备注说明</th>
               </tr>
             </thead>
             <tbody id="cash-tbody"></tbody>
           </table>
         </div>
         <div class="pagination-bar no-print" id="cash-pagination"></div>
+      </div>
+
+      <!-- 6. 其他资金规费明细 (月结单服务费、代收手续费等) -->
+      <div id="tab-pane-charges" class="tab-pane">
+        <div style="font-size: 12px; color: var(--slate-500); margin-bottom: 10px;">
+          📌 展示券商收取的月结单服务费、代收股息手续费、上市公司行动杂项服务费等扣除流水：
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>扣费日期</th>
+                <th class="text-center">业务类型</th>
+                <th class="text-right">扣费金额 (HKD)</th>
+                <th>费用说明 / 扣除凭据</th>
+              </tr>
+            </thead>
+            <tbody id="charges-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination-bar no-print" id="charges-pagination"></div>
       </div>
     </div>
 
@@ -825,6 +850,6 @@
     CRS 涉税金融资产与证券交易盈亏智能核算系统 &copy; 2026 证券投资顾问专用工作台
   </footer>
 
-  <script src="app.js?v=20260820_v16"></script>
+  <script src="app.js?v=20260820_v17"></script>
 </body>
 </html>

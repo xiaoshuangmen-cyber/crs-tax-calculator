@@ -43,6 +43,7 @@ let tradePage = 1, tradePageSize = 15;
 let divPage = 1, divPageSize = 15;
 let intPage = 1, intPageSize = 15;
 let cashPage = 1, cashPageSize = 15;
+let chargesPage = 1, chargesPageSize = 15;
 
 // 初始化：默认以干净清空状态启动
 window.addEventListener('DOMContentLoaded', function() {
@@ -82,6 +83,14 @@ function resetToEmptyState() {
   document.getElementById('val-sales').innerText = 'HK$ 0.00';
   document.getElementById('cnt-sales').innerText = '0';
 
+  // 资金卡片归零
+  document.getElementById('val-deposit').innerText = 'HK$ 0.00';
+  document.getElementById('val-withdraw').innerText = 'HK$ 0.00';
+  document.getElementById('val-net-deposit').innerText = 'HK$ 0.00';
+  document.getElementById('val-deposit-all').innerText = 'HK$ 0.00';
+  document.getElementById('val-withdraw-all').innerText = 'HK$ 0.00';
+  document.getElementById('val-net-deposit-all').innerText = 'HK$ 0.00';
+
   // 持仓汇总条归零
   var elHoldCost = document.getElementById('val-hold-cost');
   var elHoldMarket = document.getElementById('val-hold-market');
@@ -92,6 +101,13 @@ function resetToEmptyState() {
     elHoldUn.innerText = 'HK$ 0.00 (0.00%)';
     elHoldUn.className = 'number-font';
   }
+
+  // 徽标数字归零
+  var bTrades = document.getElementById('tab-badge-trades'); if (bTrades) bTrades.innerText = '0';
+  var bDiv = document.getElementById('tab-badge-div'); if (bDiv) bDiv.innerText = '0';
+  var bInt = document.getElementById('tab-badge-int'); if (bInt) bInt.innerText = '0';
+  var bCash = document.getElementById('tab-badge-cash'); if (bCash) bCash.innerText = '0';
+  var bChg = document.getElementById('tab-badge-charges'); if (bChg) bChg.innerText = '0';
 
   // 年份胶囊栏清空
   var box = document.getElementById('year-pills-box');
@@ -107,6 +123,7 @@ function resetToEmptyState() {
   var tDiv = document.getElementById('dividends-tbody'); if (tDiv) tDiv.innerHTML = emptyRow;
   var tInt = document.getElementById('interest-tbody'); if (tInt) tInt.innerHTML = emptyRow;
   var tCash = document.getElementById('cash-tbody'); if (tCash) tCash.innerHTML = emptyRow;
+  var tCharges = document.getElementById('charges-tbody'); if (tCharges) tCharges.innerHTML = emptyRow;
 }
 
 function initApp() {
@@ -123,6 +140,7 @@ function initApp() {
   renderDividendsTable();
   renderInterestTable();
   renderCashTable();
+  renderChargesTable();
 }
 
 function showToast(msg, type) {
@@ -204,11 +222,12 @@ function setYear(yr) {
   }
   renderYearPills();
   recalculate();
-  tradePage = 1; divPage = 1; intPage = 1; cashPage = 1;
+  tradePage = 1; divPage = 1; intPage = 1; cashPage = 1; chargesPage = 1;
   renderTradesTable();
   renderDividendsTable();
   renderInterestTable();
   renderCashTable();
+  renderChargesTable();
 }
 
 function onCustomDate() {
@@ -218,11 +237,12 @@ function onCustomDate() {
   document.getElementById('period-display-label').innerText = '自定义时间段 (' + s + ' 至 ' + e + ')';
   renderYearPills();
   recalculate();
-  tradePage = 1; divPage = 1; intPage = 1; cashPage = 1;
+  tradePage = 1; divPage = 1; intPage = 1; cashPage = 1; chargesPage = 1;
   renderTradesTable();
   renderDividendsTable();
   renderInterestTable();
   renderCashTable();
+  renderChargesTable();
   showToast('已更新自定义时间范围', 'info');
 }
 
@@ -289,6 +309,13 @@ function recalculate() {
   document.getElementById('val-deposit-all').innerText = fmt(all.deposit_total) + ' (' + allDepLogs.length + ' 笔入账)';
   document.getElementById('val-withdraw-all').innerText = fmt(all.withdrawal_total) + ' (' + allWithLogs.length + ' 笔出金)';
   document.getElementById('val-net-deposit-all').innerText = fmt(all.withdrawal_total - all.deposit_total);
+
+  var bTrades = document.getElementById('tab-badge-trades'); if (bTrades) bTrades.innerText = trades.length;
+  var bDiv = document.getElementById('tab-badge-div'); if (bDiv) bDiv.innerText = divs.length;
+  var bInt = document.getElementById('tab-badge-int'); if (bInt) bInt.innerText = ints.length;
+  var bCash = document.getElementById('tab-badge-cash'); if (bCash) bCash.innerText = cash.length;
+  var charges = (appData.charge_logs || []).filter(function(c) { return c.date >= sDate && c.date <= eDate; });
+  var bChg = document.getElementById('tab-badge-charges'); if (bChg) bChg.innerText = charges.length;
 }
 
 function filterStockTable(mode) {
@@ -410,7 +437,7 @@ function renderStockTable() {
 
 // 选项卡切换与平滑滚动定位
 function showTab(t) {
-  ['yearly', 'trades', 'dividends', 'interest', 'cash'].forEach(function(k) {
+  ['yearly', 'trades', 'dividends', 'interest', 'cash', 'charges'].forEach(function(k) {
     var btn = document.getElementById('tab-btn-' + k);
     var pane = document.getElementById('tab-pane-' + k);
     if (btn) btn.className = 'tab-btn' + (k === t ? ' active' : '');
@@ -730,20 +757,15 @@ function renderCashTable() {
   pageList.forEach(function(c) {
     var isDep = c.type === '入金';
     var isWith = c.type === '出金';
-    var isChg = c.type === '规费扣除';
 
-    var tagBg = '#f1f5f9', tagColor = '#475569', amtColor = '#334155', sign = '-';
-    if (isDep) {
-      tagBg = '#d1fae5'; tagColor = '#065f46'; amtColor = '#059669'; sign = '+';
-    } else if (isWith) {
-      tagBg = '#ffe4e6'; tagColor = '#be123c'; amtColor = '#e11d48'; sign = '-';
-    } else if (isChg) {
-      tagBg = '#f1f5f9'; tagColor = '#64748b'; amtColor = '#64748b'; sign = '-';
-    }
+    var tagBg = isDep ? '#d1fae5' : '#ffe4e6';
+    var tagColor = isDep ? '#065f46' : '#be123c';
+    var amtColor = isDep ? '#059669' : '#e11d48';
+    var sign = isDep ? '+' : '-';
 
     var tr = document.createElement('tr');
     tr.innerHTML = '<td style="font-family:monospace; font-weight:600;">' + c.date + '</td>' +
-      '<td class="text-center"><span class="tag" style="background:' + tagBg + '; color:' + tagColor + '; font-weight:700;">' + (isWith ? '📤 ' : (isDep ? '📥 ' : '🏷️ ')) + c.type + '</span></td>' +
+      '<td class="text-center"><span class="tag" style="background:' + tagBg + '; color:' + tagColor + '; font-weight:700;">' + (isWith ? '📤 提取出金' : '📥 转账存入') + '</span></td>' +
       '<td class="text-right number-font" style="font-weight:700; color:' + amtColor + ';">' + sign + fmt(c.amount) + '</td>' +
       '<td style="color:' + (isWith ? '#9f1239; font-weight:600;' : 'inherit;') + '">' + c.remarks + '</td>';
     tbody.appendChild(tr);
@@ -753,6 +775,36 @@ function renderCashTable() {
     cashPage = p; renderCashTable();
   }, function(sz) {
     cashPageSize = sz; cashPage = 1; renderCashTable();
+  });
+}
+
+function renderChargesTable() {
+  if (!appData) return;
+  var tbody = document.getElementById('charges-tbody');
+  tbody.innerHTML = '';
+  var s = document.getElementById('date-start').value || '1970-01-01';
+  var e = document.getElementById('date-end').value || '2099-12-31';
+
+  var list = (appData.charge_logs || []).filter(function(c) { return c.date >= s && c.date <= e; });
+  var total = list.length;
+  var totalPages = Math.ceil(total / chargesPageSize) || 1;
+  if (chargesPage > totalPages) chargesPage = totalPages;
+
+  var pageList = list.slice((chargesPage - 1) * chargesPageSize, chargesPage * chargesPageSize);
+
+  pageList.forEach(function(c) {
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td style="font-family:monospace; font-weight:600;">' + c.date + '</td>' +
+      '<td class="text-center"><span class="tag" style="background:#f1f5f9; color:#64748b; font-weight:700;">🏷️ ' + c.type + '</span></td>' +
+      '<td class="text-right number-font" style="font-weight:700; color:#64748b;">-' + fmt(c.amount) + '</td>' +
+      '<td style="color:#475569;">' + c.remarks + '</td>';
+    tbody.appendChild(tr);
+  });
+
+  renderPagination('charges-pagination', total, chargesPage, chargesPageSize, function(p) {
+    chargesPage = p; renderChargesTable();
+  }, function(sz) {
+    chargesPageSize = sz; chargesPage = 1; renderChargesTable();
   });
 }
 
@@ -1112,10 +1164,10 @@ function calculateAllFromRecords(records) {
 
   var allDep = 0, allWith = 0;
   var stocks = {};
-  var tradeLogs = [], divLogs = [], intLogs = [], cashLogs = [];
+  var tradeLogs = [], divLogs = [], intLogs = [], cashLogs = [], chargeLogs = [];
   var yearly = {};
 
-  records.forEach(function(rec) {
+  enhancedRecords.forEach(function(rec) {
     var yr = rec.year;
     if (!yearly[yr]) {
       yearly[yr] = { year: yr, dividend_total: 0, interest_total: 0, sales_proceeds: 0, realized_pnl_wac: 0, realized_pnl_fifo: 0, deposits: 0, withdrawals: 0, trades_count: 0 };
@@ -1163,7 +1215,7 @@ function calculateAllFromRecords(records) {
           cashLogs.push({ date: rec.date_str, type: '入金', amount: deposit, remarks: remarks, year: yr });
         } else if (['W', 'WITHDRAW', '提取', '出金'].includes(io)) {
           if (isChg) {
-            cashLogs.push({ date: rec.date_str, type: '规费扣除', amount: deduct, remarks: remarks, year: yr });
+            chargeLogs.push({ date: rec.date_str, type: '规费扣除', amount: deduct, remarks: remarks, year: yr });
           } else {
             allWith += deduct;
             yearly[yr].withdrawals += deduct;
@@ -1342,7 +1394,8 @@ function calculateAllFromRecords(records) {
     trade_logs: tradeLogs,
     dividend_logs: divLogs,
     interest_logs: intLogs,
-    cash_logs: cashLogs
+    cash_logs: cashLogs,
+    charge_logs: chargeLogs
   };
 }
 

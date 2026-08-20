@@ -190,6 +190,7 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
     dividend_logs = []
     interest_logs = []
     cash_logs = []
+    charge_logs = []
 
     yearly_stats = defaultdict(lambda: {
         'year': 0,
@@ -264,7 +265,7 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
                 elif io in ['W', 'WITHDRAW', '提取', '出金']:
                     if is_charge:
                         yearly_stats[yr]['dividend_charges'] += deduct
-                        cash_logs.append({'date': rec['date_str'], 'type': '规费扣除', 'amount': deduct, 'remarks': remarks, 'year': yr})
+                        charge_logs.append({'date': rec['date_str'], 'type': '规费扣除', 'amount': deduct, 'remarks': remarks, 'year': yr})
                     else:
                         all_time_withdraw += deduct
                         yearly_stats[yr]['withdrawals'] += deduct
@@ -476,7 +477,8 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
         'trade_logs': trade_logs,
         'dividend_logs': dividend_logs,
         'interest_logs': interest_logs,
-        'cash_logs': cash_logs
+        'cash_logs': cash_logs,
+        'charge_logs': charge_logs
     }
 
 if __name__ == '__main__':
