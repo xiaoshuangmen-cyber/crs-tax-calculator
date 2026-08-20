@@ -1,0 +1,3671 @@
+{
+  "client_info": {
+    "account_no": "00869909",
+    "client_name": "盧繼紅",
+    "currency": "HKD",
+    "total_records": 380,
+    "earliest_date": "2008-12-08",
+    "latest_date": "2026-08-03"
+  },
+  "all_time_totals": {
+    "deposit_total": 1647010.46,
+    "withdrawal_total": 1360000.0,
+    "net_deposit": 287010.45999999996,
+    "dividend_total": 104144.37,
+    "interest_total": 170.54,
+    "sales_proceeds_total": 3460330.86,
+    "realized_pnl_wac_total": 588021.9200000002,
+    "realized_pnl_fifo_total": 588021.92
+  },
+  "yearly_stats": [
+    {
+      "year": 2008,
+      "dividend_total": 0.0,
+      "dividend_charges": 0.0,
+      "interest_total": 0.69,
+      "sales_proceeds": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "deposits": 99880.0,
+      "withdrawals": 0.0,
+      "trades_count": 0
+    },
+    {
+      "year": 2009,
+      "dividend_total": 1940.0,
+      "dividend_charges": 3986.0,
+      "interest_total": 7.34,
+      "sales_proceeds": 27867.48,
+      "realized_pnl_wac": 736.0499999999993,
+      "realized_pnl_fifo": 736.0499999999993,
+      "deposits": 779130.46,
+      "withdrawals": 0.0,
+      "trades_count": 12
+    },
+    {
+      "year": 2010,
+      "dividend_total": 0.0,
+      "dividend_charges": 0.0,
+      "interest_total": 2.5599999999999996,
+      "sales_proceeds": 227154.1,
+      "realized_pnl_wac": 143035.56,
+      "realized_pnl_fifo": 143035.56,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 4
+    },
+    {
+      "year": 2011,
+      "dividend_total": 3300.0,
+      "dividend_charges": 30.0,
+      "interest_total": 1.53,
+      "sales_proceeds": 888668.68,
+      "realized_pnl_wac": 73505.07000000007,
+      "realized_pnl_fifo": 73505.07000000007,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 6
+    },
+    {
+      "year": 2012,
+      "dividend_total": 0.0,
+      "dividend_charges": 1969.35,
+      "interest_total": 9.670000000000002,
+      "sales_proceeds": 597058.18,
+      "realized_pnl_wac": 41567.668258064536,
+      "realized_pnl_fifo": 42652.240377358474,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 15
+    },
+    {
+      "year": 2013,
+      "dividend_total": 560.0,
+      "dividend_charges": 34.0,
+      "interest_total": 33.53,
+      "sales_proceeds": 1243766.3599999999,
+      "realized_pnl_wac": 195614.87499601475,
+      "realized_pnl_fifo": 210259.17962264153,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 25
+    },
+    {
+      "year": 2014,
+      "dividend_total": 460.0,
+      "dividend_charges": 34.0,
+      "interest_total": 48.709999999999994,
+      "sales_proceeds": 370458.99000000005,
+      "realized_pnl_wac": 112656.34674592075,
+      "realized_pnl_fifo": 96927.47000000003,
+      "deposits": 0.0,
+      "withdrawals": 1360000.0,
+      "trades_count": 11
+    },
+    {
+      "year": 2015,
+      "dividend_total": 0.0,
+      "dividend_charges": 50.0,
+      "interest_total": 2.8,
+      "sales_proceeds": 39454.95,
+      "realized_pnl_wac": 12022.759999999998,
+      "realized_pnl_fifo": 12022.759999999998,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 1
+    },
+    {
+      "year": 2016,
+      "dividend_total": 0.0,
+      "dividend_charges": 0.0,
+      "interest_total": 5.23,
+      "sales_proceeds": 65902.12,
+      "realized_pnl_wac": 8883.590000000004,
+      "realized_pnl_fifo": 8883.590000000004,
+      "deposits": 768000.0,
+      "withdrawals": 0.0,
+      "trades_count": 5
+    },
+    {
+      "year": 2017,
+      "dividend_total": 11175.01,
+      "dividend_charges": 949.88,
+      "interest_total": 0.0,
+      "sales_proceeds": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 0
+    },
+    {
+      "year": 2018,
+      "dividend_total": 13283.7,
+      "dividend_charges": 66.42,
+      "interest_total": 1.6900000000000002,
+      "sales_proceeds": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 0
+    },
+    {
+      "year": 2019,
+      "dividend_total": 13717.91,
+      "dividend_charges": 228.59,
+      "interest_total": 3.65,
+      "sales_proceeds": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 0
+    },
+    {
+      "year": 2020,
+      "dividend_total": 14542.54,
+      "dividend_charges": 312.71,
+      "interest_total": 3.6599999999999997,
+      "sales_proceeds": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 0
+    },
+    {
+      "year": 2021,
+      "dividend_total": 17563.41,
+      "dividend_charges": 327.82,
+      "interest_total": 5.35,
+      "sales_proceeds": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 0
+    },
+    {
+      "year": 2022,
+      "dividend_total": 18855.8,
+      "dividend_charges": 334.28,
+      "interest_total": 7.3,
+      "sales_proceeds": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 0
+    },
+    {
+      "year": 2023,
+      "dividend_total": 8746.0,
+      "dividend_charges": 283.73,
+      "interest_total": 8.540000000000001,
+      "sales_proceeds": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 0
+    },
+    {
+      "year": 2024,
+      "dividend_total": 0.0,
+      "dividend_charges": 240.0,
+      "interest_total": 10.979999999999999,
+      "sales_proceeds": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 0
+    },
+    {
+      "year": 2025,
+      "dividend_total": 0.0,
+      "dividend_charges": 240.0,
+      "interest_total": 10.95,
+      "sales_proceeds": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 0
+    },
+    {
+      "year": 2026,
+      "dividend_total": 0.0,
+      "dividend_charges": 160.0,
+      "interest_total": 6.36,
+      "sales_proceeds": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "deposits": 0.0,
+      "withdrawals": 0.0,
+      "trades_count": 0
+    }
+  ],
+  "stocks": [
+    {
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "status": "已清仓",
+      "current_qty": 0.0,
+      "avg_cost": 0.0,
+      "current_cost_total": 0.0,
+      "total_buy_qty": 410000.0,
+      "total_buy_amount": 487566.82,
+      "total_sell_qty": 410000.0,
+      "total_sell_amount": 823723.1300000001,
+      "realized_pnl_wac": 336156.31,
+      "realized_pnl_fifo": 336156.31,
+      "dividends_total": 0.0,
+      "roi_wac": 68.95,
+      "trades_count": 19
+    },
+    {
+      "code": "00992",
+      "name": "LENOVO GROUP",
+      "market": "HKEX",
+      "status": "已清仓",
+      "current_qty": 0.0,
+      "avg_cost": 0.0,
+      "current_cost_total": 0.0,
+      "total_buy_qty": 48000.0,
+      "total_buy_amount": 111770.75,
+      "total_sell_qty": 48000.0,
+      "total_sell_amount": 256059.78,
+      "realized_pnl_wac": 144289.03,
+      "realized_pnl_fifo": 144289.03,
+      "dividends_total": 1000.0,
+      "roi_wac": 129.09,
+      "trades_count": 6
+    },
+    {
+      "code": "02349",
+      "name": "CHINA AI INFRA",
+      "market": "HKEX",
+      "status": "已清仓",
+      "current_qty": 0.0,
+      "avg_cost": 0.0,
+      "current_cost_total": 0.0,
+      "total_buy_qty": 8820000.0,
+      "total_buy_amount": 815163.61,
+      "total_sell_qty": 8820000.0,
+      "total_sell_amount": 888668.68,
+      "realized_pnl_wac": 73505.07000000007,
+      "realized_pnl_fifo": 73505.07000000007,
+      "dividends_total": 0.0,
+      "roi_wac": 9.02,
+      "trades_count": 8
+    },
+    {
+      "code": "01688",
+      "name": "LINGYI ITECH",
+      "market": "HKEX",
+      "status": "已清仓",
+      "current_qty": 0.0,
+      "avg_cost": 0.0,
+      "current_cost_total": 0.0,
+      "total_buy_qty": 28500.0,
+      "total_buy_amount": 334560.51,
+      "total_sell_qty": 28500.0,
+      "total_sell_amount": 384750.0,
+      "realized_pnl_wac": 50189.48999999999,
+      "realized_pnl_fifo": 50189.48999999999,
+      "dividends_total": 4800.0,
+      "roi_wac": 15.0,
+      "trades_count": 7
+    },
+    {
+      "code": "01101",
+      "name": "HUARONG ENERGY",
+      "market": "HKEX",
+      "status": "已清仓",
+      "current_qty": 0.0,
+      "avg_cost": 0.0,
+      "current_cost_total": 0.0,
+      "total_buy_qty": 70000.0,
+      "total_buy_amount": 64876.17,
+      "total_sell_qty": 70000.0,
+      "total_sell_amount": 98789.61,
+      "realized_pnl_wac": 33913.44,
+      "realized_pnl_fifo": 33913.44,
+      "dividends_total": 0.0,
+      "roi_wac": 52.27,
+      "trades_count": 5
+    },
+    {
+      "code": "02331",
+      "name": "LI NING",
+      "market": "HKEX",
+      "status": "已清仓",
+      "current_qty": 0.0,
+      "avg_cost": 0.0,
+      "current_cost_total": 0.0,
+      "total_buy_qty": 17500.0,
+      "total_buy_amount": 77393.15,
+      "total_sell_qty": 17500.0,
+      "total_sell_amount": 91172.09,
+      "realized_pnl_wac": 13778.940000000002,
+      "realized_pnl_fifo": 13778.940000000002,
+      "dividends_total": 0.0,
+      "roi_wac": 17.8,
+      "trades_count": 8
+    },
+    {
+      "code": "00175",
+      "name": "GEELY AUTO",
+      "market": "HKEX",
+      "status": "已清仓",
+      "current_qty": 0.0,
+      "avg_cost": 0.0,
+      "current_cost_total": 0.0,
+      "total_buy_qty": 10000.0,
+      "total_buy_amount": 27432.19,
+      "total_sell_qty": 10000.0,
+      "total_sell_amount": 39454.95,
+      "realized_pnl_wac": 12022.759999999998,
+      "realized_pnl_fifo": 12022.759999999998,
+      "dividends_total": 460.0,
+      "roi_wac": 43.83,
+      "trades_count": 2
+    },
+    {
+      "code": "01886",
+      "name": "HUIYUAN JUICE",
+      "market": "HKEX",
+      "status": "已清仓",
+      "current_qty": 0.0,
+      "avg_cost": 0.0,
+      "current_cost_total": 0.0,
+      "total_buy_qty": 5000.0,
+      "total_buy_amount": 27131.43,
+      "total_sell_qty": 5000.0,
+      "total_sell_amount": 27867.48,
+      "realized_pnl_wac": 736.0499999999993,
+      "realized_pnl_fifo": 736.0499999999993,
+      "dividends_total": 0.0,
+      "roi_wac": 2.71,
+      "trades_count": 2
+    },
+    {
+      "code": "03396",
+      "name": "LEGENDHOLDING",
+      "market": "HKEX",
+      "status": "持仓中",
+      "current_qty": 44700.0,
+      "avg_cost": 19.54271610738255,
+      "current_cost_total": 873559.4099999999,
+      "total_buy_qty": 44700.0,
+      "total_buy_amount": 873559.4099999999,
+      "total_sell_qty": 0.0,
+      "total_sell_amount": 0.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "dividends_total": 97884.37,
+      "roi_wac": 0.0,
+      "trades_count": 4
+    },
+    {
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "status": "已清仓",
+      "current_qty": 0.0,
+      "avg_cost": 0.0,
+      "current_cost_total": 0.0,
+      "total_buy_qty": 30000.0,
+      "total_buy_amount": 165049.87,
+      "total_sell_qty": 30000.0,
+      "total_sell_amount": 135947.29,
+      "realized_pnl_wac": -29102.58000000001,
+      "realized_pnl_fifo": -29102.58000000001,
+      "dividends_total": 0.0,
+      "roi_wac": -17.63,
+      "trades_count": 11
+    },
+    {
+      "code": "00721",
+      "name": "C FIN INT INV",
+      "market": "HKEX",
+      "status": "已清仓",
+      "current_qty": 0.0,
+      "avg_cost": 0.0,
+      "current_cost_total": 0.0,
+      "total_buy_qty": 1550000.0,
+      "total_buy_amount": 761364.44,
+      "total_sell_qty": 1550000.0,
+      "total_sell_amount": 713897.85,
+      "realized_pnl_wac": -47466.589999999924,
+      "realized_pnl_fifo": -47466.59000000002,
+      "dividends_total": 0.0,
+      "roi_wac": -6.23,
+      "trades_count": 7
+    }
+  ],
+  "trade_logs": [
+    {
+      "date": "2009-02-27",
+      "year": 2009,
+      "code": "01688",
+      "name": "LINGYI ITECH",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 3000.0,
+      "price": 6.8,
+      "amount": 20524.84,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 3000.0,
+      "avg_cost_after": 6.841613333333333,
+      "remarks": ""
+    },
+    {
+      "date": "2009-03-13",
+      "year": 2009,
+      "code": "00992",
+      "name": "LENOVO GROUP",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 18000.0,
+      "price": 1.55,
+      "amount": 28032.52,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 18000.0,
+      "avg_cost_after": 1.5573622222222223,
+      "remarks": ""
+    },
+    {
+      "date": "2009-04-09",
+      "year": 2009,
+      "code": "00992",
+      "name": "LENOVO GROUP",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 20000.0,
+      "price": 1.93,
+      "amount": 38744.47,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 38000.0,
+      "avg_cost_after": 1.757289210526316,
+      "remarks": ""
+    },
+    {
+      "date": "2009-05-22",
+      "year": 2009,
+      "code": "01886",
+      "name": "HUIYUAN JUICE",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 5000.0,
+      "price": 5.4,
+      "amount": 27131.43,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 5000.0,
+      "avg_cost_after": 5.426286,
+      "remarks": ""
+    },
+    {
+      "date": "2009-06-04",
+      "year": 2009,
+      "code": "01688",
+      "name": "LINGYI ITECH",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 3000.0,
+      "price": 14.24,
+      "amount": 42868.85,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 6000.0,
+      "avg_cost_after": 10.565615000000001,
+      "remarks": ""
+    },
+    {
+      "date": "2009-06-08",
+      "year": 2009,
+      "code": "00992",
+      "name": "LENOVO GROUP",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 6000.0,
+      "price": 2.87,
+      "amount": 17341.55,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 44000.0,
+      "avg_cost_after": 1.9117850000000003,
+      "remarks": ""
+    },
+    {
+      "date": "2009-06-15",
+      "year": 2009,
+      "code": "01688",
+      "name": "LINGYI ITECH",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 1500.0,
+      "price": 13.2,
+      "amount": 19923.78,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 7500.0,
+      "avg_cost_after": 11.108996,
+      "remarks": ""
+    },
+    {
+      "date": "2009-07-29",
+      "year": 2009,
+      "code": "02349",
+      "name": "CHINA AI INFRA",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 500000.0,
+      "price": 0.295,
+      "amount": 147996.11,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 500000.0,
+      "avg_cost_after": 0.29599222,
+      "remarks": ""
+    },
+    {
+      "date": "2009-08-05",
+      "year": 2009,
+      "code": "02349",
+      "name": "CHINA AI INFRA",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 784000.0,
+      "price": 0.25,
+      "amount": 196658.56,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 1284000.0,
+      "avg_cost_after": 0.26842264018691586,
+      "remarks": ""
+    },
+    {
+      "date": "2009-10-14",
+      "year": 2009,
+      "code": "02349",
+      "name": "CHINA AI INFRA",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 116000.0,
+      "price": 0.125,
+      "amount": 14618.31,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 1400000.0,
+      "avg_cost_after": 0.2566235571428571,
+      "remarks": ""
+    },
+    {
+      "date": "2009-10-16",
+      "year": 2009,
+      "code": "02349",
+      "name": "CHINA AI INFRA",
+      "market": "HKEX",
+      "action": "供股配股",
+      "qty": 6420000.0,
+      "price": 0.05,
+      "amount": 321000.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 7820000.0,
+      "avg_cost_after": 0.08699142966751917,
+      "remarks": "*02349 DEP FOR SUB OFFER #44043"
+    },
+    {
+      "date": "2009-12-07",
+      "year": 2009,
+      "code": "01886",
+      "name": "HUIYUAN JUICE",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 5000.0,
+      "price": 5.6,
+      "amount": 27867.48,
+      "realized_pnl_wac": 736.0499999999993,
+      "realized_pnl_fifo": 736.0499999999993,
+      "cost_basis": 27131.43,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2010-01-05",
+      "year": 2010,
+      "code": "02349",
+      "name": "CHINA AI INFRA",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 200000.0,
+      "price": 0.14,
+      "amount": 28132.52,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 8020000.0,
+      "avg_cost_after": 0.08832986284289276,
+      "remarks": ""
+    },
+    {
+      "date": "2010-01-05",
+      "year": 2010,
+      "code": "00992",
+      "name": "LENOVO GROUP",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 44000.0,
+      "price": 5.18,
+      "amount": 227154.1,
+      "realized_pnl_wac": 143035.56,
+      "realized_pnl_fifo": 143035.56,
+      "cost_basis": 84118.54000000001,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2010-01-07",
+      "year": 2010,
+      "code": "02349",
+      "name": "CHINA AI INFRA",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 800000.0,
+      "price": 0.133,
+      "amount": 106758.11,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 8820000.0,
+      "avg_cost_after": 0.09242217800453514,
+      "remarks": ""
+    },
+    {
+      "date": "2010-03-23",
+      "year": 2010,
+      "code": "01688",
+      "name": "LINGYI ITECH",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 7500.0,
+      "price": 16.02,
+      "amount": 120554.56,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 15000.0,
+      "avg_cost_after": 13.591468666666666,
+      "remarks": ""
+    },
+    {
+      "date": "2011-05-04",
+      "year": 2011,
+      "code": "00721",
+      "name": "C FIN INT INV",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 1060000.0,
+      "price": 0.48717,
+      "amount": 518001.44,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 1060000.0,
+      "avg_cost_after": 0.4886806037735849,
+      "remarks": ""
+    },
+    {
+      "date": "2011-05-04",
+      "year": 2011,
+      "code": "02349",
+      "name": "CHINA AI INFRA",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 7820000.0,
+      "price": 0.09801,
+      "amount": 764087.43,
+      "realized_pnl_wac": 41345.99800453521,
+      "realized_pnl_fifo": 83814.45000000007,
+      "cost_basis": 722741.4319954648,
+      "holdings_after": 1000000.0,
+      "avg_cost_after": 0.09242217800453514,
+      "remarks": ""
+    },
+    {
+      "date": "2011-05-06",
+      "year": 2011,
+      "code": "00721",
+      "name": "C FIN INT INV",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 490000.0,
+      "price": 0.495,
+      "amount": 243363.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 1550000.0,
+      "avg_cost_after": 0.491202864516129,
+      "remarks": ""
+    },
+    {
+      "date": "2011-06-27",
+      "year": 2011,
+      "code": "02349",
+      "name": "CHINA AI INFRA",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 1000000.0,
+      "price": 0.125,
+      "amount": 124581.25,
+      "realized_pnl_wac": 32159.071995464852,
+      "realized_pnl_fifo": -10309.380000000005,
+      "cost_basis": 92422.17800453515,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2011-07-12",
+      "year": 2011,
+      "code": "01688",
+      "name": "LINGYI ITECH",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 5000.0,
+      "price": 11.6,
+      "amount": 58195.14,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 20000.0,
+      "avg_cost_after": 13.103358499999999,
+      "remarks": ""
+    },
+    {
+      "date": "2011-08-10",
+      "year": 2011,
+      "code": "01688",
+      "name": "LINGYI ITECH",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 8500.0,
+      "price": 8.5,
+      "amount": 72493.34,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 28500.0,
+      "avg_cost_after": 11.738965263157896,
+      "remarks": ""
+    },
+    {
+      "date": "2012-06-29",
+      "year": 2012,
+      "code": "01688",
+      "name": "LINGYI ITECH",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 28500.0,
+      "price": 13.5,
+      "amount": 384750.0,
+      "realized_pnl_wac": 50189.48999999999,
+      "realized_pnl_fifo": 50189.48999999999,
+      "cost_basis": 334560.51,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": "Delisted Stock <HKEX 01688 ALIBABA>"
+    },
+    {
+      "date": "2012-07-03",
+      "year": 2012,
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 2000.0,
+      "price": 6.83,
+      "amount": 13777.09,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 2000.0,
+      "avg_cost_after": 6.888545,
+      "remarks": ""
+    },
+    {
+      "date": "2012-07-03",
+      "year": 2012,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 30000.0,
+      "price": 1.40667,
+      "amount": 42348.38,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 30000.0,
+      "avg_cost_after": 1.4116126666666666,
+      "remarks": ""
+    },
+    {
+      "date": "2012-07-09",
+      "year": 2012,
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 8000.0,
+      "price": 6.43,
+      "amount": 51613.85,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 10000.0,
+      "avg_cost_after": 6.539094,
+      "remarks": ""
+    },
+    {
+      "date": "2012-07-09",
+      "year": 2012,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 40000.0,
+      "price": 1.26,
+      "amount": 50570.43,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 70000.0,
+      "avg_cost_after": 1.3274115714285715,
+      "remarks": ""
+    },
+    {
+      "date": "2012-07-11",
+      "year": 2012,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 20000.0,
+      "price": 1.19,
+      "amount": 23927.9,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 90000.0,
+      "avg_cost_after": 1.2982967777777776,
+      "remarks": ""
+    },
+    {
+      "date": "2012-07-13",
+      "year": 2012,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 40000.0,
+      "price": 1.03,
+      "amount": 41347.3,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 130000.0,
+      "avg_cost_after": 1.216877,
+      "remarks": ""
+    },
+    {
+      "date": "2012-07-23",
+      "year": 2012,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 50000.0,
+      "price": 0.89,
+      "amount": 44650.7,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 180000.0,
+      "avg_cost_after": 1.1269150555555556,
+      "remarks": ""
+    },
+    {
+      "date": "2012-07-27",
+      "year": 2012,
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 5000.0,
+      "price": 4.74,
+      "amount": 23827.9,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 15000.0,
+      "avg_cost_after": 5.947922666666666,
+      "remarks": ""
+    },
+    {
+      "date": "2012-07-30",
+      "year": 2012,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 100000.0,
+      "price": 0.84,
+      "amount": 84281.72,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 280000.0,
+      "avg_cost_after": 1.025451535714286,
+      "remarks": ""
+    },
+    {
+      "date": "2012-08-02",
+      "year": 2012,
+      "code": "00721",
+      "name": "C FIN INT INV",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 430000.0,
+      "price": 0.47,
+      "amount": 201422.06,
+      "realized_pnl_wac": -9795.171741935454,
+      "realized_pnl_fifo": -8710.599622641515,
+      "cost_basis": 211217.23174193545,
+      "holdings_after": 1120000.0,
+      "avg_cost_after": 0.491202864516129,
+      "remarks": ""
+    },
+    {
+      "date": "2012-08-29",
+      "year": 2012,
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 5000.0,
+      "price": 4.76,
+      "amount": 23927.9,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 20000.0,
+      "avg_cost_after": 5.657336999999999,
+      "remarks": ""
+    },
+    {
+      "date": "2012-09-05",
+      "year": 2012,
+      "code": "01101",
+      "name": "HUARONG ENERGY",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 10000.0,
+      "price": 0.96,
+      "amount": 9712.77,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 10000.0,
+      "avg_cost_after": 0.9712770000000001,
+      "remarks": ""
+    },
+    {
+      "date": "2012-09-13",
+      "year": 2012,
+      "code": "01101",
+      "name": "HUARONG ENERGY",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 10000.0,
+      "price": 1.1,
+      "amount": 10886.12,
+      "realized_pnl_wac": 1173.3500000000004,
+      "realized_pnl_fifo": 1173.3500000000004,
+      "cost_basis": 9712.77,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2012-11-15",
+      "year": 2012,
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 3000.0,
+      "price": 5.0,
+      "amount": 15118.2,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 23000.0,
+      "avg_cost_after": 5.57673652173913,
+      "remarks": ""
+    },
+    {
+      "date": "2013-02-22",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 20000.0,
+      "price": 1.38,
+      "amount": 27732.21,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 300000.0,
+      "avg_cost_after": 1.0495288000000003,
+      "remarks": ""
+    },
+    {
+      "date": "2013-02-26",
+      "year": 2013,
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 3000.0,
+      "price": 5.5,
+      "amount": 16620.33,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 26000.0,
+      "avg_cost_after": 5.572510384615384,
+      "remarks": ""
+    },
+    {
+      "date": "2013-03-18",
+      "year": 2013,
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 4000.0,
+      "price": 5.01,
+      "amount": 20164.6,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 30000.0,
+      "avg_cost_after": 5.501662333333333,
+      "remarks": ""
+    },
+    {
+      "date": "2013-04-02",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 30000.0,
+      "price": 1.24,
+      "amount": 37342.98,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 330000.0,
+      "avg_cost_after": 1.0672776363636365,
+      "remarks": ""
+    },
+    {
+      "date": "2013-05-09",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 30000.0,
+      "price": 1.46,
+      "amount": 43650.5,
+      "realized_pnl_wac": 11632.170909090906,
+      "realized_pnl_fifo": 1302.1200000000026,
+      "cost_basis": 32018.329090909094,
+      "holdings_after": 300000.0,
+      "avg_cost_after": 1.0672776363636365,
+      "remarks": ""
+    },
+    {
+      "date": "2013-05-27",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 30000.0,
+      "price": 1.66,
+      "amount": 49968.03,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 330000.0,
+      "avg_cost_after": 1.1216706694214877,
+      "remarks": ""
+    },
+    {
+      "date": "2013-05-27",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 130000.0,
+      "price": 1.67462,
+      "amount": 216970.4,
+      "realized_pnl_wac": 71153.21297520658,
+      "realized_pnl_fifo": 74334.35,
+      "cost_basis": 145817.1870247934,
+      "holdings_after": 200000.0,
+      "avg_cost_after": 1.1216706694214875,
+      "remarks": ""
+    },
+    {
+      "date": "2013-05-29",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 30000.0,
+      "price": 1.78,
+      "amount": 53219.58,
+      "realized_pnl_wac": 19569.45991735538,
+      "realized_pnl_fifo": 26931.128000000004,
+      "cost_basis": 33650.12008264462,
+      "holdings_after": 170000.0,
+      "avg_cost_after": 1.1216706694214875,
+      "remarks": ""
+    },
+    {
+      "date": "2013-06-25",
+      "year": 2013,
+      "code": "02331",
+      "name": "LI NING",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 5000.0,
+      "price": 4.05,
+      "amount": 20374.62,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 5000.0,
+      "avg_cost_after": 4.074924,
+      "remarks": ""
+    },
+    {
+      "date": "2013-06-25",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 30000.0,
+      "price": 1.35,
+      "amount": 40646.25,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 200000.0,
+      "avg_cost_after": 1.1566513190082643,
+      "remarks": ""
+    },
+    {
+      "date": "2013-06-25",
+      "year": 2013,
+      "code": "00992",
+      "name": "LENOVO GROUP",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 4000.0,
+      "price": 6.88,
+      "amount": 27652.21,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 4000.0,
+      "avg_cost_after": 6.9130525,
+      "remarks": ""
+    },
+    {
+      "date": "2013-07-05",
+      "year": 2013,
+      "code": "01101",
+      "name": "HUARONG ENERGY",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 30000.0,
+      "price": 0.9,
+      "amount": 27131.16,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 30000.0,
+      "avg_cost_after": 0.904372,
+      "remarks": ""
+    },
+    {
+      "date": "2013-07-24",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 30000.0,
+      "price": 1.69,
+      "amount": 50528.86,
+      "realized_pnl_wac": 15829.320429752072,
+      "realized_pnl_fifo": 25244.344,
+      "cost_basis": 34699.53957024793,
+      "holdings_after": 170000.0,
+      "avg_cost_after": 1.1566513190082643,
+      "remarks": ""
+    },
+    {
+      "date": "2013-08-05",
+      "year": 2013,
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 10000.0,
+      "price": 5.59,
+      "amount": 55711.74,
+      "realized_pnl_wac": 695.1166666666686,
+      "realized_pnl_fifo": -9679.200000000004,
+      "cost_basis": 55016.62333333333,
+      "holdings_after": 20000.0,
+      "avg_cost_after": 5.501662333333334,
+      "remarks": ""
+    },
+    {
+      "date": "2013-08-05",
+      "year": 2013,
+      "code": "02331",
+      "name": "LI NING",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 5000.0,
+      "price": 5.08,
+      "amount": 25269.97,
+      "realized_pnl_wac": 4895.3499999999985,
+      "realized_pnl_fifo": 4895.3499999999985,
+      "cost_basis": 20374.620000000003,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2013-08-06",
+      "year": 2013,
+      "code": "00992",
+      "name": "LENOVO GROUP",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 4000.0,
+      "price": 7.26,
+      "amount": 28905.68,
+      "realized_pnl_wac": 1253.4700000000012,
+      "realized_pnl_fifo": 1253.4700000000012,
+      "cost_basis": 27652.21,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2013-08-12",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 60000.0,
+      "price": 1.865,
+      "amount": 111525.02,
+      "realized_pnl_wac": 42125.940859504146,
+      "realized_pnl_fifo": 60955.988000000005,
+      "cost_basis": 69399.07914049586,
+      "holdings_after": 110000.0,
+      "avg_cost_after": 1.1566513190082646,
+      "remarks": ""
+    },
+    {
+      "date": "2013-08-19",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 20000.0,
+      "price": 2.23,
+      "amount": 44750.92,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 130000.0,
+      "avg_cost_after": 1.3229428083916084,
+      "remarks": ""
+    },
+    {
+      "date": "2013-08-20",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 40000.0,
+      "price": 2.38,
+      "amount": 94880.18,
+      "realized_pnl_wac": 41962.46766433566,
+      "realized_pnl_fifo": 42252.649999999994,
+      "cost_basis": 52917.712335664335,
+      "holdings_after": 90000.0,
+      "avg_cost_after": 1.3229428083916082,
+      "remarks": ""
+    },
+    {
+      "date": "2013-08-27",
+      "year": 2013,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 20000.0,
+      "price": 2.54,
+      "amount": 50628.64,
+      "realized_pnl_wac": 24169.783832167835,
+      "realized_pnl_fifo": 21524.97,
+      "cost_basis": 26458.856167832164,
+      "holdings_after": 70000.0,
+      "avg_cost_after": 1.3229428083916082,
+      "remarks": ""
+    },
+    {
+      "date": "2013-10-29",
+      "year": 2013,
+      "code": "01101",
+      "name": "HUARONG ENERGY",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 30000.0,
+      "price": 0.93,
+      "amount": 28032.24,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 60000.0,
+      "avg_cost_after": 0.91939,
+      "remarks": ""
+    },
+    {
+      "date": "2013-12-18",
+      "year": 2013,
+      "code": "00721",
+      "name": "C FIN INT INV",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 350000.0,
+      "price": 0.44,
+      "amount": 153484.1,
+      "realized_pnl_wac": -18436.90258064514,
+      "realized_pnl_fifo": -17554.111320754717,
+      "cost_basis": 171921.00258064514,
+      "holdings_after": 770000.0,
+      "avg_cost_after": 0.491202864516129,
+      "remarks": ""
+    },
+    {
+      "date": "2013-12-20",
+      "year": 2013,
+      "code": "00721",
+      "name": "C FIN INT INV",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 400000.0,
+      "price": 0.455,
+      "amount": 181390.3,
+      "realized_pnl_wac": -15090.845806451602,
+      "realized_pnl_fifo": -15039.37109742011,
+      "cost_basis": 196481.1458064516,
+      "holdings_after": 370000.0,
+      "avg_cost_after": 0.491202864516129,
+      "remarks": ""
+    },
+    {
+      "date": "2013-12-23",
+      "year": 2013,
+      "code": "00721",
+      "name": "C FIN INT INV",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 250000.0,
+      "price": 0.48,
+      "amount": 119598.0,
+      "realized_pnl_wac": -3202.7161290322547,
+      "realized_pnl_fifo": -4566.795918367352,
+      "cost_basis": 122800.71612903225,
+      "holdings_after": 120000.0,
+      "avg_cost_after": 0.49120286451612893,
+      "remarks": ""
+    },
+    {
+      "date": "2013-12-27",
+      "year": 2013,
+      "code": "00721",
+      "name": "C FIN INT INV",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 120000.0,
+      "price": 0.485,
+      "amount": 58003.39,
+      "realized_pnl_wac": -940.9537419354747,
+      "realized_pnl_fifo": -1595.7120408163246,
+      "cost_basis": 58944.343741935474,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2014-01-06",
+      "year": 2014,
+      "code": "00268",
+      "name": "KINGDEE INT'L",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 70000.0,
+      "price": 2.9,
+      "amount": 202319.95,
+      "realized_pnl_wac": 109713.95341258743,
+      "realized_pnl_fifo": 83610.76000000002,
+      "cost_basis": 92605.99658741258,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2014-02-07",
+      "year": 2014,
+      "code": "01101",
+      "name": "HUARONG ENERGY",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 60000.0,
+      "price": 1.47,
+      "amount": 87903.49,
+      "realized_pnl_wac": 32740.090000000004,
+      "realized_pnl_fifo": 32740.090000000004,
+      "cost_basis": 55163.4,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2014-04-25",
+      "year": 2014,
+      "code": "00175",
+      "name": "GEELY AUTO",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 10000.0,
+      "price": 2.73,
+      "amount": 27432.19,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 10000.0,
+      "avg_cost_after": 2.743219,
+      "remarks": ""
+    },
+    {
+      "date": "2014-04-25",
+      "year": 2014,
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 7000.0,
+      "price": 3.98,
+      "amount": 27727.77,
+      "realized_pnl_wac": -10783.866333333335,
+      "realized_pnl_fifo": -5671.2900000000045,
+      "cost_basis": 38511.636333333336,
+      "holdings_after": 13000.0,
+      "avg_cost_after": 5.501662333333334,
+      "remarks": ""
+    },
+    {
+      "date": "2014-07-29",
+      "year": 2014,
+      "code": "02331",
+      "name": "LI NING",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 1000.0,
+      "price": 4.57,
+      "amount": 4677.37,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 1000.0,
+      "avg_cost_after": 4.677369999999996,
+      "remarks": ""
+    },
+    {
+      "date": "2014-08-15",
+      "year": 2014,
+      "code": "02331",
+      "name": "LI NING",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 2500.0,
+      "price": 4.63,
+      "amount": 11689.93,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 3500.0,
+      "avg_cost_after": 4.676371428571428,
+      "remarks": ""
+    },
+    {
+      "date": "2014-08-15",
+      "year": 2014,
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 5000.0,
+      "price": 4.01,
+      "amount": 19925.4,
+      "realized_pnl_wac": -7582.911666666667,
+      "realized_pnl_fifo": -4510.139999999999,
+      "cost_basis": 27508.31166666667,
+      "holdings_after": 8000.0,
+      "avg_cost_after": 5.501662333333335,
+      "remarks": ""
+    },
+    {
+      "date": "2014-08-18",
+      "year": 2014,
+      "code": "02331",
+      "name": "LI NING",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 4000.0,
+      "price": 4.54375,
+      "amount": 18297.46,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 7500.0,
+      "avg_cost_after": 4.621967999999999,
+      "remarks": ""
+    },
+    {
+      "date": "2014-08-18",
+      "year": 2014,
+      "code": "01068",
+      "name": "YURUN FOOD",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 8000.0,
+      "price": 4.09,
+      "amount": 32582.38,
+      "realized_pnl_wac": -11430.918666666676,
+      "realized_pnl_fifo": -9241.95,
+      "cost_basis": 44013.29866666668,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2014-08-19",
+      "year": 2014,
+      "code": "02331",
+      "name": "LI NING",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 2500.0,
+      "price": 4.45,
+      "amount": 11239.89,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 10000.0,
+      "avg_cost_after": 4.590464999999999,
+      "remarks": ""
+    },
+    {
+      "date": "2014-08-20",
+      "year": 2014,
+      "code": "02331",
+      "name": "LI NING",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 2500.0,
+      "price": 4.4,
+      "amount": 11113.88,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 12500.0,
+      "avg_cost_after": 4.561482399999999,
+      "remarks": ""
+    },
+    {
+      "date": "2015-03-25",
+      "year": 2015,
+      "code": "00175",
+      "name": "GEELY AUTO",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 10000.0,
+      "price": 3.96,
+      "amount": 39454.95,
+      "realized_pnl_wac": 12022.759999999998,
+      "realized_pnl_fifo": 12022.759999999998,
+      "cost_basis": 27432.19,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2016-09-06",
+      "year": 2016,
+      "code": "02331",
+      "name": "LI NING",
+      "market": "HKEX",
+      "action": "卖出",
+      "qty": 12500.0,
+      "price": 5.29,
+      "amount": 65902.12,
+      "realized_pnl_wac": 8883.590000000004,
+      "realized_pnl_fifo": 8883.590000000004,
+      "cost_basis": 57018.52999999999,
+      "holdings_after": 0.0,
+      "avg_cost_after": 0.0,
+      "remarks": ""
+    },
+    {
+      "date": "2016-09-09",
+      "year": 2016,
+      "code": "03396",
+      "name": "LEGENDHOLDING",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 5000.0,
+      "price": 20.65,
+      "amount": 103596.33,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 5000.0,
+      "avg_cost_after": 20.719266,
+      "remarks": ""
+    },
+    {
+      "date": "2016-09-12",
+      "year": 2016,
+      "code": "03396",
+      "name": "LEGENDHOLDING",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 19400.0,
+      "price": 19.61278,
+      "amount": 381762.0,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 24400.0,
+      "avg_cost_after": 19.891734836065574,
+      "remarks": ""
+    },
+    {
+      "date": "2016-09-28",
+      "year": 2016,
+      "code": "03396",
+      "name": "LEGENDHOLDING",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 10000.0,
+      "price": 19.1,
+      "amount": 191639.28,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 34400.0,
+      "avg_cost_after": 19.68016308139535,
+      "remarks": ""
+    },
+    {
+      "date": "2016-09-30",
+      "year": 2016,
+      "code": "03396",
+      "name": "LEGENDHOLDING",
+      "market": "HKEX",
+      "action": "买入",
+      "qty": 10300.0,
+      "price": 19.02,
+      "amount": 196561.8,
+      "realized_pnl_wac": 0.0,
+      "realized_pnl_fifo": 0.0,
+      "cost_basis": 0.0,
+      "holdings_after": 44700.0,
+      "avg_cost_after": 19.54271610738255,
+      "remarks": ""
+    }
+  ],
+  "dividend_logs": [
+    {
+      "date": "2009-09-10",
+      "amount": 1500.0,
+      "remarks": "SP DIV #1688 HKD0.20/SH 7,500 UNIT    ALIBABA(01688)",
+      "year": 2009
+    },
+    {
+      "date": "2009-12-03",
+      "amount": 440.0,
+      "remarks": "DIV #992 HKD0.01/SH 44,000 UNIT       LENOVO GROUP(00992)",
+      "year": 2009
+    },
+    {
+      "date": "2011-02-01",
+      "amount": 3300.0,
+      "remarks": "Cash Dividend SPECIAL CASH DIVIDEND-HKD 0.2200/SH <HKEX 01688 ALIBABA>",
+      "year": 2011
+    },
+    {
+      "date": "2011-02-01",
+      "amount": 0.0,
+      "remarks": "HANDLING CHG FOR CASH DIV#1688",
+      "year": 2011
+    },
+    {
+      "date": "2013-07-29",
+      "amount": 560.0,
+      "remarks": "Cash Dividend F/D FOR YEAR END 31MAR13 PER SHARE:     HKD 0.1400 <HKEX 00992 LENOVO GROUP>",
+      "year": 2013
+    },
+    {
+      "date": "2014-07-11",
+      "amount": 460.0,
+      "remarks": "Cash Dividend F/D FOR YEAR END 31DEC13 PER SHARE:     HKD 0.046 <HKEX 00175 GEELY AUTO>",
+      "year": 2014
+    },
+    {
+      "date": "2017-07-13",
+      "amount": 11175.01,
+      "remarks": "Cash Dividend 16 F/D-RMB0.242/H SH(-10%)~HKD0.2500002 <HKEX 03396 LEGENDHOLDING>",
+      "year": 2017
+    },
+    {
+      "date": "2018-07-16",
+      "amount": 13283.7,
+      "remarks": "Cash Dividend 17 F/D-RMB0.27/H SH(-10%)~HKD0.2971746 <HKEX 03396 LEGENDHOLDING>",
+      "year": 2018
+    },
+    {
+      "date": "2019-07-15",
+      "amount": 13717.91,
+      "remarks": "Cash Dividend 18 F/D RMB0.3(-10%)~HKD0.3068882999 <HKEX 03396 LEGENDHOLDING>",
+      "year": 2019
+    },
+    {
+      "date": "2020-07-15",
+      "amount": 14542.54,
+      "remarks": "Cash Dividend 19 F/D-RMB0.33/SH(-10%)~HKD0.3253364999 <HKEX 03396 LEGENDHOLDING>",
+      "year": 2020
+    },
+    {
+      "date": "2021-07-15",
+      "amount": 17563.41,
+      "remarks": "Cash Dividend 20 F/D-RMB0.36/SH(-10%)PAY IN APPROX.   HKD0.3929174999(NET) <HKEX 03396 LEGENDHOLDING>",
+      "year": 2021
+    },
+    {
+      "date": "2022-08-30",
+      "amount": 18855.8,
+      "remarks": "Cash Dividend 21 F/D-RMB0.4/SH(-10%) PAY IN HKD0.42183(NET) <HKEX 03396 LEGENDHOLDING>",
+      "year": 2022
+    },
+    {
+      "date": "2023-08-30",
+      "amount": 8746.0,
+      "remarks": "Cash Dividend 22 F/D-RMB0.2/SH(-10%), PAY IN HKD      0.19566(NET) <HKEX 03396 LEGENDHOLDING>",
+      "year": 2023
+    }
+  ],
+  "interest_logs": [
+    {
+      "date": "2008-12-31",
+      "amount": 0.69,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2008/12",
+      "year": 2008
+    },
+    {
+      "date": "2009-01-30",
+      "amount": 0.87,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2009/01",
+      "year": 2009
+    },
+    {
+      "date": "2009-02-27",
+      "amount": 0.8,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2009/02",
+      "year": 2009
+    },
+    {
+      "date": "2009-03-31",
+      "amount": 0.53,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2009/03",
+      "year": 2009
+    },
+    {
+      "date": "2009-04-30",
+      "amount": 0.18,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2009/04",
+      "year": 2009
+    },
+    {
+      "date": "2009-05-29",
+      "amount": 0.32,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2009/05",
+      "year": 2009
+    },
+    {
+      "date": "2009-06-30",
+      "amount": 0.23,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2009/06",
+      "year": 2009
+    },
+    {
+      "date": "2009-07-31",
+      "amount": 1.33,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2009/07",
+      "year": 2009
+    },
+    {
+      "date": "2009-08-31",
+      "amount": 0.31,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2009/08",
+      "year": 2009
+    },
+    {
+      "date": "2009-09-30",
+      "amount": 2.19,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2009/09",
+      "year": 2009
+    },
+    {
+      "date": "2009-10-30",
+      "amount": 0.38,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2009/10",
+      "year": 2009
+    },
+    {
+      "date": "2009-12-31",
+      "amount": 0.2,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2009/12",
+      "year": 2009
+    },
+    {
+      "date": "2010-01-29",
+      "amount": 0.96,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2010/01",
+      "year": 2010
+    },
+    {
+      "date": "2010-02-26",
+      "amount": 0.88,
+      "remarks": "ACCRUED INT. FOR THE MONTH 2010/02",
+      "year": 2010
+    },
+    {
+      "date": "2010-03-31",
+      "amount": 0.72,
+      "remarks": "Interest for Month",
+      "year": 2010
+    },
+    {
+      "date": "2011-05-31",
+      "amount": 0.35,
+      "remarks": "Interest for Month",
+      "year": 2011
+    },
+    {
+      "date": "2011-06-30",
+      "amount": 0.08,
+      "remarks": "Interest for Month",
+      "year": 2011
+    },
+    {
+      "date": "2011-07-29",
+      "amount": 0.88,
+      "remarks": "Interest for Month",
+      "year": 2011
+    },
+    {
+      "date": "2011-08-31",
+      "amount": 0.22,
+      "remarks": "Interest for Month",
+      "year": 2011
+    },
+    {
+      "date": "2012-06-29",
+      "amount": 0.2,
+      "remarks": "Interest for Month",
+      "year": 2012
+    },
+    {
+      "date": "2012-07-31",
+      "amount": 1.82,
+      "remarks": "Interest for Month",
+      "year": 2012
+    },
+    {
+      "date": "2012-08-31",
+      "amount": 1.55,
+      "remarks": "Interest for Month",
+      "year": 2012
+    },
+    {
+      "date": "2012-09-28",
+      "amount": 1.5,
+      "remarks": "Interest for Month",
+      "year": 2012
+    },
+    {
+      "date": "2012-10-31",
+      "amount": 1.55,
+      "remarks": "Interest for Month",
+      "year": 2012
+    },
+    {
+      "date": "2012-11-30",
+      "amount": 1.5,
+      "remarks": "Interest for Month",
+      "year": 2012
+    },
+    {
+      "date": "2012-12-31",
+      "amount": 1.55,
+      "remarks": "Interest for Month",
+      "year": 2012
+    },
+    {
+      "date": "2013-01-31",
+      "amount": 1.55,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2013-02-28",
+      "amount": 1.36,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2013-03-29",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2013-04-30",
+      "amount": 0.64,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2013-05-31",
+      "amount": 0.97,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2013-06-28",
+      "amount": 2.62,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2013-07-31",
+      "amount": 2.0,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2013-08-30",
+      "amount": 3.65,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2013-09-30",
+      "amount": 4.8,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2013-10-31",
+      "amount": 4.95,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2013-11-29",
+      "amount": 4.5,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2013-12-31",
+      "amount": 5.56,
+      "remarks": "Interest for Month",
+      "year": 2013
+    },
+    {
+      "date": "2014-01-31",
+      "amount": 10.42,
+      "remarks": "Interest for Month",
+      "year": 2014
+    },
+    {
+      "date": "2014-02-28",
+      "amount": 10.16,
+      "remarks": "Interest for Month",
+      "year": 2014
+    },
+    {
+      "date": "2014-03-31",
+      "amount": 11.47,
+      "remarks": "Interest for Month",
+      "year": 2014
+    },
+    {
+      "date": "2014-04-30",
+      "amount": 11.1,
+      "remarks": "Interest for Month",
+      "year": 2014
+    },
+    {
+      "date": "2014-05-30",
+      "amount": 5.55,
+      "remarks": "Interest for Month",
+      "year": 2014
+    },
+    {
+      "date": "2014-08-29",
+      "amount": 0.01,
+      "remarks": "Interest for Month",
+      "year": 2014
+    },
+    {
+      "date": "2015-03-31",
+      "amount": 0.05,
+      "remarks": "Interest for Month",
+      "year": 2015
+    },
+    {
+      "date": "2015-04-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2015
+    },
+    {
+      "date": "2015-05-29",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2015
+    },
+    {
+      "date": "2015-06-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2015
+    },
+    {
+      "date": "2015-07-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2015
+    },
+    {
+      "date": "2015-08-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2015
+    },
+    {
+      "date": "2015-09-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2015
+    },
+    {
+      "date": "2015-10-30",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2015
+    },
+    {
+      "date": "2015-11-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2015
+    },
+    {
+      "date": "2015-12-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2015
+    },
+    {
+      "date": "2016-01-29",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2016
+    },
+    {
+      "date": "2016-02-29",
+      "amount": 0.29,
+      "remarks": "Interest for Month",
+      "year": 2016
+    },
+    {
+      "date": "2016-03-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2016
+    },
+    {
+      "date": "2016-04-29",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2016
+    },
+    {
+      "date": "2016-05-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2016
+    },
+    {
+      "date": "2016-06-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2016
+    },
+    {
+      "date": "2016-07-29",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2016
+    },
+    {
+      "date": "2016-08-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2016
+    },
+    {
+      "date": "2016-09-30",
+      "amount": 2.64,
+      "remarks": "Interest for Month",
+      "year": 2016
+    },
+    {
+      "date": "2016-10-31",
+      "amount": 0.15,
+      "remarks": "Interest for Month",
+      "year": 2016
+    },
+    {
+      "date": "2018-07-31",
+      "amount": 0.16,
+      "remarks": "Interest for Month",
+      "year": 2018
+    },
+    {
+      "date": "2018-08-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2018
+    },
+    {
+      "date": "2018-09-28",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2018
+    },
+    {
+      "date": "2018-10-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2018
+    },
+    {
+      "date": "2018-11-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2018
+    },
+    {
+      "date": "2018-12-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2018
+    },
+    {
+      "date": "2019-01-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2019-02-28",
+      "amount": 0.28,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2019-03-29",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2019-04-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2019-05-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2019-06-28",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2019-07-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2019-08-30",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2019-09-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2019-10-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2019-11-29",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2019-12-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2019
+    },
+    {
+      "date": "2020-01-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2020-02-28",
+      "amount": 0.29,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2020-03-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2020-04-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2020-05-29",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2020-06-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2020-07-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2020-08-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2020-09-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2020-10-30",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2020-11-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2020-12-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2020
+    },
+    {
+      "date": "2021-01-29",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2021-02-26",
+      "amount": 0.28,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2021-03-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2021-04-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2021-05-31",
+      "amount": 0.31,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2021-06-30",
+      "amount": 0.3,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2021-07-30",
+      "amount": 0.48,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2021-08-31",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2021-09-30",
+      "amount": 0.6,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2021-10-29",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2021-11-30",
+      "amount": 0.6,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2021-12-31",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2021
+    },
+    {
+      "date": "2022-01-31",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2022-02-28",
+      "amount": 0.56,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2022-03-31",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2022-04-29",
+      "amount": 0.6,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2022-05-31",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2022-06-30",
+      "amount": 0.6,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2022-07-29",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2022-08-31",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2022-09-30",
+      "amount": 0.6,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2022-10-31",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2022-11-30",
+      "amount": 0.6,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2022-12-30",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2022
+    },
+    {
+      "date": "2023-01-31",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2023-02-28",
+      "amount": 0.56,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2023-03-31",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2023-04-28",
+      "amount": 0.6,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2023-05-31",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2023-06-30",
+      "amount": 0.6,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2023-07-31",
+      "amount": 0.62,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2023-08-31",
+      "amount": 0.64,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2023-09-29",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2023-10-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2023-11-30",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2023-12-29",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2023
+    },
+    {
+      "date": "2024-01-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2024-02-29",
+      "amount": 0.87,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2024-03-29",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2024-04-30",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2024-05-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2024-06-28",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2024-07-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2024-08-30",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2024-09-30",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2024-10-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2024-11-29",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2024-12-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2024
+    },
+    {
+      "date": "2025-01-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2025-02-28",
+      "amount": 0.84,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2025-03-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2025-04-30",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2025-05-30",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2025-06-30",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2025-07-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2025-08-29",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2025-09-30",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2025-10-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2025-11-28",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2025-12-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2025
+    },
+    {
+      "date": "2026-01-30",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2026
+    },
+    {
+      "date": "2026-02-27",
+      "amount": 0.84,
+      "remarks": "Interest for Month",
+      "year": 2026
+    },
+    {
+      "date": "2026-03-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2026
+    },
+    {
+      "date": "2026-04-30",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2026
+    },
+    {
+      "date": "2026-05-29",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2026
+    },
+    {
+      "date": "2026-06-30",
+      "amount": 0.9,
+      "remarks": "Interest for Month",
+      "year": 2026
+    },
+    {
+      "date": "2026-07-31",
+      "amount": 0.93,
+      "remarks": "Interest for Month",
+      "year": 2026
+    }
+  ],
+  "cash_logs": [
+    {
+      "date": "2008-12-08",
+      "type": "入金",
+      "amount": 99880.0,
+      "remarks": "FUND DEPOSIT (SUB A/C)",
+      "year": 2008
+    },
+    {
+      "date": "2009-05-21",
+      "type": "入金",
+      "amount": 100000.0,
+      "remarks": "FUND DEPOSIT (SUB A/C)",
+      "year": 2009
+    },
+    {
+      "date": "2009-07-17",
+      "type": "入金",
+      "amount": 339635.46,
+      "remarks": "FUND DEPOSIT (SUB A/C)",
+      "year": 2009
+    },
+    {
+      "date": "2009-09-07",
+      "type": "入金",
+      "amount": 339495.0,
+      "remarks": "FUND DEPOSIT (SUB A/C)",
+      "year": 2009
+    },
+    {
+      "date": "2009-09-10",
+      "type": "规费扣除",
+      "amount": 30.0,
+      "remarks": "0.50% NOM. FEE #1688 FOR              7,500 UNIT ALIBABA(01688)",
+      "year": 2009
+    },
+    {
+      "date": "2009-09-10",
+      "type": "规费扣除",
+      "amount": 30.0,
+      "remarks": "SCRIP FEE #1688 FOR 7,500 UNIT        ALIBABA(01688)",
+      "year": 2009
+    },
+    {
+      "date": "2009-09-23",
+      "type": "规费扣除",
+      "amount": 642.0,
+      "remarks": "SCRIP FEE #2349 FOR 1,284,000 UNIT    1,284,000 UNIT CH BOTANIC DEV(02349)",
+      "year": 2009
+    },
+    {
+      "date": "2009-10-05",
+      "type": "规费扣除",
+      "amount": 3210.0,
+      "remarks": "HANDLING CHG #44043",
+      "year": 2009
+    },
+    {
+      "date": "2009-12-03",
+      "type": "规费扣除",
+      "amount": 30.0,
+      "remarks": "0.50% NOM. FEE #992 FOR               44,000 UNIT LENOVO GROUP(00992)",
+      "year": 2009
+    },
+    {
+      "date": "2009-12-03",
+      "type": "规费扣除",
+      "amount": 44.0,
+      "remarks": "SCRIP FEE #992 FOR 44,000 UNIT        LENOVO GROUP(00992)",
+      "year": 2009
+    },
+    {
+      "date": "2011-02-01",
+      "type": "规费扣除",
+      "amount": 30.0,
+      "remarks": "Scrip Charge <HKEX 01688 ALIBABA>",
+      "year": 2011
+    },
+    {
+      "date": "2012-06-29",
+      "type": "规费扣除",
+      "amount": 1923.75,
+      "remarks": "Handling Charge <HKEX 01688 ALIBABA>",
+      "year": 2012
+    },
+    {
+      "date": "2012-06-29",
+      "type": "规费扣除",
+      "amount": 45.6,
+      "remarks": "CA FEE #1688 (PRIVATISATION)",
+      "year": 2012
+    },
+    {
+      "date": "2013-07-29",
+      "type": "规费扣除",
+      "amount": 30.0,
+      "remarks": "Handling Charge <HKEX 00992 LENOVO GROUP>",
+      "year": 2013
+    },
+    {
+      "date": "2013-07-29",
+      "type": "规费扣除",
+      "amount": 4.0,
+      "remarks": "Scrip Charge <HKEX 00992 LENOVO GROUP>",
+      "year": 2013
+    },
+    {
+      "date": "2014-05-16",
+      "type": "出金",
+      "amount": 1360000.0,
+      "remarks": "CHEQUE WITHDRAWAL Payment Cheque# 044908",
+      "year": 2014
+    },
+    {
+      "date": "2014-07-11",
+      "type": "规费扣除",
+      "amount": 30.0,
+      "remarks": "Handling Charge <HKEX 00175 GEELY AUTO>",
+      "year": 2014
+    },
+    {
+      "date": "2014-07-11",
+      "type": "规费扣除",
+      "amount": 4.0,
+      "remarks": "Scrip Charge <HKEX 00175 GEELY AUTO>",
+      "year": 2014
+    },
+    {
+      "date": "2015-01-09",
+      "type": "规费扣除",
+      "amount": 50.0,
+      "remarks": "Scrip Charge <HKEX 02331 LI NING>",
+      "year": 2015
+    },
+    {
+      "date": "2016-09-09",
+      "type": "入金",
+      "amount": 380000.0,
+      "remarks": "TRANSFER DEPOSIT CMB",
+      "year": 2016
+    },
+    {
+      "date": "2016-09-13",
+      "type": "入金",
+      "amount": 288000.0,
+      "remarks": "TRANSFER DEPOSIT CMB",
+      "year": 2016
+    },
+    {
+      "date": "2016-09-13",
+      "type": "入金",
+      "amount": 100000.0,
+      "remarks": "TRANSFER DEPOSIT CMB",
+      "year": 2016
+    },
+    {
+      "date": "2017-07-13",
+      "type": "规费扣除",
+      "amount": 55.88,
+      "remarks": "Handling Charge <HKEX 03396 LEGENDHOLDING>",
+      "year": 2017
+    },
+    {
+      "date": "2017-07-13",
+      "type": "规费扣除",
+      "amount": 894.0,
+      "remarks": "Scrip Charge <HKEX 03396 LEGENDHOLDING>",
+      "year": 2017
+    },
+    {
+      "date": "2018-07-16",
+      "type": "规费扣除",
+      "amount": 66.42,
+      "remarks": "Handling Charge <HKEX 03396 LEGENDHOLDING>",
+      "year": 2018
+    },
+    {
+      "date": "2019-05-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2019
+    },
+    {
+      "date": "2019-06-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2019
+    },
+    {
+      "date": "2019-07-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2019
+    },
+    {
+      "date": "2019-07-15",
+      "type": "规费扣除",
+      "amount": 68.59,
+      "remarks": "Handling Charge <HKEX 03396 LEGENDHOLDING>",
+      "year": 2019
+    },
+    {
+      "date": "2019-08-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2019
+    },
+    {
+      "date": "2019-09-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2019
+    },
+    {
+      "date": "2019-10-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2019
+    },
+    {
+      "date": "2019-11-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2019
+    },
+    {
+      "date": "2019-12-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2019
+    },
+    {
+      "date": "2020-01-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2020-02-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2020-03-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2020-04-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2020-05-04",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2020-06-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2020-07-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2020-07-15",
+      "type": "规费扣除",
+      "amount": 72.71,
+      "remarks": "Handling Charge <HKEX 03396 LEGENDHOLDING>",
+      "year": 2020
+    },
+    {
+      "date": "2020-08-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2020-09-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2020-10-05",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2020-11-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2020-12-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2020
+    },
+    {
+      "date": "2021-01-04",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2021-02-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2021-03-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2021-04-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2021-05-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2021-06-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2021-07-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2021-07-15",
+      "type": "规费扣除",
+      "amount": 87.82,
+      "remarks": "Handling Charge <HKEX 03396 LEGENDHOLDING>",
+      "year": 2021
+    },
+    {
+      "date": "2021-08-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2021-09-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2021-10-04",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2021-11-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2021-12-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2021
+    },
+    {
+      "date": "2022-01-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2022-02-04",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2022-03-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2022-04-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2022-05-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2022-06-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2022-07-04",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2022-08-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2022-08-30",
+      "type": "规费扣除",
+      "amount": 94.28,
+      "remarks": "Handling Charge <HKEX 03396 LEGENDHOLDING>",
+      "year": 2022
+    },
+    {
+      "date": "2022-09-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2022-10-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2022-11-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2022-12-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2022
+    },
+    {
+      "date": "2023-01-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2023-02-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2023-03-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2023-04-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2023-05-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2023-06-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2023-07-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2023-08-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2023-08-30",
+      "type": "规费扣除",
+      "amount": 43.73,
+      "remarks": "Handling Charge <HKEX 03396 LEGENDHOLDING>",
+      "year": 2023
+    },
+    {
+      "date": "2023-09-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2023-10-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2023-11-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2023-12-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2023
+    },
+    {
+      "date": "2024-01-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2024-02-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2024-03-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2024-04-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2024-05-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2024-06-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2024-07-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2024-08-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2024-09-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2024-10-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2024-11-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2024-12-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2024
+    },
+    {
+      "date": "2025-01-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2025-02-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2025-03-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2025-04-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2025-05-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2025-06-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2025-07-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2025-08-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2025-09-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2025-10-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2025-11-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2025-12-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2025
+    },
+    {
+      "date": "2026-01-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2026
+    },
+    {
+      "date": "2026-02-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2026
+    },
+    {
+      "date": "2026-03-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2026
+    },
+    {
+      "date": "2026-04-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2026
+    },
+    {
+      "date": "2026-05-04",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2026
+    },
+    {
+      "date": "2026-06-01",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2026
+    },
+    {
+      "date": "2026-07-02",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2026
+    },
+    {
+      "date": "2026-08-03",
+      "type": "规费扣除",
+      "amount": 20.0,
+      "remarks": "Mailing client statement services charges",
+      "year": 2026
+    }
+  ]
+}

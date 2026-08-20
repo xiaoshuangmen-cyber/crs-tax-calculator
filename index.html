@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRS 涉税资产与证券交易盈亏智能核算系统 - 证券投资顾问专业版</title>
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      /* 金融涨跌配色：中文习惯红涨绿跌 (SYSTEM_DESIGN_RULES.md) */
+      --gain: #e11d48; /* 红涨 */
+      --gain-bg: #fff1f2;
+      --loss: #059669; /* 绿跌 */
+      --loss-bg: #ecfdf5;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background-color: var(--slate-50);
+      color: var(--slate-800);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    .number-font { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-variant-numeric: tabular-nums; }
+    .max-w-7xl { max-width: 1320px; margin: 0 auto; width: 100%; }
+    
+    /* 顶部导航条 */
+    .header {
+      background-color: var(--slate-900);
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--slate-800);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+    .header-content {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+    .logo-area { display: flex; align-items: center; gap: 14px; }
+    .logo-icon {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0284c7, #6366f1);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 20px; font-weight: bold;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+    }
+    .logo-title { font-size: 17px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .badge-web {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      background: rgba(16, 185, 129, 0.2); color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 9999px;
+    }
+    .logo-sub { font-size: 12px; color: var(--slate-400); margin-top: 1px; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 8px 14px; font-size: 13px; font-weight: 600;
+      border-radius: 8px; cursor: pointer; transition: all 0.15s ease;
+      border: 1px solid transparent; text-decoration: none; outline: none;
+      user-select: none;
+    }
+    .btn-upload { background: #1e293b; color: #f8fafc; border-color: #334155; }
+    .btn-upload:hover { background: #334155; color: #fff; }
+    .btn-export { background: #059669; color: #fff; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2); }
+    .btn-export:hover { background: #047857; }
+    .btn-print { background: #1e293b; color: #cbd5e1; border-color: #334155; }
+    .btn-print:hover { background: #334155; color: #fff; }
+    
+    /* 页面容器 */
+    .main-container { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+    .card {
+      background: #fff; border-radius: 16px;
+      border: 1px solid var(--slate-200);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      padding: 20px;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .card.highlight-pulse {
+      animation: pulseHighlight 1.5s ease-out;
+    }
+    @keyframes pulseHighlight {
+      0% { box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.4); border-color: #0284c7; }
+      100% { box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-color: var(--slate-200); }
+    }
+    
+    /* 客户信息栏 */
+    .client-bar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .client-info-group { display: flex; align-items: center; gap: 14px; }
+    .client-avatar {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: var(--slate-100); border: 1px solid var(--slate-200);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700; color: var(--slate-700);
+    }
+    .client-name-row { display: flex; align-items: center; gap: 8px; }
+    .client-name { font-size: 18px; font-weight: 700; color: var(--slate-900); }
+    .tag { font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600; display: inline-block; }
+    .tag-account { background: var(--slate-100); color: var(--slate-600); font-family: monospace; }
+    .tag-ccy { background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
+    
+    /* 控制栏 */
+    .controls-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    .pill-group {
+      background: var(--slate-100); padding: 4px; border-radius: 10px;
+      display: flex; align-items: center; border: 1px solid var(--slate-200);
+    }
+    .pill-btn {
+      padding: 6px 12px; font-size: 12px; font-weight: 600;
+      border-radius: 7px; border: none; background: transparent;
+      color: var(--slate-600); cursor: pointer; transition: all 0.15s ease;
+    }
+    .pill-btn.active {
+      background: #fff; color: var(--slate-900);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .date-picker-box {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--slate-50); border: 1px solid var(--slate-200);
+      padding: 5px 12px; border-radius: 10px; font-size: 12px; color: var(--slate-700);
+    }
+    .date-input {
+      border: 1px solid var(--slate-300); border-radius: 4px;
+      padding: 2px 6px; font-size: 12px; font-family: inherit; color: var(--slate-800);
+      background: #fff;
+    }
+    
+    .year-pills-scroll {
+      display: flex; align-items: center; gap: 8px;
+      overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;
+    }
+    .year-pills-scroll::-webkit-scrollbar { display: none; }
+    .year-pill {
+      padding: 6px 14px; font-size: 12px; font-weight: 600;
+      border-radius: 9999px; border: 1px solid var(--slate-200);
+      background: #fff; color: var(--slate-700); cursor: pointer;
+      white-space: nowrap; transition: all 0.15s ease;
+    }
+    .year-pill:hover { background: var(--slate-100); }
+    .year-pill.active {
+      background: var(--primary); color: #fff; border-color: var(--primary);
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+    }
+    
+    .info-banner {
+      background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 12px;
+      padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;
+      font-size: 12px; color: #0369a1;
+    }
+    
+    /* 4 大卡片 */
+    .stat-grid-4 {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;
+    }
+    .stat-card {
+      background: #fff; border-radius: 16px; padding: 20px;
+      border: 1px solid var(--slate-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      position: relative; transition: transform 0.15s ease, border-color 0.15s ease;
+      cursor: pointer;
+    }
+    .stat-card:hover { border-color: #0284c7; transform: translateY(-2px); }
+    .stat-card-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+    }
+    .stat-title { font-size: 12px; font-weight: 700; color: var(--slate-500); text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-icon-wrap {
+      width: 34px; height: 34px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .stat-val { font-size: 24px; font-weight: 800; color: var(--slate-900); margin: 4px 0; }
+    .stat-card-footer {
+      margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--slate-100);
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 12px; color: var(--slate-500);
+    }
+    .link-action { color: var(--primary); text-decoration: none; font-weight: 700; cursor: pointer; }
+    .link-action:hover { text-decoration: underline; color: var(--primary-dark); }
+    
+    /* 资金卡片 */
+    .stat-grid-3 {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;
+    }
+    .fund-card {
+      background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;
+      border-radius: 16px; padding: 20px; border: 1px solid #334155;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer;
+    }
+    .fund-card:hover { border-color: #64748b; }
+    .fund-title { font-size: 12px; font-weight: 600; color: var(--slate-400); text-transform: uppercase; }
+    .fund-val { font-size: 22px; font-weight: 800; color: #fff; margin-top: 4px; }
+    .fund-sub { font-size: 11px; color: var(--slate-400); margin-top: 4px; }
+    .fund-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    
+    /* 持仓条 */
+    .active-holding-banner {
+      background: linear-gradient(90deg, #f0f9ff 0%, #e0e7ff 100%);
+      border-bottom: 1px solid #bae6fd; padding: 16px 20px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .simulator-box {
+      display: flex; align-items: center; gap: 12px;
+      background: #fff; padding: 8px 14px; border-radius: 10px;
+      border: 1px solid #bae6fd; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      font-size: 12px;
+    }
+    .price-input {
+      width: 80px; padding: 4px 8px; font-size: 12px; font-weight: 700;
+      border: 1px solid var(--slate-300); border-radius: 6px; outline: none;
+      font-family: inherit;
+    }
+    
+    /* 表格 */
+    .table-wrap { overflow-x: auto; width: 100%; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th {
+      background: var(--slate-100); color: var(--slate-700); font-weight: 700;
+      padding: 11px 14px; border-bottom: 1px solid var(--slate-200); white-space: nowrap !important;
+      font-size: 12px;
+    }
+    td {
+      padding: 10px 14px; border-bottom: 1px solid var(--slate-100);
+      color: var(--slate-700); vertical-align: middle; white-space: nowrap !important;
+    }
+    tr:hover td { background: #f8fafc; }
+    tfoot td { background: var(--slate-50); font-weight: 700; color: var(--slate-900); border-top: 2px solid var(--slate-200); white-space: nowrap !important; }
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    .text-gain { color: var(--gain) !important; font-weight: 700; }
+    .text-loss { color: var(--loss) !important; font-weight: 700; }
+    
+    .tag { font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 600; display: inline-block; white-space: nowrap !important; line-height: 1.3; }
+    .btn-drill {
+      background: #f0f9ff; border: 1px solid #bae6fd; color: #0284c7;
+      padding: 4px 10px; border-radius: 6px; cursor: pointer;
+      font-size: 11px; font-weight: 700; white-space: nowrap !important; display: inline-block;
+      transition: all 0.15s ease;
+    }
+    .btn-drill:hover { background: #0284c7; color: #fff; border-color: #0284c7; }
+    
+    /* 选项卡 */
+    .tabs-header {
+      display: flex; align-items: center; gap: 6px; padding: 10px 16px;
+      background: var(--slate-100); border-bottom: 1px solid var(--slate-200);
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 8px 16px; font-size: 13px; font-weight: 600;
+      border-radius: 8px; border: none; background: transparent;
+      color: var(--slate-600); cursor: pointer; transition: all 0.15s ease;
+      display: flex; align-items: center; gap: 6px; white-space: nowrap;
+    }
+    .tab-btn:hover { background: rgba(255,255,255,0.6); color: var(--slate-900); }
+    .tab-btn.active {
+      background: #fff; color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08); font-weight: 700;
+    }
+    .tab-pane { padding: 20px; display: none; }
+    .tab-pane.active { display: block; }
+    
+    /* 分页控制器 (符合 SYSTEM_DESIGN_RULES.md 规范) */
+    .pagination-bar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 16px; border-top: 1px solid var(--slate-200); background: #fff;
+      font-size: 12px; color: var(--slate-600);
+    }
+    .page-btn {
+      padding: 4px 10px; font-size: 12px; font-weight: 600; border: 1px solid var(--slate-300);
+      border-radius: 6px; background: #fff; color: var(--slate-700); cursor: pointer;
+    }
+    .page-btn:hover:not(:disabled) { background: var(--slate-100); }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .page-size-select {
+      padding: 3px 8px; font-size: 12px; border: 1px solid var(--slate-300);
+      border-radius: 6px; outline: none; background: #fff;
+    }
+    
+    /* 模态框 (Modal) */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center;
+      z-index: 999; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: #fff; border-radius: 20px; max-width: 900px; width: 100%;
+      max-height: 88vh; display: flex; flex-direction: column;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      overflow: hidden; animation: modalIn 0.2s ease-out;
+    }
+    @keyframes modalIn {
+      from { transform: scale(0.96); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-header {
+      padding: 16px 24px; border-bottom: 1px solid var(--slate-200);
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--slate-50);
+    }
+    .modal-close {
+      background: none; border: none; font-size: 20px; cursor: pointer; color: var(--slate-500);
+      padding: 4px 8px; border-radius: 6px;
+    }
+    .modal-close:hover { background: var(--slate-200); color: var(--slate-900); }
+    .modal-body { padding: 20px 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+    
+    /* Toast 浮动提示 */
+    .toast-container {
+      position: fixed; top: 20px; right: 20px; z-index: 99999;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .toast {
+      background: var(--slate-900); color: #fff; padding: 10px 18px;
+      border-radius: 10px; font-size: 13px; font-weight: 600;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+      display: flex; align-items: center; gap: 8px;
+      animation: toastIn 0.25s ease-out;
+    }
+    @keyframes toastIn {
+      from { transform: translateY(-12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    /* 拖拽提示 */
+    .drop-zone-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.85); color: #fff;
+      display: none; align-items: center; justify-content: center;
+      flex-direction: column; gap: 16px; z-index: 9999;
+      font-size: 18px; font-weight: 700;
+    }
+    .drop-zone-overlay.dragover { display: flex; }
+    
+    .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; }
+    .chart-container { height: 260px; position: relative; }
+    
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff !important; }
+      .card { box-shadow: none !important; border: 1px solid #ccc !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toast 容器 -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- 拖拽提示覆盖层 -->
+  <div id="drop-zone-overlay" class="drop-zone-overlay">
+    <div style="font-size: 48px;">📥</div>
+    <div>松开鼠标立即导入并核算该客户流水 Excel / CSV</div>
+    <div style="font-size: 13px; color: #94a3b8;">支持所有券商标准交易与资金往来流水格式</div>
+  </div>
+
+  <!-- 顶部导航栏 -->
+  <header class="header">
+    <div class="max-w-7xl header-content">
+      <div class="logo-area">
+        <div class="logo-icon">税</div>
+        <div>
+          <div class="logo-title">
+            <span>CRS 涉税金融资产与交易盈亏智能核算系统</span>
+            <span class="badge-web">🌐 Web 网站在线版</span>
+          </div>
+          <div class="logo-sub">一键自动生成高净值客户 CRS 税务申报指标与单股盈亏穿透账单</div>
+        </div>
+      </div>
+
+      <div class="header-actions no-print">
+        <a href="C1900_template.csv" download="C1900_标准导入模板_空白.csv" class="btn" style="background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+          <span>📄 下载空白模板 (CSV)</span>
+        </a>
+
+        <label class="btn btn-upload" style="cursor: pointer;">
+          <span>📂 导入 C1900 / Excel</span>
+          <input id="file-upload-input" type="file" accept=".xlsx, .xls, .csv" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="handleFileInput(event)">
+        </label>
+
+        <button onclick="exportToExcel()" class="btn btn-export">
+          <span>📊 导出申报 Excel</span>
+        </button>
+
+        <button onclick="window.print()" class="btn btn-print">
+          <span>🖨️ 打印 / 导出 PDF</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主体内容容器 -->
+  <main class="max-w-7xl main-container">
+
+    <!-- 客户基本信息与控制条 -->
+    <div class="card client-bar">
+      <div class="client-info-group">
+        <div class="client-avatar" id="c-avatar">賈</div>
+        <div>
+          <div class="client-name-row">
+            <span class="client-name" id="c-name">賈海燕</span>
+            <span class="tag tag-account" id="c-account">账号: 1801606</span>
+            <span class="tag tag-ccy" id="c-currency">结算币种: HKD</span>
+          </div>
+          <div style="font-size: 12px; color: var(--slate-500); margin-top: 3px;">
+            📅 流水全周期: <strong id="c-daterange" style="color: var(--slate-700);">2009-03-10 至 2026-07-31</strong>
+            <span style="margin: 0 6px; color: #cbd5e1;">|</span>
+            总流水: <strong id="c-total-rows" style="color: var(--slate-700);">268</strong> 笔记录
+          </div>
+        </div>
+      </div>
+
+      <!-- 计税方法与时间段选择 -->
+      <div class="controls-row no-print">
+        <div class="pill-group">
+          <button id="btn-wac" class="pill-btn active" onclick="setMethod('WAC')">加权平均法 (WAC)</button>
+          <button id="btn-fifo" class="pill-btn" onclick="setMethod('FIFO')">先进先出法 (FIFO)</button>
+        </div>
+
+        <div class="date-picker-box">
+          <span>区间:</span>
+          <input type="date" id="date-start" class="date-input" onchange="onCustomDate()">
+          <span>至</span>
+          <input type="date" id="date-end" class="date-input" onchange="onCustomDate()">
+          <button onclick="resetAllTime()" title="重置" style="border:none; background:none; cursor:pointer; font-size:14px;">🔄</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 年份快捷切换胶囊栏 -->
+    <div class="year-pills-scroll no-print" id="year-pills-box"></div>
+
+    <!-- 当前核算周期提示条 -->
+    <div class="info-banner">
+      <div>
+        ℹ️ 当前核算周期：<strong id="period-display-label" style="color: #0c4a6e;">全部历史（开户以来 2009~2026）</strong>
+        <span style="margin: 0 8px; color: #93c5fd;">|</span>
+        计税成本法：<strong id="method-display-label" style="color: #0c4a6e;">移动加权平均成本法 (WAC)</strong>
+      </div>
+      <div style="font-size: 11px; color: #64748b;">注：全历史买入成本严密结转，确保已实现盈亏绝对精准。</div>
+    </div>
+
+    <!-- 4 大核心涉税指标看板卡片 (点击卡片或右下角直接联动平滑定位) -->
+    <div class="stat-grid-4">
+      <div class="stat-card" onclick="showTabAndScroll('dividends')">
+        <div class="stat-card-header">
+          <span class="stat-title">1. 股息总额 (Dividend Total)</span>
+          <div class="stat-icon-wrap" style="background: #fef3c7; color: #d97706;">🎁</div>
+        </div>
+        <div class="stat-val number-font" id="val-dividend">HK$ 0.00</div>
+        <div class="stat-card-footer">
+          <span>分红笔数: <strong id="cnt-dividend">0</strong> 笔</span>
+          <span class="link-action">查看明细 ↓</span>
+        </div>
+      </div>
+
+      <div class="stat-card" onclick="showTabAndScroll('interest')">
+        <div class="stat-card-header">
+          <span class="stat-title">2. 利息总额 (Interest Total)</span>
+          <div class="stat-icon-wrap" style="background: #dbeafe; color: #2563eb;">📈</div>
+        </div>
+        <div class="stat-val number-font" id="val-interest">HK$ 0.00</div>
+        <div class="stat-card-footer">
+          <span>结息笔数: <strong id="cnt-interest">0</strong> 笔</span>
+          <span class="link-action">查看明细 ↓</span>
+        </div>
+      </div>
+
+      <div class="stat-card" onclick="showTabAndScroll('trades')">
+        <div class="stat-card-header">
+          <span class="stat-title">3. 股票已实现盈亏 (Realized P&L)</span>
+          <div class="stat-icon-wrap" id="icon-pnl-wrap" style="background: #fff1f2; color: #e11d48;">💰</div>
+        </div>
+        <div class="stat-val number-font" id="val-pnl" style="color: #e11d48;">HK$ 0.00</div>
+        <div class="stat-card-footer">
+          <span>卖出交易: <strong id="cnt-pnl">0</strong> 笔</span>
+          <span class="link-action">盈亏推演 ↓</span>
+        </div>
+      </div>
+
+      <div class="stat-card" onclick="scrollToElement('pane-stocks')">
+        <div class="stat-card-header">
+          <span class="stat-title">4. 出售金融资产总额 (Gross Proceeds)</span>
+          <div class="stat-icon-wrap" style="background: #e0e7ff; color: #4f46e5;">🏷️</div>
+        </div>
+        <div class="stat-val number-font" id="val-sales">HK$ 0.00</div>
+        <div class="stat-card-footer">
+          <span>涉及股票: <strong id="cnt-sales-stocks">0</strong> 只</span>
+          <span class="link-action">股票全景 ↓</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 投顾资金流转看板 -->
+    <div class="stat-grid-3">
+      <div class="fund-card" onclick="showTabAndScroll('cash')">
+        <div>
+          <div class="fund-title">📥 期间 / 累计入金 (Deposits)</div>
+          <div class="fund-val number-font" id="val-deposit">HK$ 0.00</div>
+          <div class="fund-sub">开户累计: <span id="val-deposit-all" style="color: #e2e8f0; font-weight: 600;">HK$ 0.00</span></div>
+        </div>
+        <div class="fund-icon">💳</div>
+      </div>
+
+      <div class="fund-card" onclick="showTabAndScroll('cash')">
+        <div>
+          <div class="fund-title">📤 期间 / 累计出金 (Withdrawals)</div>
+          <div class="fund-val number-font" id="val-withdraw">HK$ 0.00</div>
+          <div class="fund-sub">开户累计: <span id="val-withdraw-all" style="color: #e2e8f0; font-weight: 600;">HK$ 0.00</span></div>
+        </div>
+        <div class="fund-icon">💸</div>
+      </div>
+
+      <div class="fund-card" onclick="showTabAndScroll('cash')">
+        <div>
+          <div class="fund-title">⚖️ 资金净提取 / 流向 (Net Outflow)</div>
+          <div class="fund-val number-font" id="val-net-deposit">HK$ 0.00</div>
+          <div class="fund-sub">开户净提现: <span id="val-net-deposit-all" style="color: #e2e8f0; font-weight: 600;">HK$ 0.00</span></div>
+        </div>
+        <div class="fund-icon">🏦</div>
+      </div>
+    </div>
+
+    <!-- 单只股票全景盈亏透视 -->
+    <div class="card" style="padding: 0; overflow: hidden;" id="pane-stocks">
+      <div style="padding: 16px 20px; border-bottom: 1px solid var(--slate-200); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;">
+        <div>
+          <h2 style="font-size: 15px; font-weight: 700; color: var(--slate-900); display: flex; align-items: center; gap: 8px;">
+            <span>📊 单只股票全景盈亏与持仓透视</span>
+            <span style="font-size: 12px; font-weight: normal; color: var(--slate-500);">(点击股票可弹窗穿透查看独立流水)</span>
+          </h2>
+          <div style="font-size: 12px; color: var(--slate-500); margin-top: 2px;">精准追踪每只股票的历史买入总额、卖出总额、已实现盈亏、累计分红及当前持仓计税均价</div>
+        </div>
+
+        <div class="pill-group no-print">
+          <button id="filter-stock-all" class="pill-btn active" onclick="filterStockTable('all')">全部 (12)</button>
+          <button id="filter-stock-holding" class="pill-btn" onclick="filterStockTable('holding')">持仓中 (1)</button>
+          <button id="filter-stock-closed" class="pill-btn" onclick="filterStockTable('closed')">已清仓 (11)</button>
+        </div>
+      </div>
+
+
+
+      <div id="holding-summary-bar" style="background: #f8fafc; padding: 10px 20px; border-bottom: 1px solid var(--slate-200); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span>📦 持仓股票总成本: <strong id="val-hold-cost" class="number-font" style="color: var(--slate-800);">HK$ 0.00</strong></span>
+          <span>📈 最新总市值: <strong id="val-hold-market" class="number-font" style="color: var(--slate-900);">HK$ 0.00</strong></span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span>🔥 未实现总盈亏 (浮动盈亏):</span>
+          <strong id="val-hold-unrealized" class="number-font text-gain" style="font-size: 14px;">+HK$ 0.00 (+0.00%)</strong>
+          <span style="font-size: 11px; color: var(--slate-500);">(在下方可直接输入最新价测算)</span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>股票代码/名称</th>
+              <th style="text-align: center; min-width: 75px;">状态</th>
+              <th class="text-right">累计买入金额</th>
+              <th class="text-right">累计卖出金额</th>
+              <th class="text-right">已实现盈亏</th>
+              <th class="text-right">持仓股数</th>
+              <th class="text-right">成本均价</th>
+              <th class="text-right" style="min-width: 110px;">最新市价 (可修改)</th>
+              <th class="text-right">持仓总市值</th>
+              <th class="text-right" style="min-width: 100px;">未实现盈亏 (浮动)</th>
+              <th class="text-center no-print" style="min-width: 90px;">穿透明细</th>
+            </tr>
+          </thead>
+          <tbody id="stock-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- 下穿明细选项卡卡片 -->
+    <div class="card" style="padding: 0; overflow: hidden;" id="pane-details">
+      <div class="tabs-header no-print">
+        <button id="tab-btn-yearly" class="tab-btn active" onclick="showTab('yearly')">📑 CRS 历年申报汇总表</button>
+        <button id="tab-btn-trades" class="tab-btn" onclick="showTab('trades')">🔄 股票买卖与盈亏推演 (<span id="tab-badge-trades">169</span>)</button>
+        <button id="tab-btn-dividends" class="tab-btn" onclick="showTab('dividends')">🎁 股息分红明细 (<span id="tab-badge-div">11</span>)</button>
+        <button id="tab-btn-interest" class="tab-btn" onclick="showTab('interest')">📈 利息收益明细 (<span id="tab-badge-int">35</span>)</button>
+        <button id="tab-btn-cash" class="tab-btn" onclick="showTab('cash')">🏦 资金存取流水 (<span id="tab-badge-cash">53</span>)</button>
+      </div>
+
+      <!-- 1. 历年申报表 -->
+      <div id="tab-pane-yearly" class="tab-pane active">
+        <div style="font-size: 12px; color: var(--slate-500); margin-bottom: 10px;">
+          📌 以下表格可直接用于向税务局提供年度 CRS 涉税金融收益申报数据 (单位: HKD)：
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>申报年度</th>
+                <th class="text-right">1. 股息总额 (Dividend)</th>
+                <th class="text-right">2. 利息总额 (Interest)</th>
+                <th class="text-right">3. 股票已实现盈亏 (WAC)</th>
+                <th class="text-right">股票已实现盈亏 (FIFO)</th>
+                <th class="text-right">4. 出售金融资产总额</th>
+                <th class="text-right">当年入金</th>
+                <th class="text-right">当年出金</th>
+                <th class="text-center no-print">操作</th>
+              </tr>
+            </thead>
+            <tbody id="yearly-tbody"></tbody>
+            <tfoot id="yearly-tfoot"></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- 2. 交易推演明细 -->
+      <div id="tab-pane-trades" class="tab-pane">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 12px; color: var(--slate-500);">
+          <span>逐笔交易结转明细（买入含交易规费，卖出净回款扣除结转成本得出已实现盈亏）</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input type="text" id="trade-search-input" placeholder="🔍 搜索代码或名称 (如 189)..." style="padding: 6px 12px; font-size: 12px; border: 1px solid var(--slate-300); border-radius: 6px; width: 200px;" oninput="onTradesSearch()">
+            <button onclick="clearTradesFilter()" class="page-btn">清空筛选</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>交易日期</th>
+                <th>股票代码/名称</th>
+                <th class="text-center">方向</th>
+                <th class="text-right">数量</th>
+                <th class="text-right">均价</th>
+                <th class="text-right">收付总额</th>
+                <th class="text-right">结转成本</th>
+                <th class="text-right">单笔已实现盈亏</th>
+                <th class="text-right">结后持股</th>
+                <th class="text-right">结后成本均价</th>
+              </tr>
+            </thead>
+            <tbody id="trades-tbody"></tbody>
+          </table>
+        </div>
+        <!-- 分页控件 -->
+        <div class="pagination-bar no-print" id="trades-pagination"></div>
+      </div>
+
+      <!-- 3. 股息明细 -->
+      <div id="tab-pane-dividends" class="tab-pane">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>派息日期</th>
+                <th class="text-right">入账股息金额</th>
+                <th>分红备注与代扣税说明</th>
+              </tr>
+            </thead>
+            <tbody id="dividends-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination-bar no-print" id="div-pagination"></div>
+      </div>
+
+      <!-- 4. 利息明细 -->
+      <div id="tab-pane-interest" class="tab-pane">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>结息日期</th>
+                <th class="text-right">利息入账金额</th>
+                <th>备注信息</th>
+              </tr>
+            </thead>
+            <tbody id="interest-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination-bar no-print" id="int-pagination"></div>
+      </div>
+
+      <!-- 5. 资金存取明细 -->
+      <div id="tab-pane-cash" class="tab-pane">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>往来日期</th>
+                <th class="text-center">类型</th>
+                <th class="text-right">金额</th>
+                <th>往来备注说明</th>
+              </tr>
+            </thead>
+            <tbody id="cash-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination-bar no-print" id="cash-pagination"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 单只股票全景穿透模态框 (Modal) -->
+  <div id="stock-modal" class="modal-overlay" onclick="closeStockModalOnOutside(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3 id="m-stock-title" style="font-size: 16px; font-weight: 700; color: var(--slate-900);">股票名称</h3>
+          <div id="m-stock-sub" style="font-size: 12px; color: var(--slate-500); margin-top: 2px;">代码/市场</div>
+        </div>
+        <button class="modal-close" onclick="closeStockModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;" id="m-stats-box"></div>
+        <div style="font-size: 13px; font-weight: 700; color: var(--slate-800); margin-top: 8px;">📑 该股票逐笔买卖与成本结转明细：</div>
+        <div class="table-wrap" style="max-height: 380px; overflow-y: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>交易日期</th>
+                <th class="text-center">业务类型</th>
+                <th class="text-right">数量</th>
+                <th class="text-right">成交单价</th>
+                <th class="text-right">交收金额 (含费用)</th>
+                <th class="text-right">已实现盈亏</th>
+                <th class="text-right">结后持仓</th>
+                <th class="text-right">结后均价</th>
+                <th style="min-width: 120px;">业务说明 / 备注</th>
+              </tr>
+            </thead>
+            <tbody id="m-trades-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="background: #fff; border-top: 1px solid var(--slate-200); padding: 16px 24px; font-size: 12px; color: var(--slate-500); text-align: center;" class="no-print">
+    CRS 涉税金融资产与证券交易盈亏智能核算系统 &copy; 2026 证券投资顾问专用工作台
+  </footer>
+
+  <script src="app.js?v=20260820_v12"></script>
+</body>
+</html>
