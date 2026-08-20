@@ -258,9 +258,10 @@ function recalculate() {
   var pnlSum = costMethod === 'WAC'
     ? sells.reduce(function(acc, cur) { return acc + cur.realized_pnl_wac; }, 0)
     : sells.reduce(function(acc, cur) { return acc + cur.realized_pnl_fifo; }, 0);
-
-  var depSum = cash.filter(function(c) { return c.type === '入金'; }).reduce(function(acc, cur) { return acc + cur.amount; }, 0);
-  var withSum = cash.filter(function(c) { return c.type === '出金'; }).reduce(function(acc, cur) { return acc + cur.amount; }, 0);
+  var depLogs = cash.filter(function(c) { return c.type === '入金'; });
+  var withLogs = cash.filter(function(c) { return c.type === '出金'; });
+  var depSum = depLogs.reduce(function(acc, cur) { return acc + cur.amount; }, 0);
+  var withSum = withLogs.reduce(function(acc, cur) { return acc + cur.amount; }, 0);
 
   document.getElementById('val-dividend').innerText = fmt(divSum);
   document.getElementById('cnt-dividend').innerText = divs.length;
@@ -283,8 +284,10 @@ function recalculate() {
   document.getElementById('val-net-deposit').innerText = fmt(withSum - depSum);
 
   var all = appData.all_time_totals;
-  document.getElementById('val-deposit-all').innerText = fmt(all.deposit_total);
-  document.getElementById('val-withdraw-all').innerText = fmt(all.withdrawal_total);
+  var allWithLogs = appData.cash_logs.filter(function(c) { return c.type === '出金'; });
+  var allDepLogs = appData.cash_logs.filter(function(c) { return c.type === '入金'; });
+  document.getElementById('val-deposit-all').innerText = fmt(all.deposit_total) + ' (' + allDepLogs.length + ' 笔入账)';
+  document.getElementById('val-withdraw-all').innerText = fmt(all.withdrawal_total) + ' (' + allWithLogs.length + ' 笔出金)';
   document.getElementById('val-net-deposit-all').innerText = fmt(all.withdrawal_total - all.deposit_total);
 }
 
@@ -726,11 +729,23 @@ function renderCashTable() {
 
   pageList.forEach(function(c) {
     var isDep = c.type === '入金';
+    var isWith = c.type === '出金';
+    var isChg = c.type === '规费扣除';
+
+    var tagBg = '#f1f5f9', tagColor = '#475569', amtColor = '#334155', sign = '-';
+    if (isDep) {
+      tagBg = '#d1fae5'; tagColor = '#065f46'; amtColor = '#059669'; sign = '+';
+    } else if (isWith) {
+      tagBg = '#ffe4e6'; tagColor = '#be123c'; amtColor = '#e11d48'; sign = '-';
+    } else if (isChg) {
+      tagBg = '#f1f5f9'; tagColor = '#64748b'; amtColor = '#64748b'; sign = '-';
+    }
+
     var tr = document.createElement('tr');
-    tr.innerHTML = '<td style="font-family:monospace;">' + c.date + '</td>' +
-      '<td class="text-center"><span class="tag" style="' + (isDep ? 'background:#d1fae5;color:#065f46;' : 'background:#f1f5f9;color:#334155;') + '">' + c.type + '</span></td>' +
-      '<td class="text-right number-font" style="font-weight:700; ' + (isDep ? 'color:#059669;' : 'color:#334155;') + '">' + (isDep ? '+' : '-') + fmt(c.amount) + '</td>' +
-      '<td>' + c.remarks + '</td>';
+    tr.innerHTML = '<td style="font-family:monospace; font-weight:600;">' + c.date + '</td>' +
+      '<td class="text-center"><span class="tag" style="background:' + tagBg + '; color:' + tagColor + '; font-weight:700;">' + (isWith ? '📤 ' : (isDep ? '📥 ' : '🏷️ ')) + c.type + '</span></td>' +
+      '<td class="text-right number-font" style="font-weight:700; color:' + amtColor + ';">' + sign + fmt(c.amount) + '</td>' +
+      '<td style="color:' + (isWith ? '#9f1239; font-weight:600;' : 'inherit;') + '">' + c.remarks + '</td>';
     tbody.appendChild(tr);
   });
 
