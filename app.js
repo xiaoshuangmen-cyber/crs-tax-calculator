@@ -44,23 +44,90 @@ let divPage = 1, divPageSize = 15;
 let intPage = 1, intPageSize = 15;
 let cashPage = 1, cashPageSize = 15;
 
-// 初始化
-window.addEventListener('DOMContentLoaded', async function() {
+// 初始化：默认以干净清空状态启动
+window.addEventListener('DOMContentLoaded', function() {
+  resetToEmptyState();
+  setupDragAndDrop();
+});
+
+// 清空当前数据回到初始状态
+function resetToEmptyState() {
+  appData = null;
+  window.__lastCleanRecords = null;
+  customPrices = {};
+  initialCosts = {};
+  yearFilter = 'ALL';
+
+  var welcomeCard = document.getElementById('empty-welcome-card');
+  if (welcomeCard) welcomeCard.style.display = 'block';
+
+  // 客户信息清空
+  document.getElementById('c-name').innerText = '等待导入客户流水';
+  document.getElementById('c-avatar').innerText = '📥';
+  document.getElementById('c-account').innerText = '账号: --';
+  document.getElementById('c-currency').innerText = '结算币种: --';
+  document.getElementById('c-daterange').innerText = '请导入流水文件开始核算';
+  document.getElementById('c-total-rows').innerText = '0';
+  document.getElementById('date-start').value = '';
+  document.getElementById('date-end').value = '';
+
+  // 指标卡片归零
+  document.getElementById('val-dividend').innerText = 'HK$ 0.00';
+  document.getElementById('cnt-dividend').innerText = '0';
+  document.getElementById('val-interest').innerText = 'HK$ 0.00';
+  document.getElementById('cnt-interest').innerText = '0';
+  document.getElementById('val-pnl').innerText = 'HK$ 0.00';
+  document.getElementById('val-pnl').className = 'stat-val number-font';
+  document.getElementById('cnt-pnl').innerText = '0';
+  document.getElementById('val-sales').innerText = 'HK$ 0.00';
+  document.getElementById('cnt-sales').innerText = '0';
+
+  // 持仓汇总条归零
+  var elHoldCost = document.getElementById('val-hold-cost');
+  var elHoldMarket = document.getElementById('val-hold-market');
+  var elHoldUn = document.getElementById('val-hold-unrealized');
+  if (elHoldCost) elHoldCost.innerText = 'HK$ 0.00';
+  if (elHoldMarket) elHoldMarket.innerText = 'HK$ 0.00';
+  if (elHoldUn) {
+    elHoldUn.innerText = 'HK$ 0.00 (0.00%)';
+    elHoldUn.className = 'number-font';
+  }
+
+  // 年份胶囊栏清空
+  var box = document.getElementById('year-pills-box');
+  if (box) {
+    box.innerHTML = '<button class="year-pill active">全部开户以来 (All-Time)</button>';
+  }
+
+  // 表格展示空状态行
+  var emptyRow = '<tr><td colspan="12" style="text-align:center; padding:32px 16px; color:#94a3b8; font-size:13px;">📥 暂无数据，请点击上方 <strong>📂 导入 C1900 / Excel</strong> 或直接将文件拖拽至此</td></tr>';
+  var tStock = document.getElementById('stock-tbody'); if (tStock) tStock.innerHTML = emptyRow;
+  var tYearly = document.getElementById('yearly-tbody'); if (tYearly) tYearly.innerHTML = emptyRow;
+  var tTrade = document.getElementById('trades-tbody'); if (tTrade) tTrade.innerHTML = emptyRow;
+  var tDiv = document.getElementById('dividends-tbody'); if (tDiv) tDiv.innerHTML = emptyRow;
+  var tInt = document.getElementById('interest-tbody'); if (tInt) tInt.innerHTML = emptyRow;
+  var tCash = document.getElementById('cash-tbody'); if (tCash) tCash.innerHTML = emptyRow;
+}
+
+// 加载演示 Demo 数据
+async function loadDemoData() {
   try {
     const res = await fetch('calculated_data.json?t=' + new Date().getTime());
     if (res.ok) {
       appData = await res.json();
       initApp();
-      showToast('数据已加载完成！', 'success');
+      showToast('演示数据已成功加载！', 'success');
     }
   } catch (e) {
-    console.log('Local fetch fallback', e);
+    showToast('加载演示数据失败', 'error');
   }
-  setupDragAndDrop();
-});
+}
 
 function initApp() {
   if (!appData) return;
+  var welcomeCard = document.getElementById('empty-welcome-card');
+  if (welcomeCard) welcomeCard.style.display = 'none';
+
   renderClientInfo();
   renderYearPills();
   recalculate();
