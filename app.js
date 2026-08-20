@@ -109,20 +109,6 @@ function resetToEmptyState() {
   var tCash = document.getElementById('cash-tbody'); if (tCash) tCash.innerHTML = emptyRow;
 }
 
-// 加载演示 Demo 数据
-async function loadDemoData() {
-  try {
-    const res = await fetch('calculated_data.json?t=' + new Date().getTime());
-    if (res.ok) {
-      appData = await res.json();
-      initApp();
-      showToast('演示数据已成功加载！', 'success');
-    }
-  } catch (e) {
-    showToast('加载演示数据失败', 'error');
-  }
-}
-
 function initApp() {
   if (!appData) return;
   var welcomeCard = document.getElementById('empty-welcome-card');

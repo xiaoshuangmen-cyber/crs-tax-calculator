@@ -7,3 +7,11 @@ server.py
 tax_calculator.py
 _temp_uploaded.*
 *.log
+
+# 严格排除客户数据文件
+calculated_data.json
+C1900.csv
+C1900(*).csv
+*.xlsx
+*.xls
+!C1900_template.csv

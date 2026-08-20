@@ -3,3 +3,11 @@ __pycache__/
 _temp_uploaded.*
 *.log
 .DS_Store
+
+# 严格屏蔽真实客户流水数据与计算缓存，确保零隐私泄露
+calculated_data.json
+C1900.csv
+C1900(*).csv
+*.xlsx
+*.xls
+!C1900_template.csv
