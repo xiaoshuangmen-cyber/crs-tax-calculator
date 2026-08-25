@@ -509,17 +509,17 @@
     <!-- 客户基本信息与控制条 -->
     <div class="card client-bar">
       <div class="client-info-group">
-        <div class="client-avatar" id="c-avatar">賈</div>
+        <div class="client-avatar" id="c-avatar">📥</div>
         <div>
           <div class="client-name-row">
-            <span class="client-name" id="c-name">賈海燕</span>
-            <span class="tag tag-account" id="c-account">账号: 1801606</span>
-            <span class="tag tag-ccy" id="c-currency">结算币种: HKD</span>
+            <span class="client-name" id="c-name">等待导入客户流水</span>
+            <span class="tag tag-account" id="c-account">账号: --</span>
+            <span class="tag tag-ccy" id="c-currency">结算币种: --</span>
           </div>
           <div style="font-size: 12px; color: var(--slate-500); margin-top: 3px;">
-            📅 流水全周期: <strong id="c-daterange" style="color: var(--slate-700);">2009-03-10 至 2026-07-31</strong>
+            📅 流水全周期: <strong id="c-daterange" style="color: var(--slate-700);">请导入流水文件开始核算</strong>
             <span style="margin: 0 6px; color: #cbd5e1;">|</span>
-            总流水: <strong id="c-total-rows" style="color: var(--slate-700);">268</strong> 笔记录
+            总流水: <strong id="c-total-rows" style="color: var(--slate-700);">0</strong> 笔记录
           </div>
         </div>
       </div>
@@ -542,12 +542,14 @@
     </div>
 
     <!-- 年份快捷切换胶囊栏 -->
-    <div class="year-pills-scroll no-print" id="year-pills-box"></div>
+    <div class="year-pills-scroll no-print" id="year-pills-box">
+      <button class="year-pill active">全部开户以来 (All-Time)</button>
+    </div>
 
     <!-- 当前核算周期提示条 -->
     <div class="info-banner">
       <div>
-        ℹ️ 当前核算周期：<strong id="period-display-label" style="color: #0c4a6e;">全部历史（开户以来 2009~2026）</strong>
+        ℹ️ 当前核算周期：<strong id="period-display-label" style="color: #0c4a6e;">全部历史（开户以来）</strong>
         <span style="margin: 0 8px; color: #93c5fd;">|</span>
         持仓成本法：<strong id="method-display-label" style="color: #0c4a6e;">富途摊薄成本法 (Diluted Cost / 保本价)</strong>
       </div>
@@ -629,13 +631,13 @@
         <div>
           <div class="fund-title">⚖️ 资金净提取 / 流向 (Net Outflow)</div>
           <div class="fund-val number-font" id="val-net-deposit">HK$ 0.00</div>
-          <div class="fund-sub">开户净提现: <span id="val-net-deposit-all" style="color: #e2e8f0; font-weight: 600;">HK$ 0.00</span></div>
+          <div class="fund-sub">开户累计: <span id="val-net-deposit-all" style="color: #e2e8f0; font-weight: 600;">HK$ 0.00</span></div>
         </div>
-        <div class="fund-icon">🏦</div>
+        <div class="fund-icon">⚖️</div>
       </div>
     </div>
 
-    <!-- 单只股票全景盈亏透视 -->
+    <!-- 单只股票全景透视卡片 -->
     <div class="card" style="padding: 0; overflow: hidden;" id="pane-stocks">
       <div style="padding: 16px 20px; border-bottom: 1px solid var(--slate-200); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;">
         <div>
@@ -647,13 +649,11 @@
         </div>
 
         <div class="pill-group no-print">
-          <button id="filter-stock-all" class="pill-btn active" onclick="filterStockTable('all')">全部 (12)</button>
-          <button id="filter-stock-holding" class="pill-btn" onclick="filterStockTable('holding')">持仓中 (1)</button>
-          <button id="filter-stock-closed" class="pill-btn" onclick="filterStockTable('closed')">已清仓 (11)</button>
+          <button id="filter-stock-all" class="pill-btn active" onclick="filterStockTable('all')">全部 (0)</button>
+          <button id="filter-stock-holding" class="pill-btn" onclick="filterStockTable('holding')">持仓中 (0)</button>
+          <button id="filter-stock-closed" class="pill-btn" onclick="filterStockTable('closed')">已清仓 (0)</button>
         </div>
       </div>
-
-
 
       <div id="holding-summary-bar" style="background: #f8fafc; padding: 10px 20px; border-bottom: 1px solid var(--slate-200); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px;">
         <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px;">
@@ -695,15 +695,14 @@
       </div>
     </div>
 
-
     <!-- 下穿明细选项卡卡片 -->
     <div class="card" style="padding: 0; overflow: hidden;" id="pane-details">
       <div class="tabs-header no-print">
         <button id="tab-btn-yearly" class="tab-btn active" onclick="showTab('yearly')">📑 CRS 历年申报汇总表</button>
-        <button id="tab-btn-trades" class="tab-btn" onclick="showTab('trades')">🔄 股票买卖与盈亏推演 (<span id="tab-badge-trades">169</span>)</button>
-        <button id="tab-btn-dividends" class="tab-btn" onclick="showTab('dividends')">🎁 股息分红明细 (<span id="tab-badge-div">11</span>)</button>
-        <button id="tab-btn-interest" class="tab-btn" onclick="showTab('interest')">📈 利息收益明细 (<span id="tab-badge-int">35</span>)</button>
-        <button id="tab-btn-cash" class="tab-btn" onclick="showTab('cash')">🏦 资金存取流水 (<span id="tab-badge-cash">8</span>)</button>
+        <button id="tab-btn-trades" class="tab-btn" onclick="showTab('trades')">🔄 股票买卖与盈亏推演 (<span id="tab-badge-trades">0</span>)</button>
+        <button id="tab-btn-dividends" class="tab-btn" onclick="showTab('dividends')">🎁 股息分红明细 (<span id="tab-badge-div">0</span>)</button>
+        <button id="tab-btn-interest" class="tab-btn" onclick="showTab('interest')">📈 利息收益明细 (<span id="tab-badge-int">0</span>)</button>
+        <button id="tab-btn-cash" class="tab-btn" onclick="showTab('cash')">🏦 资金存取流水 (<span id="tab-badge-cash">0</span>)</button>
         <button id="tab-btn-charges" class="tab-btn" onclick="showTab('charges')">🏷️ 其他资金规费明细 (<span id="tab-badge-charges">0</span>)</button>
       </div>
 
@@ -883,6 +882,6 @@
     CRS 涉税金融资产与证券交易盈亏智能核算系统 &copy; 2026 证券投资顾问专用工作台
   </footer>
 
-  <script src="app.js?v=20260825_v21"></script>
+  <script src="app.js?v=20260825_v22"></script>
 </body>
 </html>

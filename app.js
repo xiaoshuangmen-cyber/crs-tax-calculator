@@ -107,6 +107,13 @@ function resetToEmptyState() {
     elHoldUn.className = 'number-font';
   }
 
+  // 股票筛选胶囊重置归零
+  var btnAll = document.getElementById('filter-stock-all'); if (btnAll) btnAll.innerText = '全部 (0)';
+  var btnHold = document.getElementById('filter-stock-holding'); if (btnHold) btnHold.innerText = '持仓中 (0)';
+  var btnClosed = document.getElementById('filter-stock-closed'); if (btnClosed) btnClosed.innerText = '已清仓 (0)';
+  var cntSalesStocks = document.getElementById('cnt-sales-stocks'); if (cntSalesStocks) cntSalesStocks.innerText = '0';
+  var pLabel = document.getElementById('period-display-label'); if (pLabel) pLabel.innerText = '全部历史（开户以来）';
+
   // 徽标数字归零
   var bTrades = document.getElementById('tab-badge-trades'); if (bTrades) bTrades.innerText = '0';
   var bDiv = document.getElementById('tab-badge-div'); if (bDiv) bDiv.innerText = '0';
