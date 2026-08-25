@@ -23,6 +23,7 @@ ALIAS_MAP = {
     'qty': ['qty', 'quantity', 'shares', '数量', '成交数量', '股数'],
     'price': ['average_price', 'avg_price', 'price', '平均价', '成交均价', '成交价', '单价'],
     'ccy': ['ccy', 'currency', '币种', '结算币种', '货币'],
+    'fx_rate': ['fx_rate', 'last_rate', 'exchange_rate', 'rate', '汇率', '参考汇率'],
     'deduct_amount': ['dr_amount', 'debit_amount', 'deduct_amount', 'deduct', '扣除金额', '支出金额', '借方金额', '扣款金额'],
     'deposit_amount': ['cr_amount', 'credit_amount', 'deposit_amount', 'deposit', '存入金额', '收入金额', '贷方金额', '收款金额']
 }
@@ -101,6 +102,41 @@ def process_raw_rows(raw_rows):
         raw_code = str(get_field(d, 'code')).strip()
         name = str(d.get('product_name') or get_field(d, 'name')).strip()
 
+        ccy = str(get_field(d, 'ccy', 'HKD')).strip().upper() or 'HKD'
+        fx_rate_raw = get_field(d, 'fx_rate', '')
+        fx_rate = 1.0
+        if fx_rate_raw:
+            try:
+                fx_rate = float(fx_rate_raw)
+            except (ValueError, TypeError):
+                fx_rate = 1.0
+
+        if fx_rate <= 0 or fx_rate == 1.0:
+            if ccy == 'USD':
+                fx_rate = 7.8300
+            elif ccy in ['CNY', 'RMB']:
+                fx_rate = 1.1650
+            elif ccy == 'EUR':
+                fx_rate = 9.1500
+            elif ccy == 'GBP':
+                fx_rate = 10.6500
+            else:
+                fx_rate = 1.0
+
+        raw_dr = float(get_field(d, 'deduct_amount') or 0)
+        raw_cr = float(get_field(d, 'deposit_amount') or 0)
+        raw_price = float(get_field(d, 'price') or 0)
+
+        # 非港币换算为 HKD
+        dr_amount = round(raw_dr * fx_rate, 4) if ccy != 'HKD' else raw_dr
+        cr_amount = round(raw_cr * fx_rate, 4) if ccy != 'HKD' else raw_cr
+        avg_price = round(raw_price * fx_rate, 6) if ccy != 'HKD' else raw_price
+
+        remarks = str(get_field(d, 'remarks')).strip()
+        if ccy != 'HKD':
+            orig_amt = raw_cr if raw_cr > 0 else raw_dr
+            remarks += f" [原币: {ccy} {orig_amt:,.2f} @ {fx_rate}]"
+
         item = {
             'account_no': str(get_field(d, 'account_no')).strip(),
             'client_name': str(get_field(d, 'client_name')).strip(),
@@ -112,12 +148,13 @@ def process_raw_rows(raw_rows):
             'market': str(get_field(d, 'market', 'HKEX')).strip(),
             'code': raw_code,
             'name': name,
-            'remarks': str(get_field(d, 'remarks')).strip(),
+            'remarks': remarks,
             'qty': float(get_field(d, 'qty') or 0),
-            'avg_price': float(get_field(d, 'price') or 0),
-            'ccy': str(get_field(d, 'ccy', 'HKD')).strip() or 'HKD',
-            'deduct_amount': float(get_field(d, 'deduct_amount') or 0),
-            'deposit_amount': float(get_field(d, 'deposit_amount') or 0)
+            'avg_price': avg_price,
+            'ccy': ccy,
+            'fx_rate': fx_rate,
+            'deduct_amount': dr_amount,
+            'deposit_amount': cr_amount
         }
         clean_data.append(item)
 

@@ -128,6 +128,72 @@ def fetch_tencent_quotes(stock_items):
         
     return results
 
+def fetch_tencent_fx_rates():
+    """
+    从腾讯财经外汇行情源抓取实时外币兑港币 (HKD) 汇率
+    """
+    default_rates = {
+        'HKD': 1.0,
+        'USD': 7.8300,
+        'CNY': 1.1650,
+        'RMB': 1.1650,
+        'EUR': 9.1500,
+        'GBP': 10.6500,
+        'JPY': 0.0492,
+        'CAD': 5.6600,
+        'AUD': 5.6000
+    }
+    
+    url = "https://qt.gtimg.cn/q=whUSDHKD,whHKDCNY,whEURHKD,whGBPHKD,whJPYHKD,whCADHKD,whAUDHKD"
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
+    
+    rates = dict(default_rates)
+    update_time = ''
+    try:
+        with urllib.request.urlopen(req, timeout=5) as response:
+            content = response.read().decode('gbk', errors='ignore')
+            for line in content.strip().split(';'):
+                line = line.strip()
+                if not line or '=' not in line:
+                    continue
+                var_name, data = line.split('=', 1)
+                data = data.strip().strip('"')
+                parts = data.split('~')
+                if len(parts) > 3:
+                    sym = var_name.replace('v_', '').strip()
+                    try:
+                        val = float(parts[3]) if parts[3] else 0.0
+                    except ValueError:
+                        val = 0.0
+                    if val > 0:
+                        if sym == 'whUSDHKD':
+                            rates['USD'] = round(val, 4)
+                        elif sym == 'whHKDCNY':
+                            cny_rate = round(1.0 / val, 4)
+                            rates['CNY'] = cny_rate
+                            rates['RMB'] = cny_rate
+                        elif sym == 'whEURHKD':
+                            rates['EUR'] = round(val, 4)
+                        elif sym == 'whGBPHKD':
+                            rates['GBP'] = round(val, 4)
+                        elif sym == 'whJPYHKD':
+                            rates['JPY'] = round(val / 100.0, 6)
+                        elif sym == 'whCADHKD':
+                            rates['CAD'] = round(val, 4)
+                        elif sym == 'whAUDHKD':
+                            rates['AUD'] = round(val, 4)
+                    if len(parts) > 21 and parts[21]:
+                        update_time = parts[21]
+    except Exception as e:
+        print(f"Error fetching fx rates from Tencent: {e}")
+        
+    return {
+        'base': 'HKD',
+        'rates': rates,
+        'update_time': update_time,
+        'source': 'Tencent Finance FX'
+    }
+
 class handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(204)
@@ -142,11 +208,12 @@ class handler(BaseHTTPRequestHandler):
         symbols_raw = params.get('symbols', [''])[0]
         symbols = [s.strip() for s in symbols_raw.split(',') if s.strip()]
         quotes = fetch_tencent_quotes(symbols)
+        fx_data = fetch_tencent_fx_rates()
         self.send_response(200)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
-        self.wfile.write(json.dumps({'quotes': quotes, 'status': 'success'}, ensure_ascii=False).encode('utf-8'))
+        self.wfile.write(json.dumps({'quotes': quotes, 'rates': fx_data.get('rates', {}), 'fx_info': fx_data, 'status': 'success'}, ensure_ascii=False).encode('utf-8'))
 
     def do_POST(self):
         try:
@@ -155,11 +222,12 @@ class handler(BaseHTTPRequestHandler):
             payload = json.loads(body.decode('utf-8')) if body else {}
             stocks = payload.get('stocks', payload.get('symbols', []))
             quotes = fetch_tencent_quotes(stocks)
+            fx_data = fetch_tencent_fx_rates()
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
-            self.wfile.write(json.dumps({'quotes': quotes, 'status': 'success'}, ensure_ascii=False).encode('utf-8'))
+            self.wfile.write(json.dumps({'quotes': quotes, 'rates': fx_data.get('rates', {}), 'fx_info': fx_data, 'status': 'success'}, ensure_ascii=False).encode('utf-8'))
         except Exception as e:
             self.send_response(500)
             self.send_header('Content-Type', 'application/json; charset=utf-8')

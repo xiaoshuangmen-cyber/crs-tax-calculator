@@ -140,6 +140,79 @@ def fetch_tencent_quotes(stock_items):
         
     return results
 
+def fetch_tencent_fx_rates():
+    """
+    从腾讯财经外汇行情源抓取实时外币兑港币 (HKD) 汇率
+    whUSDHKD: 美元兑港币 (如 7.8371)
+    whHKDCNY: 港币兑人民币 (如 0.8569 -> 1 CNY = 1/0.8569 ≈ 1.1670 HKD)
+    whEURHKD: 欧元兑港币 (如 9.1487)
+    whGBPHKD: 英镑兑港币 (如 10.6899)
+    whJPYHKD: 百日元兑港币 (如 4.9212 -> 1 JPY ≈ 0.0492 HKD)
+    whCADHKD: 加元兑港币 (如 5.6658)
+    whAUDHKD: 澳元兑港币 (如 5.6089)
+    """
+    default_rates = {
+        'HKD': 1.0,
+        'USD': 7.8300,
+        'CNY': 1.1650,
+        'RMB': 1.1650,
+        'EUR': 9.1500,
+        'GBP': 10.6500,
+        'JPY': 0.0492,
+        'CAD': 5.6600,
+        'AUD': 5.6000
+    }
+    
+    url = "https://qt.gtimg.cn/q=whUSDHKD,whHKDCNY,whEURHKD,whGBPHKD,whJPYHKD,whCADHKD,whAUDHKD"
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
+    
+    rates = dict(default_rates)
+    update_time = ''
+    try:
+        with urllib.request.urlopen(req, timeout=5) as response:
+            content = response.read().decode('gbk', errors='ignore')
+            for line in content.strip().split(';'):
+                line = line.strip()
+                if not line or '=' not in line:
+                    continue
+                var_name, data = line.split('=', 1)
+                data = data.strip().strip('"')
+                parts = data.split('~')
+                if len(parts) > 3:
+                    sym = var_name.replace('v_', '').strip()
+                    try:
+                        val = float(parts[3]) if parts[3] else 0.0
+                    except ValueError:
+                        val = 0.0
+                    if val > 0:
+                        if sym == 'whUSDHKD':
+                            rates['USD'] = round(val, 4)
+                        elif sym == 'whHKDCNY':
+                            cny_rate = round(1.0 / val, 4)
+                            rates['CNY'] = cny_rate
+                            rates['RMB'] = cny_rate
+                        elif sym == 'whEURHKD':
+                            rates['EUR'] = round(val, 4)
+                        elif sym == 'whGBPHKD':
+                            rates['GBP'] = round(val, 4)
+                        elif sym == 'whJPYHKD':
+                            rates['JPY'] = round(val / 100.0, 6)
+                        elif sym == 'whCADHKD':
+                            rates['CAD'] = round(val, 4)
+                        elif sym == 'whAUDHKD':
+                            rates['AUD'] = round(val, 4)
+                    if len(parts) > 21 and parts[21]:
+                        update_time = parts[21]
+    except Exception as e:
+        print(f"Error fetching fx rates from Tencent: {e}", file=sys.stderr)
+        
+    return {
+        'base': 'HKD',
+        'rates': rates,
+        'update_time': update_time,
+        'source': 'Tencent Finance FX'
+    }
+
 class TaxServiceHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
@@ -160,15 +233,24 @@ class TaxServiceHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
+        if parsed.path == '/api/rates':
+            fx_data = fetch_tencent_fx_rates()
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps(fx_data, ensure_ascii=False).encode('utf-8'))
+            return
+
         if parsed.path == '/api/quotes':
             params = urllib.parse.parse_qs(parsed.query)
             symbols_raw = params.get('symbols', [''])[0]
             symbols = [s.strip() for s in symbols_raw.split(',') if s.strip()]
             quotes = fetch_tencent_quotes(symbols)
+            fx_data = fetch_tencent_fx_rates()
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
-            self.wfile.write(json.dumps({'quotes': quotes, 'status': 'success'}, ensure_ascii=False).encode('utf-8'))
+            self.wfile.write(json.dumps({'quotes': quotes, 'rates': fx_data.get('rates', {}), 'fx_info': fx_data, 'status': 'success'}, ensure_ascii=False).encode('utf-8'))
             return
             
         if self.path == '/api/template' or self.path == '/template/C1900.csv' or self.path == '/C1900_template.csv':
@@ -189,6 +271,14 @@ class TaxServiceHandler(http.server.SimpleHTTPRequestHandler):
         super().do_GET()
 
     def do_POST(self):
+        if self.path == '/api/rates':
+            fx_data = fetch_tencent_fx_rates()
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps(fx_data, ensure_ascii=False).encode('utf-8'))
+            return
+
         if self.path == '/api/quotes':
             try:
                 content_length = int(self.headers.get('Content-Length', 0))
@@ -196,10 +286,11 @@ class TaxServiceHandler(http.server.SimpleHTTPRequestHandler):
                 payload = json.loads(body.decode('utf-8')) if body else {}
                 stocks = payload.get('stocks', payload.get('symbols', []))
                 quotes = fetch_tencent_quotes(stocks)
+                fx_data = fetch_tencent_fx_rates()
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
                 self.end_headers()
-                self.wfile.write(json.dumps({'quotes': quotes, 'status': 'success'}, ensure_ascii=False).encode('utf-8'))
+                self.wfile.write(json.dumps({'quotes': quotes, 'rates': fx_data.get('rates', {}), 'fx_info': fx_data, 'status': 'success'}, ensure_ascii=False).encode('utf-8'))
             except Exception as e:
                 self.send_response(500)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')

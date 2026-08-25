@@ -530,6 +530,10 @@
             <span class="client-name" id="c-name">等待导入客户流水</span>
             <span class="tag tag-account" id="c-account">账号: --</span>
             <span class="tag tag-ccy" id="c-currency">结算币种: --</span>
+            <span class="tag tag-fx no-print" id="c-fx-rates" onclick="openFxModal()" style="cursor: pointer; background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; display: inline-flex; align-items: center; gap: 4px;" title="点击查看或自定义腾讯实时外汇换算汇率">
+              <span>💱 实时汇率: 1 USD ≈ <span id="fx-badge-usd">7.8371</span> HKD</span>
+              <span style="font-size: 10px; opacity: 0.8;">⚙️</span>
+            </span>
           </div>
           <div style="font-size: 12px; color: var(--slate-500); margin-top: 3px;">
             📅 流水全周期: <strong id="c-daterange" style="color: var(--slate-700);">请导入流水文件开始核算</strong>
@@ -1004,10 +1008,67 @@
     </div>
   </div>
 
+  <!-- 汇率换算与设置模态框 (Modal) -->
+  <div id="fx-modal" class="modal-overlay" onclick="closeFxModalOnOutside(event)">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--slate-900);">💱 腾讯外汇实时汇率与多币种折算</h3>
+          <div style="font-size: 12px; color: var(--slate-500); margin-top: 2px;">
+            数据源: 腾讯财经实时外汇 (Tencent Finance FX)
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeFxModal()">✕</button>
+      </div>
+      <div style="padding: 20px;">
+        <div style="font-size: 12px; color: var(--slate-600); margin-bottom: 14px; line-height: 1.6; background: #f8fafc; padding: 10px 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
+          💡 当流水中包含非 HKD 币种（如美股 USD、人民币 CNY/RMB、欧元 EUR 等）时，系统自动按照对应汇率折算为 <strong>HKD</strong> 进行盈亏推演与资产总市值核算。
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--slate-700); margin-bottom: 4px;">美元兑港币 (USD / HKD)：</label>
+            <div style="position: relative; display: flex; align-items: center;">
+              <input id="input-fx-usd" type="number" step="0.0001" min="0" style="width: 100%; padding: 8px 10px; font-size: 14px; font-weight: 700; font-family: monospace; border: 1.5px solid #cbd5e1; border-radius: 6px;">
+            </div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--slate-700); margin-bottom: 4px;">人民币兑港币 (CNY / HKD)：</label>
+            <div style="position: relative; display: flex; align-items: center;">
+              <input id="input-fx-cny" type="number" step="0.0001" min="0" style="width: 100%; padding: 8px 10px; font-size: 14px; font-weight: 700; font-family: monospace; border: 1.5px solid #cbd5e1; border-radius: 6px;">
+            </div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--slate-700); margin-bottom: 4px;">欧元兑港币 (EUR / HKD)：</label>
+            <div style="position: relative; display: flex; align-items: center;">
+              <input id="input-fx-eur" type="number" step="0.0001" min="0" style="width: 100%; padding: 8px 10px; font-size: 14px; font-weight: 700; font-family: monospace; border: 1.5px solid #cbd5e1; border-radius: 6px;">
+            </div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--slate-700); margin-bottom: 4px;">英镑兑港币 (GBP / HKD)：</label>
+            <div style="position: relative; display: flex; align-items: center;">
+              <input id="input-fx-gbp" type="number" step="0.0001" min="0" style="width: 100%; padding: 8px 10px; font-size: 14px; font-weight: 700; font-family: monospace; border: 1.5px solid #cbd5e1; border-radius: 6px;">
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size: 11px; color: var(--slate-400); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+          <span id="fx-modal-update-time">⏱️ 汇率更新时间: --</span>
+          <a href="javascript:void(0)" onclick="fetchLatestRates(true)" style="color: var(--primary); text-decoration: underline; font-weight: 600;">🔄 重新拉取腾讯最新外汇牌价</a>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button class="btn" onclick="closeFxModal()" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;">取消</button>
+          <button class="btn" onclick="saveFxRatesAndRecalculate()" style="background: var(--primary); color: #fff; font-weight: 600;">💾 保存汇率并重新折算核算</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer style="background: #fff; border-top: 1px solid var(--slate-200); padding: 16px 24px; font-size: 12px; color: var(--slate-500); text-align: center;" class="no-print">
     CRS 涉税金融资产与证券交易盈亏智能核算系统 &copy; 2026 证券投资顾问专用工作台
   </footer>
 
-  <script src="app.js?v=20260825_v26"></script>
+  <script src="app.js?v=20260825_v27"></script>
 </body>
 </html>

@@ -11,7 +11,8 @@ const ALIAS_MAP = {
   remarks: ['remark', 'remarks', 'description', '备注', '摘要', '说明'],
   qty: ['qty', 'quantity', 'shares', '数量', '成交数量', '股数'],
   price: ['average_price', 'avg_price', 'price', '平均价', '成交均价', '成交价', '单价'],
-  ccy: ['ccy', 'currency', '币种', '结算币种', '货币'],
+  ccy: ['ccy', 'currency', '币种', '结算币种', '货币', 'trade_ccy', 'exposure_ccy'],
+  fx_rate: ['fx_rate', 'last_rate', 'exchange_rate', 'rate', '汇率', '参考汇率'],
   deduct_amount: ['dr_amount', 'debit_amount', 'deduct_amount', 'deduct', '扣除金额', '支出金额', '借方金额', '扣款金额'],
   deposit_amount: ['cr_amount', 'credit_amount', 'deposit_amount', 'deposit', '存入金额', '收入金额', '贷方金额', '收款金额']
 };
@@ -38,6 +39,21 @@ let costMethod = 'DILUTED'; // 富途证券默认：DILUTED(摊薄成本法/保�
 let yearFilter = 'ALL';
 let stockFilterMode = 'all';
 
+// 全局外汇汇率（基准为折合 HKD 汇率）
+let exchangeRates = {
+  HKD: 1.0,
+  USD: 7.8371,
+  CNY: 1.1670,
+  RMB: 1.1670,
+  EUR: 9.1487,
+  GBP: 10.6899,
+  JPY: 0.0492,
+  CAD: 5.6658,
+  AUD: 5.6089
+};
+let customFxRates = {};
+let fxUpdateTime = '';
+
 // 分页状态
 let tradePage = 1, tradePageSize = 15;
 let divPage = 1, divPageSize = 15;
@@ -49,7 +65,84 @@ let chargesPage = 1, chargesPageSize = 15;
 window.addEventListener('DOMContentLoaded', function() {
   resetToEmptyState();
   setupDragAndDrop();
+  fetchLatestRates(false); // 页面加载时自动异步拉取腾讯外汇牌价
 });
+
+// 拉取腾讯最新外汇牌价
+async function fetchLatestRates(isManual = false) {
+  if (isManual) showToast('正在拉取腾讯财经实时外汇牌价...', 'info');
+  try {
+    var resp = await fetch('/api/rates');
+    if (resp.ok) {
+      var data = await resp.json();
+      if (data && data.rates) {
+        for (var c in data.rates) {
+          if (!customFxRates[c]) {
+            exchangeRates[c] = data.rates[c];
+          }
+        }
+        if (data.update_time) fxUpdateTime = data.update_time;
+        updateFxBadges();
+        if (isManual) showToast('已成功刷新腾讯最新外汇牌价！', 'success');
+      }
+    }
+  } catch (e) {
+    console.log('Fetch FX rates fallback to defaults:', e);
+  }
+}
+
+function updateFxBadges() {
+  var usdRate = customFxRates['USD'] || exchangeRates['USD'] || 7.8371;
+  var bUsd = document.getElementById('fx-badge-usd');
+  if (bUsd) bUsd.innerText = usdRate.toFixed(4);
+  var mTime = document.getElementById('fx-modal-update-time');
+  if (mTime) mTime.innerText = '⏱️ 腾讯外汇牌价时间: ' + (fxUpdateTime || '实时');
+}
+
+function openFxModal() {
+  var modal = document.getElementById('fx-modal');
+  if (!modal) return;
+  document.getElementById('input-fx-usd').value = (customFxRates['USD'] || exchangeRates['USD'] || 7.8371).toFixed(4);
+  document.getElementById('input-fx-cny').value = (customFxRates['CNY'] || exchangeRates['CNY'] || 1.1670).toFixed(4);
+  document.getElementById('input-fx-eur').value = (customFxRates['EUR'] || exchangeRates['EUR'] || 9.1487).toFixed(4);
+  document.getElementById('input-fx-gbp').value = (customFxRates['GBP'] || exchangeRates['GBP'] || 10.6899).toFixed(4);
+  updateFxBadges();
+  modal.classList.add('open');
+}
+
+function closeFxModal() {
+  var modal = document.getElementById('fx-modal');
+  if (modal) modal.classList.remove('open');
+}
+
+function closeFxModalOnOutside(e) {
+  if (e.target && e.target.id === 'fx-modal') closeFxModal();
+}
+
+function saveFxRatesAndRecalculate() {
+  var usd = parseFloat(document.getElementById('input-fx-usd').value);
+  var cny = parseFloat(document.getElementById('input-fx-cny').value);
+  var eur = parseFloat(document.getElementById('input-fx-eur').value);
+  var gbp = parseFloat(document.getElementById('input-fx-gbp').value);
+
+  if (!isNaN(usd) && usd > 0) { customFxRates['USD'] = usd; exchangeRates['USD'] = usd; }
+  if (!isNaN(cny) && cny > 0) { customFxRates['CNY'] = cny; customFxRates['RMB'] = cny; exchangeRates['CNY'] = cny; exchangeRates['RMB'] = cny; }
+  if (!isNaN(eur) && eur > 0) { customFxRates['EUR'] = eur; exchangeRates['EUR'] = eur; }
+  if (!isNaN(gbp) && gbp > 0) { customFxRates['GBP'] = gbp; exchangeRates['GBP'] = gbp; }
+
+  updateFxBadges();
+  closeFxModal();
+
+  // 若已有导入数据，基于原始 rawData 重新以新汇率折算并渲染
+  if (window.__lastRawRows && window.__lastRawRows.length > 0) {
+    var clean = normalizeRawRows(window.__lastRawRows);
+    appData = calculateAllFromRecords(clean);
+    initApp();
+    showToast('已根据新汇率重新折算全部非 HKD 流水并完成重算！', 'success');
+  } else {
+    showToast('汇率设置已保存！', 'success');
+  }
+}
 
 // 清空当前数据回到初始状态
 function resetToEmptyState() {
@@ -229,6 +322,8 @@ function renderClientInfo() {
 
   document.getElementById('date-start').value = info.earliest_date || '';
   document.getElementById('date-end').value = info.latest_date || '';
+
+  updateFxBadges();
 }
 
 function renderYearPills() {
@@ -570,6 +665,14 @@ async function refreshLatestQuotes(isManual = false) {
           qTime.innerHTML = '⏱️ 行情已同步: <span style="font-weight:700; color:#0f172a;">' + timeStr + '</span>';
         }
 
+        if (res.rates) {
+          for (var c in res.rates) {
+            if (!customFxRates[c]) exchangeRates[c] = res.rates[c];
+          }
+          if (res.fx_info && res.fx_info.update_time) fxUpdateTime = res.fx_info.update_time;
+          updateFxBadges();
+        }
+
         renderStockTable();
         if (document.getElementById('stock-modal').classList.contains('open')) {
           var titleEl = document.getElementById('m-stock-title');
@@ -580,7 +683,7 @@ async function refreshLatestQuotes(isManual = false) {
         }
 
         if (count > 0) {
-          showToast('🎉 成功获取 ' + count + ' 只持仓股票的最新行情！', 'success');
+          showToast('🎉 成功获取 ' + count + ' 只持仓股票的最新行情与实时外汇牌价！', 'success');
         } else if (isManual) {
           showToast('未从行情源匹配到最新价格，已保留成本参考价', 'info');
         }
@@ -626,13 +729,18 @@ function resetHoldingPriceToLive(code) {
 function getEffectivePrice(st) {
   var code = String(st.code || '');
   var qData = latestQuotes[code] || latestQuotes[code.padStart(5, '0')] || latestQuotes[code.replace(/^0+/, '')];
+  var mkt = String(st.market || '').toUpperCase();
+  var isUsStock = mkt.includes('US') || mkt.includes('NASDAQ') || mkt.includes('NYSE') || mkt.includes('AMEX') || mkt.includes('USA') || /^[A-Z]+$/.test(code) || st.ccy === 'USD';
+  var usdRate = customFxRates['USD'] || exchangeRates['USD'] || 7.8371;
+
   if (customPrices[code] !== undefined) {
-    return { price: customPrices[code], type: 'custom', quote: qData };
+    return { price: customPrices[code], type: 'custom', quote: qData, isUsStock: isUsStock, fxRate: usdRate };
   }
   if (qData && qData.price > 0) {
-    return { price: qData.price, type: 'live', quote: qData };
+    var effPrice = isUsStock ? Math.round(qData.price * usdRate * 10000) / 10000 : qData.price;
+    return { price: effPrice, rawPrice: qData.price, type: 'live', quote: qData, isUsStock: isUsStock, fxRate: usdRate };
   }
-  return { price: (st.avg_cost || 0), type: 'cost', quote: null };
+  return { price: (st.avg_cost || 0), type: 'cost', quote: null, isUsStock: isUsStock, fxRate: usdRate };
 }
 
 function renderStockTable() {
@@ -723,8 +831,9 @@ function renderStockTable() {
         var chgPct = eff.quote.change_pct || 0;
         var chgClass = chgPct >= 0 ? 'text-gain' : 'text-loss';
         var chgSign = chgPct >= 0 ? '+' : '';
+        var rawPriceDesc = eff.isUsStock ? ' ($' + eff.rawPrice.toFixed(2) + ')' : '';
         badgeHtml = '<div style="display:flex; align-items:center; justify-content:flex-end; gap:4px; margin-top:3px;">' +
-          '<span class="quote-badge-live" title="昨收: ' + (eff.quote.prev_close || '-') + ' | 更新: ' + (eff.quote.time || '-') + '">🟢 实时</span>' +
+          '<span class="quote-badge-live" title="昨收: ' + (eff.quote.prev_close || '-') + ' | 更新: ' + (eff.quote.time || '-') + (eff.isUsStock ? ' | 美元汇率: ' + eff.fxRate : '') + '">🟢 实时' + rawPriceDesc + '</span>' +
           '<span class="' + chgClass + '" style="font-size:10px; font-weight:700;">' + chgSign + chgPct.toFixed(2) + '%</span>' +
           '</div>';
       } else if (eff.type === 'custom') {
@@ -739,7 +848,7 @@ function renderStockTable() {
       priceCell = '<div style="display:flex; flex-direction:column; align-items:flex-end;">' +
         '<input type="number" step="0.0001" min="0" value="' + curP.toFixed(4) + '" ' +
         'onchange="updateHoldingPrice(\'' + st.code + '\', this.value)" ' +
-        'style="width:90px; padding:3px 6px; font-size:12px; font-weight:700; border:1px solid #cbd5e1; border-radius:6px; text-align:right; font-family:monospace; background:' + (eff.type === 'custom' ? '#fffbeb' : '#fff') + ';" title="可直接输入最新市价实时测算浮动盈亏">' +
+        'style="width:90px; padding:3px 6px; font-size:12px; font-weight:700; border:1px solid #cbd5e1; border-radius:6px; text-align:right; font-family:monospace; background:' + (eff.type === 'custom' ? '#fffbeb' : '#fff') + ';" title="' + (eff.isUsStock ? '美股市价已按汇率折算为 HKD，可自定义修改' : '可直接输入最新市价实时测算浮动盈亏') + '">' +
         badgeHtml +
         '</div>';
 
@@ -1410,6 +1519,7 @@ async function parseExcelFileBuffer(buffer, fileName) {
 }
 
 function normalizeRawRows(rawData) {
+  window.__lastRawRows = rawData;
   var clean = [];
   rawData.forEach(function(row) {
     var dateStr = getField(row, 'trade_date');
@@ -1425,8 +1535,30 @@ function normalizeRawRows(rawData) {
     }
 
     var codeRaw = String(getField(row, 'code')).trim().replace(/^\*/, '');
-    // 直接使用 CSV 里的 product_name 字段，绝不进行任何二次翻译
     var sName = String(row['product_name'] || getField(row, 'name')).trim();
+
+    var ccy = String(getField(row, 'ccy', 'HKD')).trim().toUpperCase() || 'HKD';
+    var fxRateRaw = getField(row, 'fx_rate', '');
+    var fxRate = 1.0;
+    if (fxRateRaw && !isNaN(parseFloat(fxRateRaw)) && parseFloat(fxRateRaw) > 0) {
+      fxRate = parseFloat(fxRateRaw);
+    } else if (ccy !== 'HKD') {
+      fxRate = customFxRates[ccy] || exchangeRates[ccy] || (ccy === 'USD' ? 7.8371 : (ccy === 'CNY' || ccy === 'RMB' ? 1.1670 : (ccy === 'EUR' ? 9.1487 : (ccy === 'GBP' ? 10.6899 : 1.0))));
+    }
+
+    var rawDr = parseFloat(getField(row, 'deduct_amount') || 0);
+    var rawCr = parseFloat(getField(row, 'deposit_amount') || 0);
+    var rawPrice = parseFloat(getField(row, 'price') || 0);
+
+    var drAmount = (ccy !== 'HKD') ? Math.round(rawDr * fxRate * 10000) / 10000 : rawDr;
+    var crAmount = (ccy !== 'HKD') ? Math.round(rawCr * fxRate * 10000) / 10000 : rawCr;
+    var avgPrice = (ccy !== 'HKD') ? Math.round(rawPrice * fxRate * 1000000) / 1000000 : rawPrice;
+
+    var remarks = String(getField(row, 'remarks')).trim();
+    if (ccy !== 'HKD') {
+      var origAmt = rawCr > 0 ? rawCr : rawDr;
+      remarks += ' [原币: ' + ccy + ' ' + origAmt.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' @ ' + fxRate.toFixed(4) + ']';
+    }
 
     clean.push({
       account_no: String(getField(row, 'account_no')).trim(),
@@ -1438,12 +1570,13 @@ function normalizeRawRows(rawData) {
       market: String(getField(row, 'market', 'HKEX')).trim(),
       code: codeRaw,
       name: sName,
-      remarks: String(getField(row, 'remarks')).trim(),
+      remarks: remarks,
       qty: parseFloat(getField(row, 'qty') || 0),
-      avg_price: parseFloat(getField(row, 'price') || 0),
-      ccy: String(getField(row, 'ccy', 'HKD')).trim() || 'HKD',
-      deduct_amount: parseFloat(getField(row, 'deduct_amount') || 0),
-      deposit_amount: parseFloat(getField(row, 'deposit_amount') || 0)
+      avg_price: avgPrice,
+      ccy: ccy,
+      fx_rate: fxRate,
+      deduct_amount: drAmount,
+      deposit_amount: crAmount
     });
   });
   return clean;
