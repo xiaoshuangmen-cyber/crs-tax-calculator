@@ -37,7 +37,7 @@ function getField(row, field, defVal) {
 let appData = null;
 let costMethod = 'DILUTED'; // 富途证券默认：DILUTED(摊薄成本法/保本价), AVERAGE(平均成本法/买入加权均价)
 let yearFilter = 'ALL';
-let stockFilterMode = 'all';
+let stockFilterMode = 'holding'; // 默认展示持仓中 (holding)
 
 // 全局外汇汇率（基准为折合 HKD 汇率）
 let exchangeRates = {
@@ -216,6 +216,11 @@ function resetToEmptyState() {
   }
 
   // 股票筛选胶囊重置归零
+  stockFilterMode = 'holding';
+  ['all', 'holding', 'closed'].forEach(function(m) {
+    var el = document.getElementById('filter-stock-' + m);
+    if (el) el.className = 'pill-btn' + (m === 'holding' ? ' active' : '');
+  });
   var btnAll = document.getElementById('filter-stock-all'); if (btnAll) btnAll.innerText = '全部 (0)';
   var btnHold = document.getElementById('filter-stock-holding'); if (btnHold) btnHold.innerText = '持仓中 (0)';
   var btnClosed = document.getElementById('filter-stock-closed'); if (btnClosed) btnClosed.innerText = '已清仓 (0)';
@@ -791,6 +796,11 @@ function renderStockTable() {
   if (btnAll) btnAll.innerText = '全部 (' + allList.length + ')';
   if (btnHold) btnHold.innerText = '持仓中 (' + holdCount + ')';
   if (btnClosed) btnClosed.innerText = '已清仓 (' + closedCount + ')';
+
+  ['all', 'holding', 'closed'].forEach(function(m) {
+    var el = document.getElementById('filter-stock-' + m);
+    if (el) el.className = 'pill-btn' + (m === stockFilterMode ? ' active' : '');
+  });
 
   var totalHoldCost = 0;
   var totalHoldMarket = 0;
@@ -1454,6 +1464,11 @@ function clearCustomInputsOnNewImport() {
   userCashBalance = 0;
   userCustomNav = 0;
   customPrices = {};
+  stockFilterMode = 'holding';
+  ['all', 'holding', 'closed'].forEach(function(m) {
+    var el = document.getElementById('filter-stock-' + m);
+    if (el) el.className = 'pill-btn' + (m === 'holding' ? ' active' : '');
+  });
 
   var inpCash = document.getElementById('input-cash-balance');
   if (inpCash) inpCash.value = '';
