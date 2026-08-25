@@ -690,17 +690,17 @@
     </div>
 
     <div class="stat-grid-row-2" style="margin-bottom: 16px;">
-      <!-- 7. 账户最新净资产 (持仓股票总市值 + 净资产调整值) -->
+      <!-- 7. 账户资产总值 (持仓股票总市值 + 资产调整值) -->
       <div class="fund-card" style="border-color: #8b5cf6;">
         <div style="flex: 1;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-right: 4px;">
-            <div class="fund-title" style="color: #c4b5fd;">💎 账户最新净资产 (Total NAV)</div>
-            <button class="btn-fund-action no-print" onclick="openNavModal(event)" title="自定义修改/调整账户最新净资产">
-              <span>✏️ 自定义净资产</span>
+            <div class="fund-title" style="color: #c4b5fd;">💎 账户资产总值 (AUM)</div>
+            <button class="btn-fund-action no-print" onclick="openNavModal(event)" title="自定义修改/调整账户资产总值">
+              <span>✏️ 自定义 AUM</span>
             </button>
           </div>
           <div class="fund-val number-font" id="val-account-net-assets" style="color: #a78bfa; font-size: 22px;">HK$ 0.00</div>
-          <div class="fund-sub" id="sub-account-net-assets">持仓股票总市值 + 净资产调整值 (HKD)</div>
+          <div class="fund-sub" id="sub-account-net-assets">持仓股票总市值 + 资产调整值 (HKD)</div>
           <div id="row-nav-adjustment" style="font-size: 11px; margin-top: 3px; font-weight: 700; display: none;">
             <span style="color: #94a3b8; font-weight: normal;">调整值: </span>
             <span id="val-nav-adjustment" class="number-font">HK$ 0.00</span>
@@ -709,12 +709,12 @@
         <div class="fund-icon" style="background: rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.3);">💎</div>
       </div>
 
-      <!-- 8. 综合账户盈亏金额 (最新净资产 + 资金净提取 / 流向) -->
+      <!-- 8. 综合账户盈亏金额 (资产总值 + 资金净提取 / 流向) -->
       <div class="fund-card" id="card-account-pnl" style="border-color: #e11d48;">
         <div>
           <div class="fund-title" style="color: #fda4af;">🏆 综合账户盈亏金额 (Account Total P&L)</div>
           <div class="fund-val number-font" id="val-account-pnl" style="color: #fb7185; font-size: 22px;">HK$ 0.00</div>
-          <div class="fund-sub" id="sub-account-pnl">最新净资产 + 资金净提取 / 流向</div>
+          <div class="fund-sub" id="sub-account-pnl">资产总值 (AUM) + 资金净提取 / 流向</div>
         </div>
         <div class="fund-icon" id="icon-account-pnl-wrap" style="background: rgba(225, 29, 72, 0.15); border-color: rgba(225, 29, 72, 0.3);">🎯</div>
       </div>
@@ -1069,14 +1069,14 @@
     </div>
   </div>
 
-  <!-- 账户净资产自定义调整模态框 (Modal) -->
+  <!-- 账户资产总值自定义调整模态框 (Modal) -->
   <div id="nav-modal" class="modal-overlay" onclick="closeNavModalOnOutside(event)">
     <div class="modal-card" style="max-width: 480px;">
       <div class="modal-header">
         <div>
-          <h3 style="font-size: 16px; font-weight: 700; color: var(--slate-900);">💎 自定义修改账户最新净资产 (Total NAV)</h3>
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--slate-900);">💎 自定义修改账户资产总值 (AUM)</h3>
           <div style="font-size: 11px; color: var(--slate-500); margin-top: 2px;">
-            净资产调整值 = 用户期望净资产 - 原始系统计算净资产
+            资产调整值 = 用户期望资产总值 - 原始系统计算资产总值
           </div>
         </div>
         <button class="modal-close" onclick="closeNavModal()">✕</button>
@@ -1088,13 +1088,13 @@
             <strong id="nav-modal-stock" class="number-font">HK$ 0.00</strong>
           </div>
           <div style="display: flex; justify-content: space-between; border-top: 1px dashed #cbd5e1; padding-top: 6px; color: var(--slate-900); font-weight: 700;">
-            <span>原始系统计算净资产 (Base NAV):</span>
+            <span>原始系统计算资产总值 (Base AUM):</span>
             <strong id="nav-modal-base" class="number-font" style="color: var(--primary);">HK$ 0.00</strong>
           </div>
         </div>
 
         <div style="margin-bottom: 14px;">
-          <label style="font-size: 12px; font-weight: 700; color: var(--slate-700); display: block; margin-bottom: 6px;">用户期望账户最新净资产 (HKD):</label>
+          <label style="font-size: 12px; font-weight: 700; color: var(--slate-700); display: block; margin-bottom: 6px;">用户期望账户资产总值 (HKD):</label>
           <div style="position: relative; display: flex; align-items: center;">
             <span style="position: absolute; left: 12px; font-weight: 700; color: var(--slate-400); font-family: monospace;">HK$</span>
             <input id="input-custom-nav" type="number" step="0.01" min="0" placeholder="例如: 500000.00"
@@ -1105,7 +1105,7 @@
         </div>
 
         <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 10px 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
-          <span style="color: #1e40af; font-weight: 600;">预计净资产调整值:</span>
+          <span style="color: #1e40af; font-weight: 600;">预计资产调整值:</span>
           <strong id="nav-modal-diff" class="number-font" style="font-size: 14px; font-weight: 700;">HK$ 0.00</strong>
         </div>
 
@@ -1113,7 +1113,7 @@
           <button class="btn" onclick="resetCustomNavToOriginal()" style="background: #f8fafc; color: #64748b; border: 1px solid #cbd5e1; font-size: 12px;">🔄 还原系统原始计算</button>
           <div style="display: flex; gap: 8px;">
             <button class="btn" onclick="closeNavModal()" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;">取消</button>
-            <button class="btn" onclick="saveCustomNav()" style="background: var(--primary); color: #fff; font-weight: 600;">💾 保存净资产</button>
+            <button class="btn" onclick="saveCustomNav()" style="background: var(--primary); color: #fff; font-weight: 600;">💾 保存资产总值 (AUM)</button>
           </div>
         </div>
       </div>
@@ -1124,6 +1124,6 @@
     CRS 涉税金融资产与证券交易盈亏智能核算系统 &copy; 2026 证券投资顾问专用工作台
   </footer>
 
-  <script src="app.js?v=20260825_v33"></script>
+  <script src="app.js?v=20260825_v34"></script>
 </body>
 </html>

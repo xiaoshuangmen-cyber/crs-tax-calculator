@@ -205,10 +205,10 @@ function resetToEmptyState() {
   var elStockBal = document.getElementById('val-stock-holdings-balance'); if (elStockBal) elStockBal.innerText = 'HK$ 0.00';
   var subStockBal = document.getElementById('sub-stock-holdings-balance'); if (subStockBal) subStockBal.innerText = '当前持仓股票最新总市值 (HKD)';
   var elNetAssets = document.getElementById('val-account-net-assets'); if (elNetAssets) elNetAssets.innerText = 'HK$ 0.00';
-  var subNetAssets = document.getElementById('sub-account-net-assets'); if (subNetAssets) subNetAssets.innerText = '持仓结余 + 现金结余 (HKD)';
+  var subNetAssets = document.getElementById('sub-account-net-assets'); if (subNetAssets) subNetAssets.innerText = '持仓股票总市值 + 资产调整值 (HKD)';
   var rowNavAdj = document.getElementById('row-nav-adjustment'); if (rowNavAdj) rowNavAdj.style.display = 'none';
   var elAccPnl = document.getElementById('val-account-pnl'); if (elAccPnl) { elAccPnl.innerText = 'HK$ 0.00'; elAccPnl.style.color = '#fb7185'; }
-  var subAccPnl = document.getElementById('sub-account-pnl'); if (subAccPnl) subAccPnl.innerText = '最新净资产 + 资金净提取 / 流向';
+  var subAccPnl = document.getElementById('sub-account-pnl'); if (subAccPnl) subAccPnl.innerText = '资产总值 (AUM) + 资金净提取 / 流向';
 
   // 持仓汇总条归零
   var elHoldCost = document.getElementById('val-hold-cost');
@@ -502,10 +502,10 @@ function saveCustomNav() {
   var val = parseFloat(document.getElementById('input-custom-nav').value);
   if (!isNaN(val) && val >= 0) {
     userCustomNav = val;
-    showToast('已保存自定义账户最新净资产: ' + fmt(userCustomNav), 'success');
+    showToast('已保存自定义账户资产总值 (AUM): ' + fmt(userCustomNav), 'success');
   } else {
     userCustomNav = null;
-    showToast('已恢复系统原始净资产计算', 'info');
+    showToast('已恢复系统原始资产总值计算', 'info');
   }
   closeNavModal();
   updateAccountPnLCard();
@@ -516,7 +516,7 @@ function resetCustomNavToOriginal() {
   userNavAdjustment = 0;
   closeNavModal();
   updateAccountPnLCard();
-  showToast('已还原为系统原始净资产计算！', 'info');
+  showToast('已还原为系统原始资产总值计算！', 'info');
 }
 
 function getTotalHoldingMarket() {
@@ -542,29 +542,29 @@ function updateAccountPnLCard() {
   var withSum = withLogs.reduce(function(acc, cur) { return acc + cur.amount; }, 0);
 
   var totalHoldMarket = getTotalHoldingMarket();
-  var baseNetAssets = totalHoldMarket; // 原始系统计算的净资产 (持仓股票总市值)
+  var baseNetAssets = totalHoldMarket; // 原始系统计算的资产总值 (持仓股票总市值)
 
   if (userCustomNav !== null && !isNaN(userCustomNav)) {
-    userNavAdjustment = userCustomNav - baseNetAssets; // 净资产调整值 = 用户输入的账户净资产 - 原始系统计算净资产
+    userNavAdjustment = userCustomNav - baseNetAssets; // 资产调整值 = 用户输入的资产总值 - 原始系统计算资产总值
   } else {
     userNavAdjustment = 0;
   }
-  var effectiveNetAssets = baseNetAssets + userNavAdjustment; // 账户最新净资产 = 持仓总市值 + 净资产调整值
+  var effectiveNetAssets = baseNetAssets + userNavAdjustment; // 账户资产总值 = 持仓总市值 + 资产调整值
 
   var netOutflow = withSum - depSum;          // 资金净提取 / 流向 (Net Outflow)
-  var accountPnl = effectiveNetAssets + netOutflow; // 综合账户盈亏金额 = 账户最新净资产 + 资金净提取 / 流向
+  var accountPnl = effectiveNetAssets + netOutflow; // 综合账户盈亏金额 = 账户资产总值 (AUM) + 资金净提取 / 流向
   var accountRoi = depSum > 0 ? (accountPnl / depSum * 100) : 0;
   var pnlSign = accountPnl >= 0 ? '+' : '';
   var roiSign = accountRoi >= 0 ? '+' : '';
 
-  // 更新账户最新净资产卡片 (持仓股票总市值 + 净资产调整值)
+  // 更新账户资产总值卡片 (持仓股票总市值 + 资产调整值)
   var elNetAssets = document.getElementById('val-account-net-assets');
   var subNetAssets = document.getElementById('sub-account-net-assets');
   var rowNavAdj = document.getElementById('row-nav-adjustment');
   var valNavAdj = document.getElementById('val-nav-adjustment');
 
   if (elNetAssets) elNetAssets.innerText = fmt(effectiveNetAssets);
-  if (subNetAssets) subNetAssets.innerText = '持仓股票总市值 + 净资产调整值 (HKD)';
+  if (subNetAssets) subNetAssets.innerText = '持仓股票总市值 + 资产调整值 (HKD)';
 
   if (rowNavAdj && valNavAdj) {
     if (userCustomNav !== null && Math.abs(userNavAdjustment) > 0.001) {
@@ -596,7 +596,7 @@ function updateAccountPnLCard() {
     }
   }
   if (subAccPnl) {
-    subAccPnl.innerText = '总收益率: ' + roiSign + accountRoi.toFixed(2) + '% (最新净资产 + 资金净提取)';
+    subAccPnl.innerText = '总收益率: ' + roiSign + accountRoi.toFixed(2) + '% (资产总值 AUM + 资金净提取)';
   }
 }
 
