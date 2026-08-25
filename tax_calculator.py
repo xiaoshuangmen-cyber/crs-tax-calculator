@@ -231,9 +231,10 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
                 # 供股认购款直接结转为获配股票的买入成本
                 continue
 
-            is_div = 'DIVIDEND' in remarks_upper or 'DIV' in remarks_upper or '股息' in remarks or '分红' in remarks
+            is_div = 'DIVIDEND' in remarks_upper or 'DIV ' in remarks_upper or '股息' in remarks or '分红' in remarks
             is_int = 'INT.' in remarks_upper or 'INTEREST' in remarks_upper or '利息' in remarks or '结息' in remarks
-            is_charge = 'CHARGE' in remarks_upper or 'CHG' in remarks_upper or 'FEE' in remarks_upper or '手续费' in remarks or '收费' in remarks
+            is_ipo = 'IPO' in remarks_upper or 'EIPO' in remarks_upper or 'APP #' in remarks_upper or 'REFUND #' in remarks_upper or 'LOAN INT' in remarks_upper or 'ALLOTMENT' in remarks_upper or '新股' in remarks or '申购' in remarks
+            is_charge = is_ipo or 'CHARGE' in remarks_upper or 'CHG' in remarks_upper or 'FEE' in remarks_upper or 'SERVICE' in remarks_upper or 'POSTAGE' in remarks_upper or '手续费' in remarks or '收费' in remarks or '服务费' in remarks or '邮费' in remarks
 
             if is_div:
                 dividend_logs.append({
@@ -248,7 +249,7 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
                         stocks[code]['dividends_total'] += deposit
                         break
 
-            elif is_int:
+            elif is_int and not is_ipo:
                 interest_logs.append({
                     'date': rec['date_str'],
                     'amount': deposit,
@@ -257,19 +258,34 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
                 })
                 yearly_stats[yr]['interest_total'] += deposit
 
+            elif is_charge:
+                amt = deduct if io in ['W', 'WITHDRAW', '提取', '出金'] else deposit
+                c_type = '规费扣除'
+                if is_ipo:
+                    if 'REFUND' in remarks_upper:
+                        c_type = 'eIPO退款'
+                    elif 'LOAN INT' in remarks_upper:
+                        c_type = 'eIPO融资利息'
+                    elif 'COMMISSION' in remarks_upper:
+                        c_type = 'eIPO退佣金'
+                    elif 'HANDLING FEE' in remarks_upper or 'FEE' in remarks_upper:
+                        c_type = 'eIPO手续费'
+                    elif io in ['W', 'WITHDRAW', '提取', '出金'] or 'APP #' in remarks_upper:
+                        c_type = 'eIPO申购扣款'
+                    else:
+                        c_type = 'eIPO往来'
+                yearly_stats[yr]['dividend_charges'] += (deduct - deposit)
+                charge_logs.append({'date': rec['date_str'], 'type': c_type, 'amount': amt, 'io': io, 'remarks': remarks, 'year': yr})
+
             else:
                 if io in ['D', 'DEPOSIT', '存入', '入金']:
                     all_time_deposit += deposit
                     yearly_stats[yr]['deposits'] += deposit
                     cash_logs.append({'date': rec['date_str'], 'type': '入金', 'amount': deposit, 'remarks': remarks, 'year': yr})
                 elif io in ['W', 'WITHDRAW', '提取', '出金']:
-                    if is_charge:
-                        yearly_stats[yr]['dividend_charges'] += deduct
-                        charge_logs.append({'date': rec['date_str'], 'type': '规费扣除', 'amount': deduct, 'remarks': remarks, 'year': yr})
-                    else:
-                        all_time_withdraw += deduct
-                        yearly_stats[yr]['withdrawals'] += deduct
-                        cash_logs.append({'date': rec['date_str'], 'type': '出金', 'amount': deduct, 'remarks': remarks, 'year': yr})
+                    all_time_withdraw += deduct
+                    yearly_stats[yr]['withdrawals'] += deduct
+                    cash_logs.append({'date': rec['date_str'], 'type': '出金', 'amount': deduct, 'remarks': remarks, 'year': yr})
 
         elif is_trade:
             raw_code = rec['code']

@@ -1023,10 +1023,21 @@ function renderChargesTable() {
   var pageList = list.slice((chargesPage - 1) * chargesPageSize, chargesPage * chargesPageSize);
 
   pageList.forEach(function(c) {
+    var isRefund = c.type.includes('退款') || c.type.includes('退佣金') || c.io === 'D';
+    var tagBg = '#f1f5f9', tagColor = '#475569', amtColor = '#64748b', sign = '-';
+
+    if (isRefund) {
+      tagBg = '#d1fae5'; tagColor = '#065f46'; amtColor = '#059669'; sign = '+';
+    } else if (c.type.includes('利息')) {
+      tagBg = '#fef3c7'; tagColor = '#92400e'; amtColor = '#b45309'; sign = '-';
+    } else if (c.type.includes('申购')) {
+      tagBg = '#e0f2fe'; tagColor = '#0369a1'; amtColor = '#0284c7'; sign = '-';
+    }
+
     var tr = document.createElement('tr');
     tr.innerHTML = '<td style="font-family:monospace; font-weight:600;">' + c.date + '</td>' +
-      '<td class="text-center"><span class="tag" style="background:#f1f5f9; color:#64748b; font-weight:700;">🏷️ ' + c.type + '</span></td>' +
-      '<td class="text-right number-font" style="font-weight:700; color:#64748b;">-' + fmt(c.amount) + '</td>' +
+      '<td class="text-center"><span class="tag" style="background:' + tagBg + '; color:' + tagColor + '; font-weight:700;">' + (isRefund ? '📥 ' : (c.type.includes('利息') ? '📈 ' : '🏷️ ')) + c.type + '</span></td>' +
+      '<td class="text-right number-font" style="font-weight:700; color:' + amtColor + ';">' + sign + fmt(c.amount) + '</td>' +
       '<td style="color:#475569;">' + c.remarks + '</td>';
     tbody.appendChild(tr);
   });
@@ -1422,9 +1433,10 @@ function calculateAllFromRecords(records) {
         return;
       }
 
-      var isDiv = remarksUpper.includes('DIVIDEND') || remarksUpper.includes('DIV') || remarks.includes('股息') || remarks.includes('分红');
+      var isDiv = remarksUpper.includes('DIVIDEND') || remarksUpper.includes('DIV ') || remarks.includes('股息') || remarks.includes('分红');
       var isInt = remarksUpper.includes('INT.') || remarksUpper.includes('INTEREST') || remarks.includes('利息') || remarks.includes('结息');
-      var isChg = remarksUpper.includes('CHARGE') || remarksUpper.includes('CHG') || remarksUpper.includes('FEE') || remarks.includes('手续费') || remarks.includes('收费');
+      var isIpo = remarksUpper.includes('IPO') || remarksUpper.includes('EIPO') || remarksUpper.includes('APP #') || remarksUpper.includes('REFUND #') || remarksUpper.includes('LOAN INT') || remarksUpper.includes('ALLOTMENT') || remarks.includes('新股') || remarks.includes('申购');
+      var isChg = isIpo || remarksUpper.includes('CHARGE') || remarksUpper.includes('CHG') || remarksUpper.includes('FEE') || remarksUpper.includes('SERVICE') || remarksUpper.includes('POSTAGE') || remarks.includes('手续费') || remarks.includes('收费') || remarks.includes('服务费') || remarks.includes('邮费');
 
       if (isDiv) {
         divLogs.push({ date: rec.date_str, amount: deposit, remarks: remarks, year: yr });
@@ -1435,22 +1447,30 @@ function calculateAllFromRecords(records) {
             break;
           }
         }
-      } else if (isInt) {
+      } else if (isInt && !isIpo) {
         intLogs.push({ date: rec.date_str, amount: deposit, remarks: remarks, year: yr });
         yearly[yr].interest_total += deposit;
+      } else if (isChg) {
+        var amt = ['W', 'WITHDRAW', '提取', '出金'].includes(io) ? deduct : deposit;
+        var cType = '规费扣除';
+        if (isIpo) {
+          if (remarksUpper.includes('REFUND')) cType = 'eIPO退款';
+          else if (remarksUpper.includes('LOAN INT')) cType = 'eIPO利息';
+          else if (remarksUpper.includes('COMMISSION')) cType = 'eIPO退佣金';
+          else if (remarksUpper.includes('HANDLING FEE') || remarksUpper.includes('FEE')) cType = 'eIPO手续费';
+          else if (['W', 'WITHDRAW', '提取', '出金'].includes(io) || remarksUpper.includes('APP #')) cType = 'eIPO申购扣款';
+          else cType = 'eIPO往来';
+        }
+        chargeLogs.push({ date: rec.date_str, type: cType, amount: amt, io: io, remarks: remarks, year: yr });
       } else {
         if (['D', 'DEPOSIT', '存入', '入金'].includes(io)) {
           allDep += deposit;
           yearly[yr].deposits += deposit;
           cashLogs.push({ date: rec.date_str, type: '入金', amount: deposit, remarks: remarks, year: yr });
         } else if (['W', 'WITHDRAW', '提取', '出金'].includes(io)) {
-          if (isChg) {
-            chargeLogs.push({ date: rec.date_str, type: '规费扣除', amount: deduct, remarks: remarks, year: yr });
-          } else {
-            allWith += deduct;
-            yearly[yr].withdrawals += deduct;
-            cashLogs.push({ date: rec.date_str, type: '出金', amount: deduct, remarks: remarks, year: yr });
-          }
+          allWith += deduct;
+          yearly[yr].withdrawals += deduct;
+          cashLogs.push({ date: rec.date_str, type: '出金', amount: deduct, remarks: remarks, year: yr });
         }
       }
     } else if (isTrade) {
