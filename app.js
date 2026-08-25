@@ -198,12 +198,15 @@ function resetToEmptyState() {
 
   // 现金结余、持仓结余、最新净资产与综合账户盈亏归零
   userCashBalance = 0;
+  userCustomNav = null;
+  userNavAdjustment = 0;
   var elCashBal = document.getElementById('val-cash-balance'); if (elCashBal) elCashBal.innerText = 'HK$ 0.00';
   var tagCashStatus = document.getElementById('tag-cash-status'); if (tagCashStatus) tagCashStatus.innerText = '';
   var elStockBal = document.getElementById('val-stock-holdings-balance'); if (elStockBal) elStockBal.innerText = 'HK$ 0.00';
   var subStockBal = document.getElementById('sub-stock-holdings-balance'); if (subStockBal) subStockBal.innerText = '当前持仓股票最新总市值 (HKD)';
   var elNetAssets = document.getElementById('val-account-net-assets'); if (elNetAssets) elNetAssets.innerText = 'HK$ 0.00';
   var subNetAssets = document.getElementById('sub-account-net-assets'); if (subNetAssets) subNetAssets.innerText = '持仓结余 + 现金结余 (HKD)';
+  var rowNavAdj = document.getElementById('row-nav-adjustment'); if (rowNavAdj) rowNavAdj.style.display = 'none';
   var elAccPnl = document.getElementById('val-account-pnl'); if (elAccPnl) { elAccPnl.innerText = 'HK$ 0.00'; elAccPnl.style.color = '#fb7185'; }
   var subAccPnl = document.getElementById('sub-account-pnl'); if (subAccPnl) subAccPnl.innerText = '最新净资产 + 资金净提取 / 流向';
 
@@ -455,6 +458,78 @@ function saveCashBalanceFromModal() {
   showToast('已保存账户现金资产结余: ' + fmt(userCashBalance), 'success');
 }
 
+// 账户最新净资产自定义修改弹窗与逻辑
+let userCustomNav = null; // 用户自定义净资产
+let userNavAdjustment = 0; // 用户净资产调整值
+
+function openNavModal(e) {
+  if (e) e.stopPropagation();
+  var modal = document.getElementById('nav-modal');
+  if (!modal) return;
+
+  var totalHoldMarket = getTotalHoldingMarket();
+  var cashBal = userCashBalance || 0;
+  var baseNetAssets = totalHoldMarket + cashBal;
+
+  document.getElementById('nav-modal-cash').innerText = fmt(cashBal);
+  document.getElementById('nav-modal-stock').innerText = fmt(totalHoldMarket);
+  document.getElementById('nav-modal-base').innerText = fmt(baseNetAssets);
+
+  var curVal = (userCustomNav !== null) ? userCustomNav : baseNetAssets;
+  document.getElementById('input-custom-nav').value = curVal > 0 ? curVal.toFixed(2) : '';
+  onCustomNavInputChanged();
+
+  modal.classList.add('open');
+}
+
+function closeNavModal() {
+  var modal = document.getElementById('nav-modal');
+  if (modal) modal.classList.remove('open');
+}
+
+function closeNavModalOnOutside(e) {
+  if (e.target && e.target.id === 'nav-modal') closeNavModal();
+}
+
+function onCustomNavInputChanged() {
+  var totalHoldMarket = getTotalHoldingMarket();
+  var cashBal = userCashBalance || 0;
+  var baseNetAssets = totalHoldMarket + cashBal;
+
+  var inp = parseFloat(document.getElementById('input-custom-nav').value);
+  var diffEl = document.getElementById('nav-modal-diff');
+  if (!isNaN(inp)) {
+    var diff = inp - baseNetAssets;
+    var sign = diff >= 0 ? '+' : '';
+    diffEl.innerText = sign + fmt(diff);
+    diffEl.style.color = diff >= 0 ? '#e11d48' : '#059669'; // 弹窗中浅色背景红涨绿跌
+  } else {
+    diffEl.innerText = 'HK$ 0.00';
+    diffEl.style.color = 'var(--slate-600)';
+  }
+}
+
+function saveCustomNav() {
+  var val = parseFloat(document.getElementById('input-custom-nav').value);
+  if (!isNaN(val) && val >= 0) {
+    userCustomNav = val;
+    showToast('已保存自定义账户最新净资产: ' + fmt(userCustomNav), 'success');
+  } else {
+    userCustomNav = null;
+    showToast('已恢复系统原始净资产计算', 'info');
+  }
+  closeNavModal();
+  updateAccountPnLCard();
+}
+
+function resetCustomNavToOriginal() {
+  userCustomNav = null;
+  userNavAdjustment = 0;
+  closeNavModal();
+  updateAccountPnLCard();
+  showToast('已还原为系统原始净资产计算！', 'info');
+}
+
 function getTotalHoldingMarket() {
   if (!appData || !appData.stocks) return 0;
   var total = 0;
@@ -479,9 +554,17 @@ function updateAccountPnLCard() {
 
   var totalHoldMarket = getTotalHoldingMarket();
   var cashBal = userCashBalance || 0;
-  var netAssets = totalHoldMarket + cashBal; // 账户最新净资产 (Total NAV)
+  var baseNetAssets = totalHoldMarket + cashBal; // 原始系统计算的净资产
+
+  if (userCustomNav !== null && !isNaN(userCustomNav)) {
+    userNavAdjustment = userCustomNav - baseNetAssets; // 净资产调整值 = 用户输入的账户净资产 - 原始系统计算净资产
+  } else {
+    userNavAdjustment = 0;
+  }
+  var effectiveNetAssets = baseNetAssets + userNavAdjustment; // 账户最新净资产 = 现金结余 + 持仓结余 + 净资产调整值
+
   var netOutflow = withSum - depSum;          // 资金净提取 / 流向 (Net Outflow)
-  var accountPnl = netAssets + netOutflow;    // 综合账户盈亏金额 = 账户最新净资产 + 资金净提取 / 流向
+  var accountPnl = effectiveNetAssets + netOutflow; // 综合账户盈亏金额 = 账户最新净资产 + 资金净提取 / 流向
   var accountRoi = depSum > 0 ? (accountPnl / depSum * 100) : 0;
   var pnlSign = accountPnl >= 0 ? '+' : '';
   var roiSign = accountRoi >= 0 ? '+' : '';
@@ -503,11 +586,26 @@ function updateAccountPnLCard() {
     subStockBal.innerText = holdList.length > 0 ? (holdList.length + ' 只持仓中股票最新总市值') : '暂无股票持仓 (HKD)';
   }
 
-  // 更新账户最新净资产卡片 (持仓结余 + 现金资产结余)
+  // 更新账户最新净资产卡片 (持仓结余 + 现金资产结余 + 净资产调整值)
   var elNetAssets = document.getElementById('val-account-net-assets');
   var subNetAssets = document.getElementById('sub-account-net-assets');
-  if (elNetAssets) elNetAssets.innerText = fmt(netAssets);
+  var rowNavAdj = document.getElementById('row-nav-adjustment');
+  var valNavAdj = document.getElementById('val-nav-adjustment');
+
+  if (elNetAssets) elNetAssets.innerText = fmt(effectiveNetAssets);
   if (subNetAssets) subNetAssets.innerText = '持仓结余 + 现金结余 (HKD)';
+
+  if (rowNavAdj && valNavAdj) {
+    if (userCustomNav !== null && Math.abs(userNavAdjustment) > 0.001) {
+      rowNavAdj.style.display = 'block';
+      var isGain = userNavAdjustment >= 0;
+      var adjSign = isGain ? '+' : '';
+      valNavAdj.innerText = adjSign + fmt(userNavAdjustment);
+      valNavAdj.style.color = isGain ? '#fb7185' : '#34d399'; // 暗色卡片红涨绿跌
+    } else {
+      rowNavAdj.style.display = 'none';
+    }
+  }
 
   // 更新综合账户盈亏卡片
   var elAccPnl = document.getElementById('val-account-pnl');
