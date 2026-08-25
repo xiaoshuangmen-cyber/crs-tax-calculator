@@ -205,16 +205,16 @@
     }
     .link-action { color: var(--primary); font-weight: 600; font-size: 11px; }
     
-    /* 资金与全景资产两行看板 (第 1 行 6 列，第 2 行 4 列) */
+    /* 资金与全景资产两行看板 (第 1 行 6 列，第 2 行 2 列) */
     .stat-grid-row-6 {
       display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px;
     }
-    .stat-grid-row-4 {
-      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 16px;
+    .stat-grid-row-2 {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 16px;
     }
     @media (max-width: 1400px) {
       .stat-grid-row-6 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
-      .stat-grid-row-4 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+      .stat-grid-row-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
     }
     .fund-card {
       background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;
@@ -689,33 +689,8 @@
       </div>
     </div>
 
-    <div class="stat-grid-row-4" style="margin-bottom: 16px;">
-      <!-- 7. 账户现金资产结余 (人手录入) -->
-      <div class="fund-card" style="border-color: #3b82f6;">
-        <div style="flex: 1;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-right: 4px;">
-            <div class="fund-title" style="color: #93c5fd;">💵 账户现金资产结余 (Cash Balance)</div>
-            <button class="btn-fund-action no-print" onclick="openCashBalanceModal(event)" title="人手录入当前账户闲置现金资产">
-              <span>✏️ 录入结余</span>
-            </button>
-          </div>
-          <div class="fund-val number-font" id="val-cash-balance" style="color: #60a5fa; font-size: 22px;">HK$ 0.00</div>
-          <div class="fund-sub">未投闲置现金 (HKD) <span id="tag-cash-status" style="font-size: 10px; color: #93c5fd; margin-left: 4px;"></span></div>
-        </div>
-        <div class="fund-icon" style="background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.3);">🪙</div>
-      </div>
-
-      <!-- 8. 账户持仓结余 (持仓股票最新总市值) -->
-      <div class="fund-card" onclick="scrollToElement('pane-stocks')" style="cursor: pointer; border-color: #10b981;">
-        <div>
-          <div class="fund-title" style="color: #a7f3d0;">📦 账户持仓结余 (Stock Balance)</div>
-          <div class="fund-val number-font" id="val-stock-holdings-balance" style="color: #34d399; font-size: 22px;">HK$ 0.00</div>
-          <div class="fund-sub" id="sub-stock-holdings-balance">当前持仓股票最新总市值 (HKD)</div>
-        </div>
-        <div class="fund-icon" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3);">📈</div>
-      </div>
-
-      <!-- 9. 账户最新净资产 (持仓结余 + 现金资产结余 + 净资产调整值) -->
+    <div class="stat-grid-row-2" style="margin-bottom: 16px;">
+      <!-- 7. 账户最新净资产 (持仓股票总市值 + 净资产调整值) -->
       <div class="fund-card" style="border-color: #8b5cf6;">
         <div style="flex: 1;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-right: 4px;">
@@ -725,7 +700,7 @@
             </button>
           </div>
           <div class="fund-val number-font" id="val-account-net-assets" style="color: #a78bfa; font-size: 22px;">HK$ 0.00</div>
-          <div class="fund-sub" id="sub-account-net-assets">持仓结余 + 现金结余 (HKD)</div>
+          <div class="fund-sub" id="sub-account-net-assets">持仓股票总市值 + 净资产调整值 (HKD)</div>
           <div id="row-nav-adjustment" style="font-size: 11px; margin-top: 3px; font-weight: 700; display: none;">
             <span style="color: #94a3b8; font-weight: normal;">调整值: </span>
             <span id="val-nav-adjustment" class="number-font">HK$ 0.00</span>
@@ -734,7 +709,7 @@
         <div class="fund-icon" style="background: rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.3);">💎</div>
       </div>
 
-      <!-- 10. 综合账户盈亏金额 (最新净资产 + 资金净提取 / 流向) -->
+      <!-- 8. 综合账户盈亏金额 (最新净资产 + 资金净提取 / 流向) -->
       <div class="fund-card" id="card-account-pnl" style="border-color: #e11d48;">
         <div>
           <div class="fund-title" style="color: #fda4af;">🏆 综合账户盈亏金额 (Account Total P&L)</div>
@@ -1109,11 +1084,7 @@
       <div style="padding: 20px;">
         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; font-size: 13px; color: var(--slate-700);">
           <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-            <span>现金资产结余 (Cash Balance):</span>
-            <strong id="nav-modal-cash" class="number-font">HK$ 0.00</strong>
-          </div>
-          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-            <span>股票持仓结余 (Stock Balance):</span>
+            <span>股票持仓最新总市值:</span>
             <strong id="nav-modal-stock" class="number-font">HK$ 0.00</strong>
           </div>
           <div style="display: flex; justify-content: space-between; border-top: 1px dashed #cbd5e1; padding-top: 6px; color: var(--slate-900); font-weight: 700;">
@@ -1153,6 +1124,6 @@
     CRS 涉税金融资产与证券交易盈亏智能核算系统 &copy; 2026 证券投资顾问专用工作台
   </footer>
 
-  <script src="app.js?v=20260825_v32"></script>
+  <script src="app.js?v=20260825_v33"></script>
 </body>
 </html>
