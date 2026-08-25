@@ -2133,7 +2133,7 @@ function exportToExcel() {
   if (!appData) return;
   var csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
   csvContent += '【CRS 年度涉税收益申报汇总】\r\n';
-  csvContent += '申报年度,股息总额(HKD),利息总额(HKD),股票已实现盈亏_加权平均(HKD),股票已实现盈亏_先进先出(HKD),出售金融资产总额(HKD),当年入金(HKD),当年出金(HKD)\r\n';
+  csvContent += '申报年度,股息总额(HKD),利息总额(HKD),账户已实现盈亏_加权平均(HKD),账户已实现盈亏_先进先出(HKD),出售金融资产总额(HKD),当年入金(HKD),当年出金(HKD)\r\n';
   appData.yearly_stats.forEach(function(y) {
     csvContent += y.year + '年,' + y.dividend_total + ',' + y.interest_total + ',' + y.realized_pnl_wac + ',' + y.realized_pnl_fifo + ',' + y.sales_proceeds + ',' + y.deposits + ',' + y.withdrawals + '\r\n';
   });
