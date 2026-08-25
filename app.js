@@ -196,14 +196,16 @@ function resetToEmptyState() {
   var elIntOutAll = document.getElementById('val-internal-out-all'); if (elIntOutAll) elIntOutAll.innerText = 'HK$ 0.00';
   var elIntNetAll = document.getElementById('val-internal-net-all'); if (elIntNetAll) elIntNetAll.innerText = 'HK$ 0.00';
 
-  // 现金结余、持仓结余与综合账户盈亏归零
+  // 现金结余、持仓结余、最新净资产与综合账户盈亏归零
   userCashBalance = 0;
   var elCashBal = document.getElementById('val-cash-balance'); if (elCashBal) elCashBal.innerText = 'HK$ 0.00';
   var tagCashStatus = document.getElementById('tag-cash-status'); if (tagCashStatus) tagCashStatus.innerText = '';
   var elStockBal = document.getElementById('val-stock-holdings-balance'); if (elStockBal) elStockBal.innerText = 'HK$ 0.00';
   var subStockBal = document.getElementById('sub-stock-holdings-balance'); if (subStockBal) subStockBal.innerText = '当前持仓股票最新总市值 (HKD)';
+  var elNetAssets = document.getElementById('val-account-net-assets'); if (elNetAssets) elNetAssets.innerText = 'HK$ 0.00';
+  var subNetAssets = document.getElementById('sub-account-net-assets'); if (subNetAssets) subNetAssets.innerText = '持仓结余 + 现金结余 (HKD)';
   var elAccPnl = document.getElementById('val-account-pnl'); if (elAccPnl) { elAccPnl.innerText = 'HK$ 0.00'; elAccPnl.style.color = '#fb7185'; }
-  var subAccPnl = document.getElementById('sub-account-pnl'); if (subAccPnl) subAccPnl.innerText = '出金 + 结余 + 持仓市值 - 入金';
+  var subAccPnl = document.getElementById('sub-account-pnl'); if (subAccPnl) subAccPnl.innerText = '出金 + 现金结余 + 持仓市值 - 入金';
 
   // 持仓汇总条归零
   var elHoldCost = document.getElementById('val-hold-cost');
@@ -498,6 +500,13 @@ function updateAccountPnLCard() {
     var holdList = (appData.stocks || []).filter(function(s) { return s.status === '持仓中'; });
     subStockBal.innerText = holdList.length > 0 ? (holdList.length + ' 只持仓中股票最新总市值') : '暂无股票持仓 (HKD)';
   }
+
+  // 更新账户最新净资产卡片 (持仓结余 + 现金资产结余)
+  var netAssets = totalHoldMarket + cashBal;
+  var elNetAssets = document.getElementById('val-account-net-assets');
+  var subNetAssets = document.getElementById('sub-account-net-assets');
+  if (elNetAssets) elNetAssets.innerText = fmt(netAssets);
+  if (subNetAssets) subNetAssets.innerText = '持仓结余 + 现金结余 (HKD)';
 
   // 更新综合账户盈亏卡片
   var elAccPnl = document.getElementById('val-account-pnl');
