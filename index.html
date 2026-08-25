@@ -539,31 +539,16 @@
         </div>
       </div>
 
-      <!-- 富途证券成本价计算方法与时间段选择 -->
-      <div class="controls-row no-print">
-        <div class="pill-group" title="富途证券支持的两种持仓成本价计算方式">
-          <button id="btn-diluted" class="pill-btn active" onclick="setCostMethod('DILUTED')">摊薄成本法 (Diluted / 保本价)</button>
-          <button id="btn-average" class="pill-btn" onclick="setCostMethod('AVERAGE')">平均成本法 (Average / 买入均价)</button>
-        </div>
-
+      <!-- 时间段选择 -->
+      <div class="controls-row no-print" style="justify-content: flex-end;">
         <div class="date-picker-box">
-          <span>区间:</span>
+          <span>📅 核算区间:</span>
           <input type="date" id="date-start" class="date-input" onchange="onCustomDate()">
           <span>至</span>
           <input type="date" id="date-end" class="date-input" onchange="onCustomDate()">
-          <button onclick="resetAllTime()" title="重置" style="border:none; background:none; cursor:pointer; font-size:14px;">🔄</button>
+          <button onclick="resetAllTime()" title="重置为全历史区间" style="border:none; background:none; cursor:pointer; font-size:14px;">🔄</button>
         </div>
       </div>
-    </div>
-
-    <!-- 当前核算周期提示条 -->
-    <div class="info-banner">
-      <div>
-        ℹ️ 当前核算周期：<strong id="period-display-label" style="color: #0c4a6e;">全部历史（开户以来）</strong>
-        <span style="margin: 0 8px; color: #93c5fd;">|</span>
-        持仓成本法：<strong id="method-display-label" style="color: #0c4a6e;">富途摊薄成本法 (Diluted Cost / 保本价)</strong>
-      </div>
-      <div style="font-size: 11px; color: #64748b;">注：摊薄法将历史买卖盈亏与分红分摊入持仓成本，反映保本价格；平均法则仅按买入交收均价结转。</div>
     </div>
 
     <!-- 4 大核心涉税指标看板卡片 (点击卡片或右下角直接联动平滑定位) -->
@@ -1103,6 +1088,6 @@
     CRS 涉税金融资产与证券交易盈亏智能核算系统 &copy; 2026 证券投资顾问专用工作台
   </footer>
 
-  <script src="app.js?v=20260825_v40"></script>
+  <script src="app.js?v=20260825_v41"></script>
 </body>
 </html>
