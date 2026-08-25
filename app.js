@@ -1134,11 +1134,11 @@ function renderYearlyTable() {
   var tfoot = document.getElementById('yearly-tfoot');
   tbody.innerHTML = '';
 
-  var sDiv=0, sInt=0, sWac=0, sFifo=0, sSales=0, sDep=0, sWith=0;
+  var sDiv=0, sInt=0, sWac=0, sSales=0, sDep=0, sWith=0;
   var sortedYears = (appData.yearly_stats || []).slice().sort(function(a, b) { return b.year - a.year; });
   sortedYears.forEach(function(y) {
     sDiv += y.dividend_total; sInt += y.interest_total;
-    sWac += y.realized_pnl_wac; sFifo += y.realized_pnl_fifo;
+    sWac += y.realized_pnl_wac;
     sSales += y.sales_proceeds; sDep += y.deposits; sWith += y.withdrawals;
 
     var tr = document.createElement('tr');
@@ -1146,7 +1146,6 @@ function renderYearlyTable() {
       '<td class="text-right number-font" style="color:#b45309; font-weight:600;">' + fmt(y.dividend_total, '') + '</td>' +
       '<td class="text-right number-font" style="color:#1d4ed8; font-weight:600;">' + fmt(y.interest_total, '') + '</td>' +
       '<td class="text-right number-font ' + (y.realized_pnl_wac >= 0 ? 'text-gain' : 'text-loss') + '">' + fmt(y.realized_pnl_wac, '') + '</td>' +
-      '<td class="text-right number-font ' + (y.realized_pnl_fifo >= 0 ? 'text-gain' : 'text-loss') + '">' + fmt(y.realized_pnl_fifo, '') + '</td>' +
       '<td class="text-right number-font" style="color:#4338ca; font-weight:700;">' + fmt(y.sales_proceeds, '') + '</td>' +
       '<td class="text-right number-font">' + fmt(y.deposits, '') + '</td>' +
       '<td class="text-right number-font">' + fmt(y.withdrawals, '') + '</td>' +
@@ -1157,8 +1156,7 @@ function renderYearlyTable() {
   tfoot.innerHTML = '<tr><td>全历史汇总</td>' +
     '<td class="text-right number-font" style="color:#b45309;">' + fmt(sDiv, '') + '</td>' +
     '<td class="text-right number-font" style="color:#1d4ed8;">' + fmt(sInt, '') + '</td>' +
-    '<td class="text-right number-font text-gain">' + fmt(sWac, '') + '</td>' +
-    '<td class="text-right number-font text-gain">' + fmt(sFifo, '') + '</td>' +
+    '<td class="text-right number-font ' + (sWac >= 0 ? 'text-gain' : 'text-loss') + '">' + fmt(sWac, '') + '</td>' +
     '<td class="text-right number-font" style="color:#4338ca;">' + fmt(sSales, '') + '</td>' +
     '<td class="text-right number-font">' + fmt(sDep, '') + '</td>' +
     '<td class="text-right number-font">' + fmt(sWith, '') + '</td>' +
@@ -2067,9 +2065,9 @@ function exportToExcel() {
   if (!appData) return;
   var csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
   csvContent += '【CRS 年度涉税收益申报汇总】\r\n';
-  csvContent += '申报年度,股息总额(HKD),利息总额(HKD),账户已实现盈亏_加权平均(HKD),账户已实现盈亏_先进先出(HKD),出售金融资产总额(HKD),当年入金(HKD),当年出金(HKD)\r\n';
+  csvContent += '申报年度,股息总额(HKD),利息总额(HKD),账户已实现盈亏(HKD),出售金融资产总额(HKD),当年入金(HKD),当年出金(HKD)\r\n';
   appData.yearly_stats.forEach(function(y) {
-    csvContent += y.year + '年,' + y.dividend_total + ',' + y.interest_total + ',' + y.realized_pnl_wac + ',' + y.realized_pnl_fifo + ',' + y.sales_proceeds + ',' + y.deposits + ',' + y.withdrawals + '\r\n';
+    csvContent += y.year + '年,' + y.dividend_total + ',' + y.interest_total + ',' + y.realized_pnl_wac + ',' + y.sales_proceeds + ',' + y.deposits + ',' + y.withdrawals + '\r\n';
   });
 
   csvContent += '\r\n【单只股票全景盈亏与持仓透视】\r\n';
