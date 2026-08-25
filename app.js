@@ -764,7 +764,7 @@ function openStockModal(code) {
       '</div>' +
       '<div style="display:flex; align-items:center; gap:16px;">' +
       '<div><span style="font-size:11px; color:#64748b;">持仓最新市值:</span> <strong class="number-font" style="color:#0f172a; margin-left:4px;">' + fmt(mVal) + '</strong></div>' +
-      '<div><span style="font-size:11px; color:#64748b;">未实现浮动盈亏:</span> <strong class="number-font ' + uPnlClass + '" style="font-size:14px; margin-left:4px;">' + sign + fmt(uPnl) + ' (' + sign + uRoi.toFixed(2) + '%)</strong></div>' +
+      '<div><span style="font-size:11px; color:#64748b;">未实现浮动盈亏:</span> <strong class="number-font ' + uPnlClass + '" style="font-size:14px; margin-left:4px;">' + uSign + fmt(uPnl) + ' (' + uSign + uRoi.toFixed(2) + '%)</strong></div>' +
       '</div>' +
       '</div>';
   }
