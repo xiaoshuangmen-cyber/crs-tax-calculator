@@ -1023,20 +1023,24 @@ function renderChargesTable() {
   var pageList = list.slice((chargesPage - 1) * chargesPageSize, chargesPage * chargesPageSize);
 
   pageList.forEach(function(c) {
-    var isRefund = c.type.includes('退款') || c.type.includes('退佣金') || c.io === 'D';
+    var isIncoming = c.type.includes('退款') || c.type.includes('退佣金') || c.type.includes('赎回') || c.type.includes('返还') || c.io === 'D';
     var tagBg = '#f1f5f9', tagColor = '#475569', amtColor = '#64748b', sign = '-';
 
-    if (isRefund) {
+    if (isIncoming) {
       tagBg = '#d1fae5'; tagColor = '#065f46'; amtColor = '#059669'; sign = '+';
     } else if (c.type.includes('利息')) {
       tagBg = '#fef3c7'; tagColor = '#92400e'; amtColor = '#b45309'; sign = '-';
     } else if (c.type.includes('申购')) {
       tagBg = '#e0f2fe'; tagColor = '#0369a1'; amtColor = '#0284c7'; sign = '-';
+    } else if (c.type.includes('税')) {
+      tagBg = '#fee2e2'; tagColor = '#991b1b'; amtColor = '#dc2626'; sign = '-';
     }
+
+    var icon = isIncoming ? '📥 ' : (c.type.includes('利息') ? '📈 ' : (c.type.includes('税') ? '🏛️ ' : '🏷️ '));
 
     var tr = document.createElement('tr');
     tr.innerHTML = '<td style="font-family:monospace; font-weight:600;">' + c.date + '</td>' +
-      '<td class="text-center"><span class="tag" style="background:' + tagBg + '; color:' + tagColor + '; font-weight:700;">' + (isRefund ? '📥 ' : (c.type.includes('利息') ? '📈 ' : '🏷️ ')) + c.type + '</span></td>' +
+      '<td class="text-center"><span class="tag" style="background:' + tagBg + '; color:' + tagColor + '; font-weight:700;">' + icon + c.type + '</span></td>' +
       '<td class="text-right number-font" style="font-weight:700; color:' + amtColor + ';">' + sign + fmt(c.amount) + '</td>' +
       '<td style="color:#475569;">' + c.remarks + '</td>';
     tbody.appendChild(tr);
@@ -1434,9 +1438,16 @@ function calculateAllFromRecords(records) {
       }
 
       var isDiv = remarksUpper.includes('DIVIDEND') || remarksUpper.includes('DIV ') || remarks.includes('股息') || remarks.includes('分红');
-      var isInt = remarksUpper.includes('INT.') || remarksUpper.includes('INTEREST') || remarks.includes('利息') || remarks.includes('结息');
-      var isIpo = remarksUpper.includes('IPO') || remarksUpper.includes('EIPO') || remarksUpper.includes('APP #') || remarksUpper.includes('REFUND #') || remarksUpper.includes('LOAN INT') || remarksUpper.includes('ALLOTMENT') || remarks.includes('新股') || remarks.includes('申购');
-      var isChg = isIpo || remarksUpper.includes('CHARGE') || remarksUpper.includes('CHG') || remarksUpper.includes('FEE') || remarksUpper.includes('SERVICE') || remarksUpper.includes('POSTAGE') || remarks.includes('手续费') || remarks.includes('收费') || remarks.includes('服务费') || remarks.includes('邮费');
+      var isInt = (remarksUpper.includes('INT.') || remarksUpper.includes('INTEREST') || remarks.includes('利息') || remarks.includes('结息')) && !remarksUpper.includes('LOAN INT') && !remarksUpper.includes('EIPO') && !remarksUpper.includes('IPO');
+
+      var isRedemption = remarksUpper.includes('REDEMPTION') || remarksUpper.includes('REDEEM') || remarks.includes('赎回');
+      var isSubscription = (remarksUpper.includes('SUBSCRIPTION') || remarks.includes('申购')) && !isDiv;
+      var isCommissionRefund = (remarksUpper.includes('COMMISSION') && (remarksUpper.includes('REFUND') || remarksUpper.includes('REBATE') || ['D', 'DEPOSIT', '存入'].includes(io))) || remarks.includes('佣金返还') || remarks.includes('佣金回赠');
+      var isFeeRefund = (remarksUpper.includes('REFUND') || remarks.includes('退款') || remarks.includes('返还')) && !isDiv;
+      var isIpo = remarksUpper.includes('IPO') || remarksUpper.includes('EIPO') || remarksUpper.includes('APP #') || remarksUpper.includes('REFUND #') || remarksUpper.includes('LOAN INT') || remarksUpper.includes('ALLOTMENT') || remarks.includes('新股');
+      var isRegularCharge = remarksUpper.includes('CHARGE') || remarksUpper.includes('CHG') || remarksUpper.includes('FEE') || remarksUpper.includes('SERVICE') || remarksUpper.includes('POSTAGE') || remarksUpper.includes('SCRIP') || remarksUpper.includes('TAX') || remarks.includes('手续费') || remarks.includes('收费') || remarks.includes('服务费') || remarks.includes('邮费') || remarks.includes('过户费');
+
+      var isOtherOp = isRedemption || isSubscription || isCommissionRefund || isFeeRefund || isIpo || isRegularCharge;
 
       if (isDiv) {
         divLogs.push({ date: rec.date_str, amount: deposit, remarks: remarks, year: yr });
@@ -1447,20 +1458,26 @@ function calculateAllFromRecords(records) {
             break;
           }
         }
-      } else if (isInt && !isIpo) {
+      } else if (isInt) {
         intLogs.push({ date: rec.date_str, amount: deposit, remarks: remarks, year: yr });
         yearly[yr].interest_total += deposit;
-      } else if (isChg) {
+      } else if (isOtherOp) {
         var amt = ['W', 'WITHDRAW', '提取', '出金'].includes(io) ? deduct : deposit;
         var cType = '规费扣除';
-        if (isIpo) {
+        if (isRedemption) cType = '基金赎回';
+        else if (isSubscription) cType = '基金申购';
+        else if (isCommissionRefund) cType = '佣金返还';
+        else if (isIpo) {
           if (remarksUpper.includes('REFUND')) cType = 'eIPO退款';
           else if (remarksUpper.includes('LOAN INT')) cType = 'eIPO利息';
           else if (remarksUpper.includes('COMMISSION')) cType = 'eIPO退佣金';
           else if (remarksUpper.includes('HANDLING FEE') || remarksUpper.includes('FEE')) cType = 'eIPO手续费';
           else if (['W', 'WITHDRAW', '提取', '出金'].includes(io) || remarksUpper.includes('APP #')) cType = 'eIPO申购扣款';
           else cType = 'eIPO往来';
-        }
+        } else if (isFeeRefund) cType = '费用退还';
+        else if (remarksUpper.includes('SCRIP')) cType = '过户规费';
+        else if (remarksUpper.includes('TAX')) cType = '税费扣除';
+
         chargeLogs.push({ date: rec.date_str, type: cType, amount: amt, io: io, remarks: remarks, year: yr });
       } else {
         if (['D', 'DEPOSIT', '存入', '入金'].includes(io)) {

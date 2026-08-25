@@ -232,9 +232,17 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
                 continue
 
             is_div = 'DIVIDEND' in remarks_upper or 'DIV ' in remarks_upper or '股息' in remarks or '分红' in remarks
-            is_int = 'INT.' in remarks_upper or 'INTEREST' in remarks_upper or '利息' in remarks or '结息' in remarks
-            is_ipo = 'IPO' in remarks_upper or 'EIPO' in remarks_upper or 'APP #' in remarks_upper or 'REFUND #' in remarks_upper or 'LOAN INT' in remarks_upper or 'ALLOTMENT' in remarks_upper or '新股' in remarks or '申购' in remarks
-            is_charge = is_ipo or 'CHARGE' in remarks_upper or 'CHG' in remarks_upper or 'FEE' in remarks_upper or 'SERVICE' in remarks_upper or 'POSTAGE' in remarks_upper or '手续费' in remarks or '收费' in remarks or '服务费' in remarks or '邮费' in remarks
+            is_int = ('INT.' in remarks_upper or 'INTEREST' in remarks_upper or '利息' in remarks or '结息' in remarks) and not any(k in remarks_upper for k in ['LOAN INT', 'EIPO', 'IPO'])
+
+            # 基金赎回/申购、佣金/手续费返还、新股业务、各项税费规费
+            is_redemption = 'REDEMPTION' in remarks_upper or 'REDEEM' in remarks_upper or '赎回' in remarks
+            is_subscription = ('SUBSCRIPTION' in remarks_upper or '申购' in remarks) and not is_div
+            is_commission_refund = ('COMMISSION' in remarks_upper and ('REFUND' in remarks_upper or 'REBATE' in remarks_upper or io in ['D', 'DEPOSIT', '存入'])) or '佣金返还' in remarks or '佣金回赠' in remarks
+            is_fee_refund = ('REFUND' in remarks_upper or '退款' in remarks or '返还' in remarks) and not is_div
+            is_ipo = 'IPO' in remarks_upper or 'EIPO' in remarks_upper or 'APP #' in remarks_upper or 'REFUND #' in remarks_upper or 'LOAN INT' in remarks_upper or 'ALLOTMENT' in remarks_upper or '新股' in remarks
+            is_regular_charge = 'CHARGE' in remarks_upper or 'CHG' in remarks_upper or 'FEE' in remarks_upper or 'SERVICE' in remarks_upper or 'POSTAGE' in remarks_upper or 'SCRIP' in remarks_upper or 'TAX' in remarks_upper or '手续费' in remarks or '收费' in remarks or '服务费' in remarks or '邮费' in remarks or '过户费' in remarks
+
+            is_other_operation = is_redemption or is_subscription or is_commission_refund or is_fee_refund or is_ipo or is_regular_charge
 
             if is_div:
                 dividend_logs.append({
@@ -249,7 +257,7 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
                         stocks[code]['dividends_total'] += deposit
                         break
 
-            elif is_int and not is_ipo:
+            elif is_int:
                 interest_logs.append({
                     'date': rec['date_str'],
                     'amount': deposit,
@@ -258,10 +266,16 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
                 })
                 yearly_stats[yr]['interest_total'] += deposit
 
-            elif is_charge:
+            elif is_other_operation:
                 amt = deduct if io in ['W', 'WITHDRAW', '提取', '出金'] else deposit
                 c_type = '规费扣除'
-                if is_ipo:
+                if is_redemption:
+                    c_type = '基金赎回'
+                elif is_subscription:
+                    c_type = '基金申购'
+                elif is_commission_refund:
+                    c_type = '佣金返还'
+                elif is_ipo:
                     if 'REFUND' in remarks_upper:
                         c_type = 'eIPO退款'
                     elif 'LOAN INT' in remarks_upper:
@@ -274,6 +288,13 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
                         c_type = 'eIPO申购扣款'
                     else:
                         c_type = 'eIPO往来'
+                elif is_fee_refund:
+                    c_type = '费用退还'
+                elif 'SCRIP' in remarks_upper:
+                    c_type = '过户规费'
+                elif 'TAX' in remarks_upper:
+                    c_type = '税费扣除'
+
                 yearly_stats[yr]['dividend_charges'] += (deduct - deposit)
                 charge_logs.append({'date': rec['date_str'], 'type': c_type, 'amount': amt, 'io': io, 'remarks': remarks, 'year': yr})
 
