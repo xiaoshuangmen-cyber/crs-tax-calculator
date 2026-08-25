@@ -96,6 +96,13 @@ function resetToEmptyState() {
   document.getElementById('val-withdraw-all').innerText = 'HK$ 0.00';
   document.getElementById('val-net-deposit-all').innerText = 'HK$ 0.00';
 
+  // 现金结余与综合账户盈亏归零
+  userCashBalance = 0;
+  var elCashBal = document.getElementById('val-cash-balance'); if (elCashBal) elCashBal.innerText = 'HK$ 0.00';
+  var tagCashStatus = document.getElementById('tag-cash-status'); if (tagCashStatus) tagCashStatus.innerText = '';
+  var elAccPnl = document.getElementById('val-account-pnl'); if (elAccPnl) { elAccPnl.innerText = 'HK$ 0.00'; elAccPnl.style.color = '#fb7185'; }
+  var subAccPnl = document.getElementById('sub-account-pnl'); if (subAccPnl) subAccPnl.innerText = '出金 + 结余 + 市值 - 入金';
+
   // 持仓汇总条归零
   var elHoldCost = document.getElementById('val-hold-cost');
   var elHoldMarket = document.getElementById('val-hold-market');
@@ -150,6 +157,11 @@ function initApp() {
   if (!appData) return;
   var welcomeCard = document.getElementById('empty-welcome-card');
   if (welcomeCard) welcomeCard.style.display = 'none';
+
+  // 读取当前客户账号在本地保存的现金结余
+  var accNo = (appData.client_info && appData.client_info.account_no) || 'default';
+  var savedCash = localStorage.getItem('crs_cash_balance_' + accNo);
+  userCashBalance = (savedCash !== null && !isNaN(parseFloat(savedCash))) ? parseFloat(savedCash) : 0;
 
   renderClientInfo();
   renderYearPills();
@@ -296,6 +308,104 @@ function setMethod(m) {
   setCostMethod(m === 'FIFO' ? 'AVERAGE' : (m === 'WAC' ? 'AVERAGE' : m));
 }
 
+let userCashBalance = 0;
+
+function openCashBalanceModal(event) {
+  if (event) event.stopPropagation();
+  var input = document.getElementById('input-cash-balance');
+  if (input) {
+    input.value = userCashBalance > 0 ? userCashBalance : '';
+  }
+  var modal = document.getElementById('cash-balance-modal');
+  if (modal) {
+    modal.classList.add('open');
+    setTimeout(function() {
+      if (input) input.focus();
+    }, 100);
+  }
+}
+
+function closeCashBalanceModal() {
+  var modal = document.getElementById('cash-balance-modal');
+  if (modal) modal.classList.remove('open');
+}
+
+function closeCashBalanceModalOnOutside(e) {
+  if (e.target.id === 'cash-balance-modal') closeCashBalanceModal();
+}
+
+function saveCashBalanceFromModal() {
+  var input = document.getElementById('input-cash-balance');
+  var val = parseFloat(input ? input.value : 0);
+  userCashBalance = (!isNaN(val) && val >= 0) ? val : 0;
+
+  var accNo = (appData && appData.client_info && appData.client_info.account_no) || 'default';
+  localStorage.setItem('crs_cash_balance_' + accNo, userCashBalance);
+
+  closeCashBalanceModal();
+  updateAccountPnLCard();
+  showToast('已保存账户现金资产结余: ' + fmt(userCashBalance), 'success');
+}
+
+function getTotalHoldingMarket() {
+  if (!appData || !appData.stocks) return 0;
+  var total = 0;
+  appData.stocks.forEach(function(st) {
+    if (st.status === '持仓中') {
+      var eff = getEffectivePrice(st);
+      total += st.current_qty * eff.price;
+    }
+  });
+  return total;
+}
+
+function updateAccountPnLCard() {
+  if (!appData) return;
+  var sDate = document.getElementById('date-start').value || '1970-01-01';
+  var eDate = document.getElementById('date-end').value || '2099-12-31';
+  var cash = appData.cash_logs.filter(function(c) { return c.date >= sDate && c.date <= eDate; });
+  var depLogs = cash.filter(function(c) { return c.type === '入金'; });
+  var withLogs = cash.filter(function(c) { return c.type === '出金'; });
+  var depSum = depLogs.reduce(function(acc, cur) { return acc + cur.amount; }, 0);
+  var withSum = withLogs.reduce(function(acc, cur) { return acc + cur.amount; }, 0);
+
+  var totalHoldMarket = getTotalHoldingMarket();
+  var cashBal = userCashBalance || 0;
+  var accountPnl = withSum + cashBal + totalHoldMarket - depSum;
+  var accountRoi = depSum > 0 ? (accountPnl / depSum * 100) : 0;
+  var pnlSign = accountPnl >= 0 ? '+' : '';
+  var roiSign = accountRoi >= 0 ? '+' : '';
+
+  // 更新现金结余卡片
+  var elCashBal = document.getElementById('val-cash-balance');
+  if (elCashBal) elCashBal.innerText = fmt(cashBal);
+  var tagCashStatus = document.getElementById('tag-cash-status');
+  if (tagCashStatus) {
+    tagCashStatus.innerText = cashBal > 0 ? '(已录入)' : '(待录入)';
+  }
+
+  // 更新综合账户盈亏卡片
+  var elAccPnl = document.getElementById('val-account-pnl');
+  var cardAccPnl = document.getElementById('card-account-pnl');
+  var iconAccPnlWrap = document.getElementById('icon-account-pnl-wrap');
+  var subAccPnl = document.getElementById('sub-account-pnl');
+  if (elAccPnl) {
+    elAccPnl.innerText = pnlSign + fmt(accountPnl);
+    var isGain = accountPnl >= 0;
+    elAccPnl.style.color = isGain ? '#fb7185' : '#34d399'; // 暗色卡片上红涨绿跌
+    if (cardAccPnl) {
+      cardAccPnl.style.borderColor = isGain ? '#f43f5e' : '#10b981';
+    }
+    if (iconAccPnlWrap) {
+      iconAccPnlWrap.style.background = isGain ? 'rgba(244, 63, 94, 0.15)' : 'rgba(16, 185, 129, 0.15)';
+      iconAccPnlWrap.style.borderColor = isGain ? 'rgba(244, 63, 94, 0.3)' : 'rgba(16, 185, 129, 0.3)';
+    }
+  }
+  if (subAccPnl) {
+    subAccPnl.innerText = '总收益率: ' + roiSign + accountRoi.toFixed(2) + '% (出金+结余+市值-入金)';
+  }
+}
+
 function recalculate() {
   if (!appData) return;
   var sDate = document.getElementById('date-start').value || '1970-01-01';
@@ -352,6 +462,9 @@ function recalculate() {
   var bCash = document.getElementById('tab-badge-cash'); if (bCash) bCash.innerText = cash.length;
   var charges = (appData.charge_logs || []).filter(function(c) { return c.date >= sDate && c.date <= eDate; });
   var bChg = document.getElementById('tab-badge-charges'); if (bChg) bChg.innerText = charges.length;
+
+  // 联动更新综合账户盈亏与现金结余卡片
+  updateAccountPnLCard();
 }
 
 function filterStockTable(mode) {
@@ -614,6 +727,9 @@ function renderStockTable() {
       '<td class="text-center no-print" style="white-space: nowrap;"><button class="btn-drill" onclick="openStockModal(\'' + st.code + '\')">' + st.trades_count + ' 笔穿透</button></td>';
     tbody.appendChild(tr);
   });
+
+  // 联动更新全景账户盈亏卡片
+  updateAccountPnLCard();
 }
 
 // 选项卡切换与平滑滚动定位
