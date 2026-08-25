@@ -646,14 +646,17 @@
             <tr>
               <th style="min-width: 140px;">股票代码/名称</th>
               <th style="text-align: center; min-width: 75px;">状态</th>
-              <th class="text-right">累计买入金额</th>
-              <th class="text-right">累计卖出金额</th>
-              <th class="text-right">已实现盈亏</th>
+              <th class="text-right">累计买入 (均价)</th>
+              <th class="text-right">累计卖出 (均价)</th>
+              <th class="text-right">已实现盈亏 (CRS)</th>
               <th class="text-right">持仓股数</th>
-              <th class="text-right">成本均价</th>
+              <th class="text-right" title="仅考虑买入计算的持仓平均成本">平均成本 (WAC)</th>
+              <th class="text-right" title="考虑历史买卖盈亏及分红分摊后的保本价格">摊薄保本价</th>
               <th class="text-right" style="min-width: 105px;">最新市价 (可修改)</th>
               <th class="text-right">持仓总市值</th>
-              <th class="text-right" style="min-width: 105px;">未实现盈亏 (浮动)</th>
+              <th class="text-right" style="min-width: 105px;">未实现浮动盈亏</th>
+              <th class="text-right">累计现金分红</th>
+              <th class="text-right" style="min-width: 105px;" title="富途标准综合总收益 = 已实现 + 浮动 + 现金分红">综合总盈亏 (总收益)</th>
               <th class="text-center no-print" style="min-width: 90px; text-align: center;">穿透明细</th>
             </tr>
           </thead>
@@ -850,6 +853,6 @@
     CRS 涉税金融资产与证券交易盈亏智能核算系统 &copy; 2026 证券投资顾问专用工作台
   </footer>
 
-  <script src="app.js?v=20260820_v17"></script>
+  <script src="app.js?v=20260825_v18"></script>
 </body>
 </html>

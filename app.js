@@ -392,23 +392,31 @@ function renderStockTable() {
 
   list.forEach(function(st) {
     var tr = document.createElement('tr');
+    var isHold = st.status === '持仓中';
     var pnl = costMethod === 'WAC' ? st.realized_pnl_wac : st.realized_pnl_fifo;
     var pnlClass = pnl >= 0 ? 'text-gain' : 'text-loss';
-    var isHold = st.status === '持仓中';
+
+    var avgBuyP = st.total_buy_qty > 0 ? (st.total_buy_amount / st.total_buy_qty) : 0;
+    var avgSellP = st.total_sell_qty > 0 ? (st.total_sell_amount / st.total_sell_qty) : 0;
+    var dilutedC = isHold ? ((st.total_buy_amount - st.total_sell_amount - (st.dividends_total || 0)) / st.current_qty) : 0;
+
+    var curP = customPrices[st.code] !== undefined ? customPrices[st.code] : (st.avg_cost || 0);
+    var mVal = isHold ? (st.current_qty * curP) : 0;
+    var uPnl = isHold ? (mVal - st.current_cost_total) : 0;
+    var uRoi = (isHold && st.current_cost_total > 0) ? (uPnl / st.current_cost_total * 100) : 0;
+    var uPnlClass = uPnl >= 0 ? 'text-gain' : 'text-loss';
+    var uSign = uPnl >= 0 ? '+' : '';
+
+    var totalCompPnl = pnl + (isHold ? uPnl : 0) + (st.dividends_total || 0);
+    var compRoi = st.total_buy_amount > 0 ? (totalCompPnl / st.total_buy_amount * 100) : 0;
+    var compPnlClass = totalCompPnl >= 0 ? 'text-gain' : 'text-loss';
+    var compSign = totalCompPnl >= 0 ? '+' : '';
 
     var priceCell = '<span style="color:#94a3b8;">-</span>';
     var mktValCell = '<span style="color:#94a3b8;">-</span>';
     var unPnlCell = '<span style="color:#94a3b8;">-</span>';
 
     if (isHold) {
-      var hCost = st.current_cost_total;
-      var curP = customPrices[st.code] !== undefined ? customPrices[st.code] : (st.avg_cost || 0);
-      var mVal = st.current_qty * curP;
-      var uPnl = mVal - hCost;
-      var uRoi = hCost > 0 ? (uPnl / hCost * 100) : 0;
-      var uPnlClass = uPnl >= 0 ? 'text-gain' : 'text-loss';
-      var sign = uPnl >= 0 ? '+' : '';
-
       priceCell = '<div style="display:inline-flex; align-items:center; gap:4px;">' +
         '<input type="number" step="0.0001" min="0" value="' + curP.toFixed(4) + '" ' +
         'onchange="updateHoldingPrice(\'' + st.code + '\', this.value)" ' +
@@ -416,20 +424,23 @@ function renderStockTable() {
         '</div>';
 
       mktValCell = '<strong style="color:var(--slate-900);">' + fmt(mVal, '') + '</strong>';
-      unPnlCell = '<div class="' + uPnlClass + '" style="font-weight:700;">' + sign + fmt(uPnl, '') + '</div>' +
-        '<div class="' + uPnlClass + '" style="font-size:10px;">' + sign + uRoi.toFixed(2) + '%</div>';
+      unPnlCell = '<div class="' + uPnlClass + '" style="font-weight:700;">' + uSign + fmt(uPnl, '') + '</div>' +
+        '<div class="' + uPnlClass + '" style="font-size:10px;">' + uSign + uRoi.toFixed(2) + '%</div>';
     }
 
     tr.innerHTML = '<td><strong style="color:var(--slate-900); cursor:pointer;" onclick="openStockModal(\'' + st.code + '\')">' + st.code + ' ' + st.name + ' 🔍</strong><div style="font-size:10px; color:#94a3b8;">市场: ' + st.market + '</div></td>' +
       '<td class="text-center" style="white-space: nowrap;"><span class="tag" style="' + (isHold ? 'background:#e0f2fe;color:#0369a1;' : 'background:#f1f5f9;color:#475569;') + '">' + st.status + '</span></td>' +
-      '<td class="text-right number-font">' + fmt(st.total_buy_amount, '') + '</td>' +
-      '<td class="text-right number-font">' + fmt(st.total_sell_amount, '') + '</td>' +
-      '<td class="text-right number-font ' + pnlClass + '">' + fmt(pnl, '') + '</td>' +
+      '<td class="text-right number-font">' + fmt(st.total_buy_amount, '') + (avgBuyP > 0 ? '<div style="font-size:10px; color:#94a3b8;">均价 ' + avgBuyP.toFixed(3) + '</div>' : '') + '</td>' +
+      '<td class="text-right number-font">' + fmt(st.total_sell_amount, '') + (avgSellP > 0 ? '<div style="font-size:10px; color:#94a3b8;">均价 ' + avgSellP.toFixed(3) + '</div>' : '') + '</td>' +
+      '<td class="text-right number-font ' + pnlClass + '" style="font-weight:700;">' + fmt(pnl, '') + '</td>' +
       '<td class="text-right number-font" style="' + (isHold ? 'color:#0369a1; font-weight:700;' : 'color:#94a3b8;') + '">' + fmtQty(st.current_qty) + '</td>' +
       '<td class="text-right number-font">' + (st.avg_cost > 0 ? st.avg_cost.toFixed(4) : '-') + '</td>' +
+      '<td class="text-right number-font" style="' + (isHold ? 'color:#d97706; font-weight:600;' : 'color:#94a3b8;') + '">' + (isHold ? dilutedC.toFixed(4) : '-') + '</td>' +
       '<td class="text-right">' + priceCell + '</td>' +
       '<td class="text-right number-font">' + mktValCell + '</td>' +
       '<td class="text-right number-font">' + unPnlCell + '</td>' +
+      '<td class="text-right number-font" style="color:#d97706;">' + (st.dividends_total > 0 ? '+' + fmt(st.dividends_total, '') : '-') + '</td>' +
+      '<td class="text-right number-font ' + compPnlClass + '" style="font-weight:700;">' + compSign + fmt(totalCompPnl, '') + '<div style="font-size:10px;">' + compSign + compRoi.toFixed(2) + '%</div></td>' +
       '<td class="text-center no-print" style="white-space: nowrap;"><button class="btn-drill" onclick="openStockModal(\'' + st.code + '\')">' + st.trades_count + ' 笔穿透</button></td>';
     tbody.appendChild(tr);
   });
@@ -499,17 +510,66 @@ function openStockModal(code) {
   var isHold = st.status === '持仓中';
 
   var curP = customPrices[st.code] !== undefined ? customPrices[st.code] : (st.avg_cost || 0);
-  var mVal = st.current_qty * curP;
-  var uPnl = mVal - st.current_cost_total;
-  var uRoi = st.current_cost_total > 0 ? (uPnl / st.current_cost_total * 100) : 0;
+  var mVal = isHold ? (st.current_qty * curP) : 0;
+  var uPnl = isHold ? (mVal - st.current_cost_total) : 0;
+  var uRoi = (isHold && st.current_cost_total > 0) ? (uPnl / st.current_cost_total * 100) : 0;
   var uPnlClass = uPnl >= 0 ? 'text-gain' : 'text-loss';
-  var sign = uPnl >= 0 ? '+' : '';
+  var uSign = uPnl >= 0 ? '+' : '';
+
+  var avgBuyP = st.total_buy_qty > 0 ? (st.total_buy_amount / st.total_buy_qty) : 0;
+  var avgSellP = st.total_sell_qty > 0 ? (st.total_sell_amount / st.total_sell_qty) : 0;
+  var dilutedC = isHold ? ((st.total_buy_amount - st.total_sell_amount - (st.dividends_total || 0)) / st.current_qty) : 0;
+
+  var totalCompPnl = pnl + (isHold ? uPnl : 0) + (st.dividends_total || 0);
+  var compRoi = st.total_buy_amount > 0 ? (totalCompPnl / st.total_buy_amount * 100) : 0;
+  var compPnlClass = totalCompPnl >= 0 ? 'text-gain' : 'text-loss';
+  var compSign = totalCompPnl >= 0 ? '+' : '';
 
   var statsBox = document.getElementById('m-stats-box');
-  var htmlStats = '<div style="background:var(--slate-50); padding:10px; border-radius:8px; border:1px solid var(--slate-200);"><div style="font-size:11px; color:#64748b;">累计买入金额</div><div class="number-font" style="font-weight:700; color:#0f172a; margin-top:2px;">' + fmt(st.total_buy_amount) + '</div></div>' +
-    '<div style="background:var(--slate-50); padding:10px; border-radius:8px; border:1px solid var(--slate-200);"><div style="font-size:11px; color:#64748b;">累计卖出金额</div><div class="number-font" style="font-weight:700; color:#0f172a; margin-top:2px;">' + fmt(st.total_sell_amount) + '</div></div>' +
-    '<div style="background:var(--slate-50); padding:10px; border-radius:8px; border:1px solid var(--slate-200);"><div style="font-size:11px; color:#64748b;">已实现盈亏 (' + costMethod + ')</div><div class="number-font ' + pnlClass + '" style="margin-top:2px;">' + fmt(pnl) + '</div></div>' +
-    '<div style="background:var(--slate-50); padding:10px; border-radius:8px; border:1px solid var(--slate-200);"><div style="font-size:11px; color:#64748b;">当前持股 / 成本均价</div><div class="number-font" style="font-weight:700; color:#0369a1; margin-top:2px;">' + fmtQty(st.current_qty) + ' 股 / ' + (st.avg_cost > 0 ? st.avg_cost.toFixed(4) : '-') + '</div></div>';
+  var htmlStats =
+    // 1. 累计买入
+    '<div style="background:var(--slate-50); padding:12px; border-radius:8px; border:1px solid var(--slate-200);">' +
+      '<div style="font-size:11px; color:#64748b; font-weight:600;">📥 累计买入金额 (含交易规费)</div>' +
+      '<div class="number-font" style="font-size:16px; font-weight:700; color:#0f172a; margin-top:4px;">' + fmt(st.total_buy_amount) + '</div>' +
+      '<div style="font-size:11px; color:#64748b; margin-top:4px;">买入均价: <strong class="number-font">' + (avgBuyP > 0 ? avgBuyP.toFixed(4) : '-') + '</strong> (共 ' + fmtQty(st.total_buy_qty) + ' 股)</div>' +
+    '</div>' +
+
+    // 2. 累计卖出
+    '<div style="background:var(--slate-50); padding:12px; border-radius:8px; border:1px solid var(--slate-200);">' +
+      '<div style="font-size:11px; color:#64748b; font-weight:600;">📤 累计卖出净回款 (扣除规费)</div>' +
+      '<div class="number-font" style="font-size:16px; font-weight:700; color:#0f172a; margin-top:4px;">' + fmt(st.total_sell_amount) + '</div>' +
+      '<div style="font-size:11px; color:#64748b; margin-top:4px;">卖出均价: <strong class="number-font">' + (avgSellP > 0 ? avgSellP.toFixed(4) : '-') + '</strong> (共 ' + fmtQty(st.total_sell_qty) + ' 股)</div>' +
+    '</div>' +
+
+    // 3. 已实现盈亏
+    '<div style="background:var(--slate-50); padding:12px; border-radius:8px; border:1px solid var(--slate-200);">' +
+      '<div style="font-size:11px; color:#64748b; font-weight:600;">🎯 已实现盈亏 (' + costMethod + ' 结转)</div>' +
+      '<div class="number-font ' + pnlClass + '" style="font-size:16px; font-weight:700; margin-top:4px;">' + (pnl >= 0 ? '+' : '') + fmt(pnl) + '</div>' +
+      '<div style="font-size:11px; color:#64748b; margin-top:4px;">结转买入成本: <span class="number-font">' + fmt(st.total_sell_amount - pnl) + '</span></div>' +
+    '</div>' +
+
+    // 4. 当前持仓与双成本价
+    '<div style="background:var(--slate-50); padding:12px; border-radius:8px; border:1px solid var(--slate-200);">' +
+      '<div style="font-size:11px; color:#64748b; font-weight:600;">📦 当前持仓股数 / 成本价</div>' +
+      '<div class="number-font" style="font-size:16px; font-weight:700; color:' + (isHold ? '#0369a1' : '#94a3b8') + '; margin-top:4px;">' + (isHold ? fmtQty(st.current_qty) + ' 股' : '已全部清仓') + '</div>' +
+      '<div style="font-size:11px; color:#64748b; margin-top:4px;">' +
+        (isHold ? '平均成本: <strong class="number-font">' + st.avg_cost.toFixed(4) + '</strong> | 摊薄保本价: <strong class="number-font" style="color:#d97706;">' + dilutedC.toFixed(4) + '</strong>' : '无存量持仓') +
+      '</div>' +
+    '</div>' +
+
+    // 5. 累计现金分红
+    '<div style="background:var(--slate-50); padding:12px; border-radius:8px; border:1px solid var(--slate-200);">' +
+      '<div style="font-size:11px; color:#64748b; font-weight:600;">🎁 累计现金股息分红</div>' +
+      '<div class="number-font" style="font-size:16px; font-weight:700; color:#d97706; margin-top:4px;">+' + fmt(st.dividends_total || 0) + '</div>' +
+      '<div style="font-size:11px; color:#64748b; margin-top:4px;">已收现金派息总和</div>' +
+    '</div>' +
+
+    // 6. 综合总收益 (富途个股总盈亏)
+    '<div style="background:' + (totalCompPnl >= 0 ? '#fef2f2' : '#f0fdf4') + '; padding:12px; border-radius:8px; border:1px solid ' + (totalCompPnl >= 0 ? '#fecaca' : '#bbf7d0') + ';">' +
+      '<div style="font-size:11px; color:#475569; font-weight:700;">🏆 累计综合总盈亏 (已实现+浮动+分红)</div>' +
+      '<div class="number-font ' + compPnlClass + '" style="font-size:18px; font-weight:700; margin-top:4px;">' + compSign + fmt(totalCompPnl) + '</div>' +
+      '<div class="' + compPnlClass + '" style="font-size:11px; font-weight:600; margin-top:4px;">综合收益率: ' + compSign + compRoi.toFixed(2) + '%</div>' +
+    '</div>';
 
   if (isInitialOnly) {
     htmlStats += '<div style="grid-column: 1 / -1; background:#fffbeb; padding:12px 16px; border-radius:8px; border:1px solid #fef3c7; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px;">' +
@@ -1348,6 +1408,9 @@ function calculateAllFromRecords(records) {
 
   var stockList = Object.values(stocks).map(function(st) {
     var avgCost = st.current_qty > 1e-4 ? st.current_cost_total / st.current_qty : 0;
+    var avgBuyPrice = st.total_buy_qty > 0 ? st.total_buy_amount / st.total_buy_qty : 0;
+    var avgSellPrice = st.total_sell_qty > 0 ? st.total_sell_amount / st.total_sell_qty : 0;
+    var dilutedCost = st.current_qty > 1e-4 ? (st.total_buy_amount - st.total_sell_amount - st.dividends_total) / st.current_qty : 0;
     var roi = st.total_buy_amount > 0 ? (st.realized_pnl_wac / st.total_buy_amount * 100) : 0;
     return {
       code: st.code,
@@ -1356,6 +1419,9 @@ function calculateAllFromRecords(records) {
       status: st.current_qty > 1e-4 ? '持仓中' : '已清仓',
       current_qty: st.current_qty,
       avg_cost: avgCost,
+      diluted_cost: dilutedCost,
+      avg_buy_price: avgBuyPrice,
+      avg_sell_price: avgSellPrice,
       current_cost_total: st.current_cost_total,
       total_buy_qty: st.total_buy_qty,
       total_buy_amount: st.total_buy_amount,

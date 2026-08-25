@@ -424,6 +424,9 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
     stock_summary = []
     for code, s in stocks.items():
         avg_cost = s['current_cost_total'] / s['current_qty'] if s['current_qty'] > 1e-4 else 0.0
+        avg_buy_price = s['total_buy_amount'] / s['total_buy_qty'] if s['total_buy_qty'] > 0 else 0.0
+        avg_sell_price = s['total_sell_amount'] / s['total_sell_qty'] if s['total_sell_qty'] > 0 else 0.0
+        diluted_cost = (s['total_buy_amount'] - s['total_sell_amount'] - s['dividends_total']) / s['current_qty'] if s['current_qty'] > 1e-4 else 0.0
         roi_wac = (s['realized_pnl_wac'] / s['total_buy_amount'] * 100) if s['total_buy_amount'] > 0 else 0.0
         stock_summary.append({
             'code': code,
@@ -432,6 +435,9 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
             'status': '持仓中' if s['current_qty'] > 1e-4 else '已清仓',
             'current_qty': s['current_qty'],
             'avg_cost': avg_cost,
+            'diluted_cost': diluted_cost,
+            'avg_buy_price': avg_buy_price,
+            'avg_sell_price': avg_sell_price,
             'current_cost_total': s['current_cost_total'],
             'total_buy_qty': s['total_buy_qty'],
             'total_buy_amount': s['total_buy_amount'],
