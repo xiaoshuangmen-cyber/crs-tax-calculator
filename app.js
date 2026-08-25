@@ -196,12 +196,14 @@ function resetToEmptyState() {
   var elIntOutAll = document.getElementById('val-internal-out-all'); if (elIntOutAll) elIntOutAll.innerText = 'HK$ 0.00';
   var elIntNetAll = document.getElementById('val-internal-net-all'); if (elIntNetAll) elIntNetAll.innerText = 'HK$ 0.00';
 
-  // 现金结余与综合账户盈亏归零
+  // 现金结余、持仓结余与综合账户盈亏归零
   userCashBalance = 0;
   var elCashBal = document.getElementById('val-cash-balance'); if (elCashBal) elCashBal.innerText = 'HK$ 0.00';
   var tagCashStatus = document.getElementById('tag-cash-status'); if (tagCashStatus) tagCashStatus.innerText = '';
+  var elStockBal = document.getElementById('val-stock-holdings-balance'); if (elStockBal) elStockBal.innerText = 'HK$ 0.00';
+  var subStockBal = document.getElementById('sub-stock-holdings-balance'); if (subStockBal) subStockBal.innerText = '当前持仓股票最新总市值 (HKD)';
   var elAccPnl = document.getElementById('val-account-pnl'); if (elAccPnl) { elAccPnl.innerText = 'HK$ 0.00'; elAccPnl.style.color = '#fb7185'; }
-  var subAccPnl = document.getElementById('sub-account-pnl'); if (subAccPnl) subAccPnl.innerText = '出金 + 结余 + 市值 - 入金';
+  var subAccPnl = document.getElementById('sub-account-pnl'); if (subAccPnl) subAccPnl.innerText = '出金 + 结余 + 持仓市值 - 入金';
 
   // 持仓汇总条归零
   var elHoldCost = document.getElementById('val-hold-cost');
@@ -486,6 +488,15 @@ function updateAccountPnLCard() {
   var tagCashStatus = document.getElementById('tag-cash-status');
   if (tagCashStatus) {
     tagCashStatus.innerText = cashBal > 0 ? '(已录入)' : '(待录入)';
+  }
+
+  // 更新账户持仓结余卡片 (持仓股票最新总市值)
+  var elStockBal = document.getElementById('val-stock-holdings-balance');
+  var subStockBal = document.getElementById('sub-stock-holdings-balance');
+  if (elStockBal) elStockBal.innerText = fmt(totalHoldMarket);
+  if (subStockBal) {
+    var holdList = (appData.stocks || []).filter(function(s) { return s.status === '持仓中'; });
+    subStockBal.innerText = holdList.length > 0 ? (holdList.length + ' 只持仓中股票最新总市值') : '暂无股票持仓 (HKD)';
   }
 
   // 更新综合账户盈亏卡片
