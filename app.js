@@ -1151,6 +1151,10 @@ function renderChargesTable() {
 
     if (isIncoming) {
       tagBg = '#d1fae5'; tagColor = '#065f46'; amtColor = '#059669'; sign = '+';
+    } else if (c.type.includes('内部转账')) {
+      tagBg = '#f3e8ff'; tagColor = '#6b21a8'; amtColor = '#7e22ce'; sign = '-';
+    } else if (c.type.includes('货币兑换')) {
+      tagBg = '#e0f2fe'; tagColor = '#0369a1'; amtColor = '#0284c7'; sign = '-';
     } else if (c.type.includes('利息')) {
       tagBg = '#fef3c7'; tagColor = '#92400e'; amtColor = '#b45309'; sign = '-';
     } else if (c.type.includes('申购')) {
@@ -1159,7 +1163,7 @@ function renderChargesTable() {
       tagBg = '#fee2e2'; tagColor = '#991b1b'; amtColor = '#dc2626'; sign = '-';
     }
 
-    var icon = isIncoming ? '📥 ' : (c.type.includes('利息') ? '📈 ' : (c.type.includes('税') ? '🏛️ ' : '🏷️ '));
+    var icon = isIncoming ? '📥 ' : (c.type.includes('内部转账') ? '🔄 ' : (c.type.includes('货币兑换') ? '💱 ' : (c.type.includes('利息') ? '📈 ' : (c.type.includes('税') ? '🏛️ ' : '🏷️ '))));
 
     var tr = document.createElement('tr');
     tr.innerHTML = '<td style="font-family:monospace; font-weight:600;">' + c.date + '</td>' +
@@ -1563,14 +1567,17 @@ function calculateAllFromRecords(records) {
       var isDiv = remarksUpper.includes('DIVIDEND') || remarksUpper.includes('DIV ') || remarks.includes('股息') || remarks.includes('分红');
       var isInt = (remarksUpper.includes('INT.') || remarksUpper.includes('INTEREST') || remarks.includes('利息') || remarks.includes('结息')) && !remarksUpper.includes('LOAN INT') && !remarksUpper.includes('EIPO') && !remarksUpper.includes('IPO');
 
+      // 基金赎回/申购、佣金/手续费返还、新股业务、各项税费规费、内部转账与货币兑换
       var isRedemption = remarksUpper.includes('REDEMPTION') || remarksUpper.includes('REDEEM') || remarks.includes('赎回');
       var isSubscription = (remarksUpper.includes('SUBSCRIPTION') || remarks.includes('申购')) && !isDiv;
       var isCommissionRefund = (remarksUpper.includes('COMMISSION') && (remarksUpper.includes('REFUND') || remarksUpper.includes('REBATE') || ['D', 'DEPOSIT', '存入'].includes(io))) || remarks.includes('佣金返还') || remarks.includes('佣金回赠');
       var isFeeRefund = (remarksUpper.includes('REFUND') || remarks.includes('退款') || remarks.includes('返还')) && !isDiv;
       var isIpo = remarksUpper.includes('IPO') || remarksUpper.includes('EIPO') || remarksUpper.includes('APP #') || remarksUpper.includes('REFUND #') || remarksUpper.includes('LOAN INT') || remarksUpper.includes('ALLOTMENT') || remarks.includes('新股');
       var isRegularCharge = remarksUpper.includes('CHARGE') || remarksUpper.includes('CHG') || remarksUpper.includes('FEE') || remarksUpper.includes('SERVICE') || remarksUpper.includes('POSTAGE') || remarksUpper.includes('SCRIP') || remarksUpper.includes('TAX') || remarks.includes('手续费') || remarks.includes('收费') || remarks.includes('服务费') || remarks.includes('邮费') || remarks.includes('过户费');
+      var isInternalTransfer = remarksUpper.includes('INTERNAL') || rt.includes('INTERNAL') || remarks.includes('内部转') || remarks.includes('内部划转') || remarks.includes('内部调拨') || remarks.includes('内部往来') || remarksUpper.includes('INT TRF') || remarksUpper.includes('INT TRANSFER') || remarksUpper.includes('INTERNAL TRF') || remarksUpper.includes('INTERNAL TRANSFER');
+      var isConvert = remarksUpper.includes('CONVERT') || rt.includes('CONVERT') || remarksUpper.includes('CONVERSION') || rt.includes('CONVERSION') || remarksUpper.includes('FX CONVERT') || remarksUpper.includes('FX CONVERSION') || remarksUpper.includes('FX ') || remarks.includes('货币兑换') || remarks.includes('汇率兑换') || remarks.includes('兑换') || remarks.includes('换汇');
 
-      var isOtherOp = isRedemption || isSubscription || isCommissionRefund || isFeeRefund || isIpo || isRegularCharge;
+      var isOtherOp = isRedemption || isSubscription || isCommissionRefund || isFeeRefund || isIpo || isRegularCharge || isInternalTransfer || isConvert;
 
       if (isDiv) {
         divLogs.push({ date: rec.date_str, amount: deposit, remarks: remarks, year: yr });
@@ -1587,7 +1594,9 @@ function calculateAllFromRecords(records) {
       } else if (isOtherOp) {
         var amt = ['W', 'WITHDRAW', '提取', '出金'].includes(io) ? deduct : deposit;
         var cType = '规费扣除';
-        if (isRedemption) cType = '基金赎回';
+        if (isInternalTransfer) cType = '内部转账';
+        else if (isConvert) cType = '货币兑换';
+        else if (isRedemption) cType = '基金赎回';
         else if (isSubscription) cType = '基金申购';
         else if (isCommissionRefund) cType = '佣金返还';
         else if (isIpo) {
