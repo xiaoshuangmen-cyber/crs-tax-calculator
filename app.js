@@ -231,9 +231,7 @@ function resetToEmptyState() {
 
   // 年份胶囊栏清空
   var box = document.getElementById('year-pills-box');
-  if (box) {
-    box.innerHTML = '<button class="year-pill active">全部开户以来 (All-Time)</button>';
-  }
+  if (box) box.innerHTML = '';
 
   costMethod = 'DILUTED';
   var btnDiluted = document.getElementById('btn-diluted');
@@ -324,24 +322,7 @@ function renderClientInfo() {
 
 function renderYearPills() {
   var box = document.getElementById('year-pills-box');
-  box.innerHTML = '';
-
-  var allBtn = document.createElement('button');
-  allBtn.className = 'year-pill' + (yearFilter === 'ALL' ? ' active' : '');
-  allBtn.innerText = '全部开户以来 (All-Time)';
-  allBtn.onclick = function() { setYear('ALL'); };
-  box.appendChild(allBtn);
-
-  // 年份由新到旧降序排序（最新年份在前）
-  var sortedYears = (appData.yearly_stats || []).slice().sort(function(a, b) { return b.year - a.year; });
-
-  sortedYears.forEach(function(y) {
-    var btn = document.createElement('button');
-    btn.className = 'year-pill' + (yearFilter === y.year ? ' active' : '');
-    btn.innerText = y.year + ' 年度';
-    btn.onclick = function() { setYear(y.year); };
-    box.appendChild(btn);
-  });
+  if (box) box.innerHTML = '';
 }
 
 function setYear(yr) {
