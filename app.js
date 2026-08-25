@@ -443,6 +443,12 @@ function openNavModal(e) {
   }
 
   modal.classList.add('open');
+  setTimeout(function() {
+    if (input) {
+      input.focus();
+      input.select();
+    }
+  }, 100);
 }
 
 function closeNavModal() {
