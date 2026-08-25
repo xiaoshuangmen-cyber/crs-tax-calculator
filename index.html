@@ -243,6 +243,33 @@
       font-family: inherit;
     }
     
+    /* 行情刷新按钮与行情角标 */
+    .btn-quote-refresh {
+      background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;
+      padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: 6px;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-quote-refresh:hover { background: #dbeafe; border-color: #93c5fd; }
+    .btn-quote-refresh:disabled { opacity: 0.6; cursor: not-allowed; }
+    .spin {
+      display: inline-block;
+      animation: spinAnim 0.8s linear infinite;
+    }
+    @keyframes spinAnim {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .quote-badge-live {
+      background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0;
+      font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 4px;
+      display: inline-flex; align-items: center; gap: 2px;
+    }
+    .quote-badge-custom {
+      background: #fefce8; color: #ca8a04; border: 1px solid #fef08a;
+      font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 4px;
+    }
+    
     /* 表格与穿透列粘性自适应布局 */
     .table-wrap {
       overflow-x: auto;
@@ -497,11 +524,11 @@
         </div>
       </div>
 
-      <!-- 计税方法与时间段选择 -->
+      <!-- 富途证券成本价计算方法与时间段选择 -->
       <div class="controls-row no-print">
-        <div class="pill-group">
-          <button id="btn-wac" class="pill-btn active" onclick="setMethod('WAC')">加权平均法 (WAC)</button>
-          <button id="btn-fifo" class="pill-btn" onclick="setMethod('FIFO')">先进先出法 (FIFO)</button>
+        <div class="pill-group" title="富途证券支持的两种持仓成本价计算方式">
+          <button id="btn-diluted" class="pill-btn active" onclick="setCostMethod('DILUTED')">摊薄成本法 (Diluted / 保本价)</button>
+          <button id="btn-average" class="pill-btn" onclick="setCostMethod('AVERAGE')">平均成本法 (Average / 买入均价)</button>
         </div>
 
         <div class="date-picker-box">
@@ -522,9 +549,9 @@
       <div>
         ℹ️ 当前核算周期：<strong id="period-display-label" style="color: #0c4a6e;">全部历史（开户以来 2009~2026）</strong>
         <span style="margin: 0 8px; color: #93c5fd;">|</span>
-        计税成本法：<strong id="method-display-label" style="color: #0c4a6e;">移动加权平均成本法 (WAC)</strong>
+        持仓成本法：<strong id="method-display-label" style="color: #0c4a6e;">富途摊薄成本法 (Diluted Cost / 保本价)</strong>
       </div>
-      <div style="font-size: 11px; color: #64748b;">注：全历史买入成本严密结转，确保已实现盈亏绝对精准。</div>
+      <div style="font-size: 11px; color: #64748b;">注：摊薄法将历史买卖盈亏与分红分摊入持仓成本，反映保本价格；平均法则仅按买入交收均价结转。</div>
     </div>
 
     <!-- 4 大核心涉税指标看板卡片 (点击卡片或右下角直接联动平滑定位) -->
@@ -628,15 +655,18 @@
 
 
 
-      <div id="holding-summary-bar" style="background: #f8fafc; padding: 10px 20px; border-bottom: 1px solid var(--slate-200); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px;">
-        <div style="display: flex; align-items: center; gap: 16px;">
+      <div id="holding-summary-bar" style="background: #f8fafc; padding: 10px 20px; border-bottom: 1px solid var(--slate-200); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px;">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px;">
           <span>📦 持仓股票总成本: <strong id="val-hold-cost" class="number-font" style="color: var(--slate-800);">HK$ 0.00</strong></span>
           <span>📈 最新总市值: <strong id="val-hold-market" class="number-font" style="color: var(--slate-900);">HK$ 0.00</strong></span>
+          <span>🔥 未实现总盈亏 (浮动盈亏): <strong id="val-hold-unrealized" class="number-font text-gain" style="font-size: 13px;">+HK$ 0.00 (+0.00%)</strong></span>
         </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span>🔥 未实现总盈亏 (浮动盈亏):</span>
-          <strong id="val-hold-unrealized" class="number-font text-gain" style="font-size: 14px;">+HK$ 0.00 (+0.00%)</strong>
-          <span style="font-size: 11px; color: var(--slate-500);">(在下方可直接输入最新价测算)</span>
+        <div style="display: flex; align-items: center; gap: 10px;" class="no-print">
+          <span id="quote-update-time" style="font-size: 11px; color: var(--slate-500);"></span>
+          <button id="btn-refresh-quotes" class="btn-quote-refresh" onclick="refreshLatestQuotes(true)" title="调用腾讯行情接口获取当前所有持仓股票的最新成交价">
+            <span id="quote-refresh-icon">🔄</span>
+            <span>获取最新行情</span>
+          </button>
         </div>
       </div>
 
@@ -853,6 +883,6 @@
     CRS 涉税金融资产与证券交易盈亏智能核算系统 &copy; 2026 证券投资顾问专用工作台
   </footer>
 
-  <script src="app.js?v=20260825_v18"></script>
+  <script src="app.js?v=20260825_v19"></script>
 </body>
 </html>

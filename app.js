@@ -34,7 +34,7 @@ function getField(row, field, defVal) {
 }
 
 let appData = null;
-let costMethod = 'WAC';
+let costMethod = 'DILUTED'; // 富途证券默认：DILUTED(摊薄成本法/保本价), AVERAGE(平均成本法/买入加权均价)
 let yearFilter = 'ALL';
 let stockFilterMode = 'all';
 
@@ -56,11 +56,16 @@ function resetToEmptyState() {
   appData = null;
   window.__lastCleanRecords = null;
   customPrices = {};
-  initialCosts = {};
+  latestQuotes = {};
+  isFetchingQuotes = false;
+  lastQuoteUpdateTime = null;
   yearFilter = 'ALL';
 
   var welcomeCard = document.getElementById('empty-welcome-card');
   if (welcomeCard) welcomeCard.style.display = 'block';
+
+  var qTime = document.getElementById('quote-update-time');
+  if (qTime) qTime.innerHTML = '';
 
   // 客户信息清空
   document.getElementById('c-name').innerText = '等待导入客户流水';
@@ -115,8 +120,16 @@ function resetToEmptyState() {
     box.innerHTML = '<button class="year-pill active">全部开户以来 (All-Time)</button>';
   }
 
+  costMethod = 'DILUTED';
+  var btnDiluted = document.getElementById('btn-diluted');
+  var btnAverage = document.getElementById('btn-average');
+  if (btnDiluted) btnDiluted.className = 'pill-btn active';
+  if (btnAverage) btnAverage.className = 'pill-btn';
+  var mLabel = document.getElementById('method-display-label');
+  if (mLabel) mLabel.innerText = '富途摊薄成本法 (Diluted Cost / 保本价)';
+
   // 表格展示空状态行
-  var emptyRow = '<tr><td colspan="12" style="text-align:center; padding:32px 16px; color:#94a3b8; font-size:13px;">📥 暂无数据，请点击上方 <strong>📂 导入 C1900 / Excel</strong> 或直接将文件拖拽至此</td></tr>';
+  var emptyRow = '<tr><td colspan="14" style="text-align:center; padding:32px 16px; color:#94a3b8; font-size:13px;">📥 暂无数据，请点击上方 <strong>📂 导入 C1900 / Excel</strong> 或直接将文件拖拽至此</td></tr>';
   var tStock = document.getElementById('stock-tbody'); if (tStock) tStock.innerHTML = emptyRow;
   var tYearly = document.getElementById('yearly-tbody'); if (tYearly) tYearly.innerHTML = emptyRow;
   var tTrade = document.getElementById('trades-tbody'); if (tTrade) tTrade.innerHTML = emptyRow;
@@ -141,6 +154,11 @@ function initApp() {
   renderInterestTable();
   renderCashTable();
   renderChargesTable();
+
+  // 首次导入或数据初始化时，自动异步获取持仓股票最新行情
+  setTimeout(function() {
+    refreshLatestQuotes(false);
+  }, 200);
 }
 
 function showToast(msg, type) {
@@ -248,16 +266,27 @@ function onCustomDate() {
 
 function resetAllTime() { setYear('ALL'); }
 
-function setMethod(m) {
+function setCostMethod(m) {
   costMethod = m;
-  document.getElementById('btn-wac').className = 'pill-btn' + (m === 'WAC' ? ' active' : '');
-  document.getElementById('btn-fifo').className = 'pill-btn' + (m === 'FIFO' ? ' active' : '');
-  document.getElementById('method-display-label').innerText = m === 'WAC' ? '移动加权平均成本法 (WAC)' : '先进先出法 (FIFO)';
+  var btnDiluted = document.getElementById('btn-diluted');
+  var btnAverage = document.getElementById('btn-average');
+  if (btnDiluted) btnDiluted.className = 'pill-btn' + (m === 'DILUTED' ? ' active' : '');
+  if (btnAverage) btnAverage.className = 'pill-btn' + (m === 'AVERAGE' ? ' active' : '');
+
+  var label = document.getElementById('method-display-label');
+  if (label) {
+    label.innerText = m === 'DILUTED' ? '富途摊薄成本法 (Diluted Cost / 保本价)' : '富途平均成本法 (Average Cost / 买入加权均价)';
+  }
+
   recalculate();
   renderStockTable();
   renderTradesTable();
   renderYearlyTable();
-  showToast('计税方法已切换为: ' + (m === 'WAC' ? '移动加权平均法' : '先进先出法'), 'info');
+  showToast('持仓成本计算方法已切换为: ' + (m === 'DILUTED' ? '富途摊薄成本法 (保本价)' : '富途平均成本法 (买入均价)'), 'info');
+}
+
+function setMethod(m) {
+  setCostMethod(m === 'FIFO' ? 'AVERAGE' : (m === 'WAC' ? 'AVERAGE' : m));
 }
 
 function recalculate() {
@@ -327,6 +356,93 @@ function filterStockTable(mode) {
 }
 
 let customPrices = {};
+let latestQuotes = {};
+let isFetchingQuotes = false;
+let lastQuoteUpdateTime = null;
+
+async function refreshLatestQuotes(isManual = false) {
+  if (!appData || !appData.stocks || appData.stocks.length === 0) {
+    if (isManual) showToast('暂无可查询行情的股票数据', 'info');
+    return;
+  }
+
+  var holdingStocks = appData.stocks.filter(function(s) { return s.status === '持仓中'; });
+  var targetStocks = holdingStocks.length > 0 ? holdingStocks : appData.stocks;
+
+  if (targetStocks.length === 0) {
+    if (isManual) showToast('暂无持仓股票需要获取行情', 'info');
+    return;
+  }
+
+  var btn = document.getElementById('btn-refresh-quotes');
+  var icon = document.getElementById('quote-refresh-icon');
+  if (btn) btn.disabled = true;
+  if (icon) icon.className = 'spin';
+
+  if (isManual) {
+    showToast('正在从腾讯财经拉取持仓最新行情...', 'info');
+  }
+
+  try {
+    var payload = {
+      stocks: targetStocks.map(function(s) {
+        return { code: s.code, market: s.market || '' };
+      })
+    };
+
+    var resp = await fetch('/api/quotes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (resp.ok) {
+      var res = await resp.json();
+      if (res && res.quotes) {
+        var count = 0;
+        for (var k in res.quotes) {
+          if (res.quotes[k] && res.quotes[k].price > 0) {
+            latestQuotes[k] = res.quotes[k];
+            count++;
+          }
+        }
+        lastQuoteUpdateTime = new Date();
+        var timeStr = lastQuoteUpdateTime.toTimeString().split(' ')[0];
+        var qTime = document.getElementById('quote-update-time');
+        if (qTime) {
+          qTime.innerHTML = '⏱️ 行情已同步: <span style="font-weight:700; color:#0f172a;">' + timeStr + '</span>';
+        }
+
+        renderStockTable();
+        if (document.getElementById('stock-modal').classList.contains('open')) {
+          var titleEl = document.getElementById('m-stock-title');
+          if (titleEl) {
+            var currCode = titleEl.innerText.split(' ')[0];
+            if (currCode) openStockModal(currCode);
+          }
+        }
+
+        if (count > 0) {
+          showToast('🎉 成功获取 ' + count + ' 只持仓股票的最新行情！', 'success');
+        } else if (isManual) {
+          showToast('未从行情源匹配到最新价格，已保留成本参考价', 'info');
+        }
+      } else {
+        if (isManual) showToast('行情接口未返回有效数据', 'warning');
+      }
+    } else {
+      if (isManual) showToast('无法连接行情接口（请确认本地 Web 服务已启动）', 'warning');
+    }
+  } catch (err) {
+    console.error('Fetch quotes failed:', err);
+    if (isManual) {
+      showToast('获取行情异常: ' + err.message, 'error');
+    }
+  } finally {
+    if (btn) btn.disabled = false;
+    if (icon) icon.className = '';
+  }
+}
 
 function updateHoldingPrice(code, newPrice) {
   var p = parseFloat(newPrice);
@@ -339,6 +455,27 @@ function updateHoldingPrice(code, newPrice) {
   if (document.getElementById('stock-modal').classList.contains('open')) {
     openStockModal(code);
   }
+}
+
+function resetHoldingPriceToLive(code) {
+  delete customPrices[code];
+  renderStockTable();
+  if (document.getElementById('stock-modal').classList.contains('open')) {
+    openStockModal(code);
+  }
+  showToast('已重置为最新实时市价！', 'info');
+}
+
+function getEffectivePrice(st) {
+  var code = String(st.code || '');
+  var qData = latestQuotes[code] || latestQuotes[code.padStart(5, '0')] || latestQuotes[code.replace(/^0+/, '')];
+  if (customPrices[code] !== undefined) {
+    return { price: customPrices[code], type: 'custom', quote: qData };
+  }
+  if (qData && qData.price > 0) {
+    return { price: qData.price, type: 'live', quote: qData };
+  }
+  return { price: (st.avg_cost || 0), type: 'cost', quote: null };
 }
 
 function renderStockTable() {
@@ -363,8 +500,11 @@ function renderStockTable() {
 
   allList.forEach(function(st) {
     if (st.status === '持仓中') {
-      var hCost = st.current_cost_total;
-      var curP = customPrices[st.code] !== undefined ? customPrices[st.code] : (st.avg_cost || 0);
+      var hCost = costMethod === 'DILUTED'
+        ? (st.total_buy_amount - st.total_sell_amount - (st.dividends_total || 0))
+        : st.current_cost_total;
+      var eff = getEffectivePrice(st);
+      var curP = eff.price;
       var mVal = st.current_qty * curP;
       var uPnl = mVal - hCost;
       totalHoldCost += hCost;
@@ -393,17 +533,21 @@ function renderStockTable() {
   list.forEach(function(st) {
     var tr = document.createElement('tr');
     var isHold = st.status === '持仓中';
-    var pnl = costMethod === 'WAC' ? st.realized_pnl_wac : st.realized_pnl_fifo;
+    var pnl = st.realized_pnl_wac;
     var pnlClass = pnl >= 0 ? 'text-gain' : 'text-loss';
 
     var avgBuyP = st.total_buy_qty > 0 ? (st.total_buy_amount / st.total_buy_qty) : 0;
     var avgSellP = st.total_sell_qty > 0 ? (st.total_sell_amount / st.total_sell_qty) : 0;
     var dilutedC = isHold ? ((st.total_buy_amount - st.total_sell_amount - (st.dividends_total || 0)) / st.current_qty) : 0;
 
-    var curP = customPrices[st.code] !== undefined ? customPrices[st.code] : (st.avg_cost || 0);
+    var eff = getEffectivePrice(st);
+    var curP = eff.price;
     var mVal = isHold ? (st.current_qty * curP) : 0;
-    var uPnl = isHold ? (mVal - st.current_cost_total) : 0;
-    var uRoi = (isHold && st.current_cost_total > 0) ? (uPnl / st.current_cost_total * 100) : 0;
+    var hCost = costMethod === 'DILUTED'
+      ? (st.total_buy_amount - st.total_sell_amount - (st.dividends_total || 0))
+      : st.current_cost_total;
+    var uPnl = isHold ? (mVal - hCost) : 0;
+    var uRoi = (isHold && hCost !== 0) ? (uPnl / Math.abs(hCost) * 100) : 0;
     var uPnlClass = uPnl >= 0 ? 'text-gain' : 'text-loss';
     var uSign = uPnl >= 0 ? '+' : '';
 
@@ -417,10 +561,29 @@ function renderStockTable() {
     var unPnlCell = '<span style="color:#94a3b8;">-</span>';
 
     if (isHold) {
-      priceCell = '<div style="display:inline-flex; align-items:center; gap:4px;">' +
+      var badgeHtml = '';
+      if (eff.type === 'live') {
+        var chgPct = eff.quote.change_pct || 0;
+        var chgClass = chgPct >= 0 ? 'text-gain' : 'text-loss';
+        var chgSign = chgPct >= 0 ? '+' : '';
+        badgeHtml = '<div style="display:flex; align-items:center; justify-content:flex-end; gap:4px; margin-top:3px;">' +
+          '<span class="quote-badge-live" title="昨收: ' + (eff.quote.prev_close || '-') + ' | 更新: ' + (eff.quote.time || '-') + '">🟢 实时</span>' +
+          '<span class="' + chgClass + '" style="font-size:10px; font-weight:700;">' + chgSign + chgPct.toFixed(2) + '%</span>' +
+          '</div>';
+      } else if (eff.type === 'custom') {
+        badgeHtml = '<div style="display:flex; align-items:center; justify-content:flex-end; gap:4px; margin-top:3px;">' +
+          '<span class="quote-badge-custom">✏️ 自定义</span>' +
+          (eff.quote && eff.quote.price > 0 ? '<a href="javascript:void(0)" onclick="resetHoldingPriceToLive(\'' + st.code + '\')" style="font-size:10px; color:#2563eb; text-decoration:underline;">还原市价</a>' : '') +
+          '</div>';
+      } else {
+        badgeHtml = '<div style="font-size:10px; color:#94a3b8; text-align:right; margin-top:3px;">(成本参考)</div>';
+      }
+
+      priceCell = '<div style="display:flex; flex-direction:column; align-items:flex-end;">' +
         '<input type="number" step="0.0001" min="0" value="' + curP.toFixed(4) + '" ' +
         'onchange="updateHoldingPrice(\'' + st.code + '\', this.value)" ' +
-        'style="width:85px; padding:3px 6px; font-size:12px; font-weight:700; border:1px solid #cbd5e1; border-radius:6px; text-align:right; font-family:monospace; background:#fff;" title="输入最新市价实时测算浮动盈亏">' +
+        'style="width:90px; padding:3px 6px; font-size:12px; font-weight:700; border:1px solid #cbd5e1; border-radius:6px; text-align:right; font-family:monospace; background:' + (eff.type === 'custom' ? '#fffbeb' : '#fff') + ';" title="可直接输入最新市价实时测算浮动盈亏">' +
+        badgeHtml +
         '</div>';
 
       mktValCell = '<strong style="color:var(--slate-900);">' + fmt(mVal, '') + '</strong>';
@@ -502,17 +665,24 @@ function openStockModal(code) {
   var isInitialOnly = st.total_buy_qty === 0 && st.total_sell_qty > 0;
   var initC = initialCosts[st.code] || 0;
 
+  var eff = getEffectivePrice(st);
+  var curP = eff.price;
+  var isLiveQuote = eff.type === 'live';
+  var quoteInfo = eff.quote ? (' | 最新市价: ' + eff.quote.price + (eff.quote.change_pct !== undefined ? ' (' + (eff.quote.change_pct >= 0 ? '+' : '') + eff.quote.change_pct.toFixed(2) + '%)' : '')) : '';
+
   document.getElementById('m-stock-title').innerText = st.code + ' ' + st.name;
-  document.getElementById('m-stock-sub').innerText = '市场: ' + st.market + ' | 当前状态: ' + st.status + (isInitialOnly ? ' (⚠️ 期初存量股票)' : '');
+  document.getElementById('m-stock-sub').innerText = '市场: ' + st.market + ' | 当前状态: ' + st.status + quoteInfo + (isInitialOnly ? ' (⚠️ 期初存量股票)' : '');
 
   var pnl = costMethod === 'WAC' ? st.realized_pnl_wac : st.realized_pnl_fifo;
   var pnlClass = pnl >= 0 ? 'text-gain' : 'text-loss';
   var isHold = st.status === '持仓中';
 
-  var curP = customPrices[st.code] !== undefined ? customPrices[st.code] : (st.avg_cost || 0);
   var mVal = isHold ? (st.current_qty * curP) : 0;
-  var uPnl = isHold ? (mVal - st.current_cost_total) : 0;
-  var uRoi = (isHold && st.current_cost_total > 0) ? (uPnl / st.current_cost_total * 100) : 0;
+  var hCost = costMethod === 'DILUTED'
+    ? (st.total_buy_amount - st.total_sell_amount - (st.dividends_total || 0))
+    : st.current_cost_total;
+  var uPnl = isHold ? (mVal - hCost) : 0;
+  var uRoi = (isHold && hCost !== 0) ? (uPnl / Math.abs(hCost) * 100) : 0;
   var uPnlClass = uPnl >= 0 ? 'text-gain' : 'text-loss';
   var uSign = uPnl >= 0 ? '+' : '';
 
@@ -568,7 +738,7 @@ function openStockModal(code) {
     '<div style="background:' + (totalCompPnl >= 0 ? '#fef2f2' : '#f0fdf4') + '; padding:12px; border-radius:8px; border:1px solid ' + (totalCompPnl >= 0 ? '#fecaca' : '#bbf7d0') + ';">' +
       '<div style="font-size:11px; color:#475569; font-weight:700;">🏆 累计综合总盈亏 (已实现+浮动+分红)</div>' +
       '<div class="number-font ' + compPnlClass + '" style="font-size:18px; font-weight:700; margin-top:4px;">' + compSign + fmt(totalCompPnl) + '</div>' +
-      '<div class="' + compPnlClass + '" style="font-size:11px; font-weight:600; margin-top:4px;">综合收益率: ' + compSign + compRoi.toFixed(2) + '%</div>' +
+      '<div class="' + compPnlClass + '" style="font-size:11px; font-weight:600; margin-top:4px;">综合收益率: ' + compSign + compRoi.toFixed(2) + '% ' + (isHold ? ('(浮动: ' + uSign + fmt(uPnl) + ')') : '') + '</div>' +
     '</div>';
 
   if (isInitialOnly) {
