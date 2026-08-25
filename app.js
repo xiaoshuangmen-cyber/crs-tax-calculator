@@ -157,6 +157,7 @@ function resetToEmptyState() {
   var tDiv = document.getElementById('dividends-tbody'); if (tDiv) tDiv.innerHTML = emptyRow;
   var tInt = document.getElementById('interest-tbody'); if (tInt) tInt.innerHTML = emptyRow;
   var tCash = document.getElementById('cash-tbody'); if (tCash) tCash.innerHTML = emptyRow;
+  var tInternal = document.getElementById('internal-tbody'); if (tInternal) tInternal.innerHTML = emptyRow;
   var tCharges = document.getElementById('charges-tbody'); if (tCharges) tCharges.innerHTML = emptyRow;
 }
 
@@ -179,6 +180,7 @@ function initApp() {
   renderDividendsTable();
   renderInterestTable();
   renderCashTable();
+  renderInternalTable();
   renderChargesTable();
 
   // 首次导入或数据初始化时，自动异步获取持仓股票最新行情
@@ -493,7 +495,8 @@ function recalculate() {
   var bTrades = document.getElementById('tab-badge-trades'); if (bTrades) bTrades.innerText = trades.length;
   var bDiv = document.getElementById('tab-badge-div'); if (bDiv) bDiv.innerText = divs.length;
   var bInt = document.getElementById('tab-badge-int'); if (bInt) bInt.innerText = ints.length;
-  var bCash = document.getElementById('tab-badge-cash'); if (bCash) bCash.innerText = cash.length;
+  var bCash = document.getElementById('tab-badge-cash'); if (bCash) bCash.innerText = depLogs.length + withLogs.length;
+  var bInternal = document.getElementById('tab-badge-internal'); if (bInternal) bInternal.innerText = intInLogs.length + intOutLogs.length;
   var charges = (appData.charge_logs || []).filter(function(c) { return c.date >= sDate && c.date <= eDate; });
   var bChg = document.getElementById('tab-badge-charges'); if (bChg) bChg.innerText = charges.length;
 
@@ -768,7 +771,7 @@ function renderStockTable() {
 
 // 选项卡切换与平滑滚动定位
 function showTab(t) {
-  ['yearly', 'trades', 'dividends', 'interest', 'cash', 'charges'].forEach(function(k) {
+  ['yearly', 'trades', 'dividends', 'interest', 'cash', 'internal', 'charges'].forEach(function(k) {
     var btn = document.getElementById('tab-btn-' + k);
     var pane = document.getElementById('tab-pane-' + k);
     if (btn) btn.className = 'tab-btn' + (k === t ? ' active' : '');
@@ -1134,7 +1137,9 @@ function renderCashTable() {
   var s = document.getElementById('date-start').value || '1970-01-01';
   var e = document.getElementById('date-end').value || '2099-12-31';
 
-  var list = appData.cash_logs.filter(function(c) { return c.date >= s && c.date <= e; });
+  var list = appData.cash_logs.filter(function(c) {
+    return (c.type === '入金' || c.type === '出金') && c.date >= s && c.date <= e;
+  });
   var total = list.length;
   var totalPages = Math.ceil(total / cashPageSize) || 1;
   if (cashPage > totalPages) cashPage = totalPages;
@@ -1143,26 +1148,17 @@ function renderCashTable() {
 
   pageList.forEach(function(c) {
     var isDep = c.type === '入金';
-    var isWith = c.type === '出金';
-    var isIntIn = c.type === '内部转入';
-    var isIntOut = c.type === '内部转出';
-
-    var tagBg = '#f1f5f9', tagColor = '#475569', amtColor = '#64748b', sign = '+', tagLabel = c.type;
-    if (isDep) {
-      tagBg = '#d1fae5'; tagColor = '#065f46'; amtColor = '#059669'; sign = '+'; tagLabel = '📥 转账存入';
-    } else if (isWith) {
-      tagBg = '#ffe4e6'; tagColor = '#be123c'; amtColor = '#e11d48'; sign = '-'; tagLabel = '📤 提取出金';
-    } else if (isIntIn) {
-      tagBg = '#f3e8ff'; tagColor = '#7e22ce'; amtColor = '#7e22ce'; sign = '+'; tagLabel = '🔄 内部转入';
-    } else if (isIntOut) {
-      tagBg = '#ffedd5'; tagColor = '#c2410c'; amtColor = '#ea580c'; sign = '-'; tagLabel = '🔁 内部转出';
-    }
+    var tagBg = isDep ? '#d1fae5' : '#ffe4e6';
+    var tagColor = isDep ? '#065f46' : '#be123c';
+    var amtColor = isDep ? '#059669' : '#e11d48';
+    var sign = isDep ? '+' : '-';
+    var tagLabel = isDep ? '📥 转账存入' : '📤 提取出金';
 
     var tr = document.createElement('tr');
     tr.innerHTML = '<td style="font-family:monospace; font-weight:600;">' + c.date + '</td>' +
       '<td class="text-center"><span class="tag" style="background:' + tagBg + '; color:' + tagColor + '; font-weight:700;">' + tagLabel + '</span></td>' +
       '<td class="text-right number-font" style="font-weight:700; color:' + amtColor + ';">' + sign + fmt(c.amount) + '</td>' +
-      '<td style="color:' + ((isWith || isIntOut) ? '#9f1239; font-weight:600;' : 'inherit;') + '">' + c.remarks + '</td>';
+      '<td style="color:' + (!isDep ? '#9f1239; font-weight:600;' : 'inherit;') + '">' + c.remarks + '</td>';
     tbody.appendChild(tr);
   });
 
@@ -1170,6 +1166,49 @@ function renderCashTable() {
     cashPage = p; renderCashTable();
   }, function(sz) {
     cashPageSize = sz; cashPage = 1; renderCashTable();
+  });
+}
+
+let internalPage = 1;
+let internalPageSize = 15;
+
+function renderInternalTable() {
+  if (!appData) return;
+  var tbody = document.getElementById('internal-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  var s = document.getElementById('date-start').value || '1970-01-01';
+  var e = document.getElementById('date-end').value || '2099-12-31';
+
+  var list = appData.cash_logs.filter(function(c) {
+    return (c.type === '内部转入' || c.type === '内部转出') && c.date >= s && c.date <= e;
+  });
+  var total = list.length;
+  var totalPages = Math.ceil(total / internalPageSize) || 1;
+  if (internalPage > totalPages) internalPage = totalPages;
+
+  var pageList = list.slice((internalPage - 1) * internalPageSize, internalPage * internalPageSize);
+
+  pageList.forEach(function(c) {
+    var isIntIn = c.type === '内部转入';
+    var tagBg = isIntIn ? '#f3e8ff' : '#ffedd5';
+    var tagColor = isIntIn ? '#7e22ce' : '#c2410c';
+    var amtColor = isIntIn ? '#7e22ce' : '#ea580c';
+    var sign = isIntIn ? '+' : '-';
+    var tagLabel = isIntIn ? '🔄 内部转入' : '🔁 内部转出';
+
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td style="font-family:monospace; font-weight:600;">' + c.date + '</td>' +
+      '<td class="text-center"><span class="tag" style="background:' + tagBg + '; color:' + tagColor + '; font-weight:700;">' + tagLabel + '</span></td>' +
+      '<td class="text-right number-font" style="font-weight:700; color:' + amtColor + ';">' + sign + fmt(c.amount) + '</td>' +
+      '<td style="color:' + (!isIntIn ? '#9f1239; font-weight:600;' : 'inherit;') + '">' + c.remarks + '</td>';
+    tbody.appendChild(tr);
+  });
+
+  renderPagination('internal-pagination', total, internalPage, internalPageSize, function(p) {
+    internalPage = p; renderInternalTable();
+  }, function(sz) {
+    internalPageSize = sz; internalPage = 1; renderInternalTable();
   });
 }
 

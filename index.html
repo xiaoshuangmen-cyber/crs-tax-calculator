@@ -655,7 +655,7 @@
       </div>
 
       <!-- 4. Internal Transfer 累计转入 -->
-      <div class="fund-card" onclick="showTabAndScroll('cash')" style="cursor: pointer; border-color: #8b5cf6;">
+      <div class="fund-card" onclick="showTabAndScroll('internal')" style="cursor: pointer; border-color: #8b5cf6;">
         <div>
           <div class="fund-title" style="color: #c4b5fd;">🔄 Internal Transfer 累计转入</div>
           <div class="fund-val number-font" id="val-internal-in" style="color: #c4b5fd;">HK$ 0.00</div>
@@ -665,7 +665,7 @@
       </div>
 
       <!-- 5. Internal Transfer 累计转出 -->
-      <div class="fund-card" onclick="showTabAndScroll('cash')" style="cursor: pointer; border-color: #f97316;">
+      <div class="fund-card" onclick="showTabAndScroll('internal')" style="cursor: pointer; border-color: #f97316;">
         <div>
           <div class="fund-title" style="color: #fed7aa;">🔁 Internal Transfer 累计转出</div>
           <div class="fund-val number-font" id="val-internal-out" style="color: #fdba74;">HK$ 0.00</div>
@@ -677,7 +677,7 @@
 
     <div class="stat-grid-row-3" style="margin-bottom: 16px;">
       <!-- 6. Internal Transfer 资金净流动 -->
-      <div class="fund-card" onclick="showTabAndScroll('cash')" style="cursor: pointer; border-color: #06b6d4;">
+      <div class="fund-card" onclick="showTabAndScroll('internal')" style="cursor: pointer; border-color: #06b6d4;">
         <div>
           <div class="fund-title" style="color: #a5f3fc;">⚖️ Internal Transfer 资金净流动 (Net Flow)</div>
           <div class="fund-val number-font" id="val-internal-net" style="color: #67e8f9;">HK$ 0.00</div>
@@ -778,6 +778,7 @@
         <button id="tab-btn-dividends" class="tab-btn" onclick="showTab('dividends')">🎁 股息分红明细 (<span id="tab-badge-div">0</span>)</button>
         <button id="tab-btn-interest" class="tab-btn" onclick="showTab('interest')">📈 利息收益明细 (<span id="tab-badge-int">0</span>)</button>
         <button id="tab-btn-cash" class="tab-btn" onclick="showTab('cash')">🏦 资金存取流水 (<span id="tab-badge-cash">0</span>)</button>
+        <button id="tab-btn-internal" class="tab-btn" onclick="showTab('internal')">🔄 Internal Transfer 流水 (<span id="tab-badge-internal">0</span>)</button>
         <button id="tab-btn-charges" class="tab-btn" onclick="showTab('charges')">🏷️ 其他资金规费明细 (<span id="tab-badge-charges">0</span>)</button>
       </div>
 
@@ -894,7 +895,28 @@
         <div class="pagination-bar no-print" id="cash-pagination"></div>
       </div>
 
-      <!-- 6. 其他资金规费明细 (月结单服务费、代收手续费等) -->
+      <!-- 6. Internal Transfer 内部转账流水 -->
+      <div id="tab-pane-internal" class="tab-pane">
+        <div style="font-size: 12px; color: var(--slate-500); margin-bottom: 10px;">
+          📌 展示账户间或子账户间的 Internal Transfer（内部转账 / 资金划转 / 调拨）流水记录：
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>转账日期</th>
+                <th class="text-center">转账方向</th>
+                <th class="text-right">转账金额 (HKD)</th>
+                <th>转账说明 / 往来凭据</th>
+              </tr>
+            </thead>
+            <tbody id="internal-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination-bar no-print" id="internal-pagination"></div>
+      </div>
+
+      <!-- 7. 其他资金规费明细 (月结单服务费、代收手续费等) -->
       <div id="tab-pane-charges" class="tab-pane">
         <div style="font-size: 12px; color: var(--slate-500); margin-bottom: 10px;">
           📌 展示券商收取的月结单服务费、代收股息手续费、上市公司行动杂项服务费等扣除流水：
@@ -986,6 +1008,6 @@
     CRS 涉税金融资产与证券交易盈亏智能核算系统 &copy; 2026 证券投资顾问专用工作台
   </footer>
 
-  <script src="app.js?v=20260825_v24"></script>
+  <script src="app.js?v=20260825_v25"></script>
 </body>
 </html>
