@@ -1339,7 +1339,9 @@ function renderChargesTable() {
     var isIncoming = c.type.includes('退款') || c.type.includes('退佣金') || c.type.includes('赎回') || c.type.includes('返还') || c.io === 'D';
     var tagBg = '#f1f5f9', tagColor = '#475569', amtColor = '#64748b', sign = '-';
 
-    if (isIncoming) {
+    if (c.type.includes('转换') || c.type.includes('兑换') || c.type.includes('CONVERT')) {
+      tagBg = '#ede9fe'; tagColor = '#6d28d9'; amtColor = isIncoming ? '#059669' : '#7c3aed'; sign = isIncoming ? '+' : '-';
+    } else if (isIncoming) {
       tagBg = '#d1fae5'; tagColor = '#065f46'; amtColor = '#059669'; sign = '+';
     } else if (c.type.includes('利息')) {
       tagBg = '#fef3c7'; tagColor = '#92400e'; amtColor = '#b45309'; sign = '-';
@@ -1349,7 +1351,7 @@ function renderChargesTable() {
       tagBg = '#fee2e2'; tagColor = '#991b1b'; amtColor = '#dc2626'; sign = '-';
     }
 
-    var icon = isIncoming ? '📥 ' : (c.type.includes('利息') ? '📈 ' : (c.type.includes('税') ? '🏛️ ' : '🏷️ '));
+    var icon = (c.type.includes('转换') || c.type.includes('兑换')) ? '💱 ' : (isIncoming ? '📥 ' : (c.type.includes('利息') ? '📈 ' : (c.type.includes('税') ? '🏛️ ' : '🏷️ ')));
 
     var tr = document.createElement('tr');
     tr.innerHTML = '<td style="font-family:monospace; font-weight:600;">' + c.date + '</td>' +
@@ -1782,9 +1784,10 @@ function calculateAllFromRecords(records) {
       var isCommissionRefund = (remarksUpper.includes('COMMISSION') && (remarksUpper.includes('REFUND') || remarksUpper.includes('REBATE') || ['D', 'DEPOSIT', '存入'].includes(io))) || remarks.includes('佣金返还') || remarks.includes('佣金回赠');
       var isFeeRefund = (remarksUpper.includes('REFUND') || remarks.includes('退款') || remarks.includes('返还')) && !isDiv;
       var isIpo = remarksUpper.includes('IPO') || remarksUpper.includes('EIPO') || remarksUpper.includes('APP #') || remarksUpper.includes('REFUND #') || remarksUpper.includes('LOAN INT') || remarksUpper.includes('ALLOTMENT') || remarks.includes('新股');
+      var isConvert = remarksUpper.includes('CONVERT') || remarksUpper.includes('CONVERSION') || remarks.includes('货币兑换') || remarks.includes('货币转换') || remarks.includes('换汇') || rt.includes('CONVERT');
       var isRegularCharge = remarksUpper.includes('CHARGE') || remarksUpper.includes('CHG') || remarksUpper.includes('FEE') || remarksUpper.includes('SERVICE') || remarksUpper.includes('POSTAGE') || remarksUpper.includes('SCRIP') || remarksUpper.includes('TAX') || remarks.includes('手续费') || remarks.includes('收费') || remarks.includes('服务费') || remarks.includes('邮费') || remarks.includes('过户费');
 
-      var isOtherOp = isRedemption || isSubscription || isCommissionRefund || isFeeRefund || isIpo || isRegularCharge;
+      var isOtherOp = isRedemption || isSubscription || isCommissionRefund || isFeeRefund || isIpo || isConvert || isRegularCharge;
 
       if (isDiv) {
         divLogs.push({ date: rec.date_str, amount: deposit, remarks: remarks, year: yr });
@@ -1801,7 +1804,8 @@ function calculateAllFromRecords(records) {
       } else if (isOtherOp) {
         var amt = ['W', 'WITHDRAW', '提取', '出金'].includes(io) ? deduct : deposit;
         var cType = '规费扣除';
-        if (isRedemption) cType = '基金赎回';
+        if (isConvert) cType = '货币转换';
+        else if (isRedemption) cType = '基金赎回';
         else if (isSubscription) cType = '基金申购';
         else if (isCommissionRefund) cType = '佣金返还';
         else if (isIpo) {

@@ -277,9 +277,10 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
             is_commission_refund = ('COMMISSION' in remarks_upper and ('REFUND' in remarks_upper or 'REBATE' in remarks_upper or io in ['D', 'DEPOSIT', '存入'])) or '佣金返还' in remarks or '佣金回赠' in remarks
             is_fee_refund = ('REFUND' in remarks_upper or '退款' in remarks or '返还' in remarks) and not is_div
             is_ipo = 'IPO' in remarks_upper or 'EIPO' in remarks_upper or 'APP #' in remarks_upper or 'REFUND #' in remarks_upper or 'LOAN INT' in remarks_upper or 'ALLOTMENT' in remarks_upper or '新股' in remarks
+            is_convert = 'CONVERT' in remarks_upper or 'CONVERSION' in remarks_upper or '货币兑换' in remarks or '货币转换' in remarks or '换汇' in remarks or 'CONVERT' in rt
             is_regular_charge = 'CHARGE' in remarks_upper or 'CHG' in remarks_upper or 'FEE' in remarks_upper or 'SERVICE' in remarks_upper or 'POSTAGE' in remarks_upper or 'SCRIP' in remarks_upper or 'TAX' in remarks_upper or '手续费' in remarks or '收费' in remarks or '服务费' in remarks or '邮费' in remarks or '过户费' in remarks
 
-            is_other_operation = is_redemption or is_subscription or is_commission_refund or is_fee_refund or is_ipo or is_regular_charge
+            is_other_operation = is_redemption or is_subscription or is_commission_refund or is_fee_refund or is_ipo or is_convert or is_regular_charge
 
             if is_div:
                 dividend_logs.append({
@@ -306,7 +307,9 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
             elif is_other_operation:
                 amt = deduct if io in ['W', 'WITHDRAW', '提取', '出金'] else deposit
                 c_type = '规费扣除'
-                if is_redemption:
+                if is_convert:
+                    c_type = '货币转换'
+                elif is_redemption:
                     c_type = '基金赎回'
                 elif is_subscription:
                     c_type = '基金申购'
