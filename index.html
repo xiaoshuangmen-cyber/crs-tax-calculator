@@ -205,9 +205,16 @@
     }
     .link-action { color: var(--primary); font-weight: 600; font-size: 11px; }
     
-    /* 资金与全景资产盈亏 5 列自适应网格 */
-    .stat-grid-5 {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;
+    /* 资金与全景资产两行看板 (第 1 行 5 列，第 2 行 3 列) */
+    .stat-grid-row-5 {
+      display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-bottom: 14px;
+    }
+    .stat-grid-row-3 {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;
+    }
+    @media (max-width: 1300px) {
+      .stat-grid-row-5 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+      .stat-grid-row-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
     }
     .fund-card {
       background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;
@@ -218,7 +225,7 @@
     }
     .fund-card:hover { border-color: #64748b; transform: translateY(-2px); }
     .fund-title { font-size: 12px; font-weight: 600; color: var(--slate-400); text-transform: uppercase; }
-    .fund-val { font-size: 21px; font-weight: 800; color: #fff; margin-top: 4px; }
+    .fund-val { font-size: 20px; font-weight: 800; color: #fff; margin-top: 4px; }
     .fund-sub { font-size: 11px; color: var(--slate-400); margin-top: 4px; }
     .fund-icon {
       width: 42px; height: 42px; border-radius: 12px;
@@ -615,8 +622,9 @@
       </div>
     </div>
 
-    <!-- 投顾资金与全景资产盈亏看板 (5 列自适应网格) -->
-    <div class="stat-grid-5">
+    <!-- 投顾资金与全景资产两行看板 (第 1 行 5 个卡片，第 2 行 3 个卡片) -->
+    <div class="stat-grid-row-5">
+      <!-- 1. 外部累计入金 -->
       <div class="fund-card" onclick="showTabAndScroll('cash')" style="cursor: pointer;">
         <div>
           <div class="fund-title">📥 期间 / 累计入金 (Deposits)</div>
@@ -626,6 +634,7 @@
         <div class="fund-icon">💳</div>
       </div>
 
+      <!-- 2. 外部累计出金 -->
       <div class="fund-card" onclick="showTabAndScroll('cash')" style="cursor: pointer;">
         <div>
           <div class="fund-title">📤 期间 / 累计出金 (Withdrawals)</div>
@@ -635,6 +644,7 @@
         <div class="fund-icon">💸</div>
       </div>
 
+      <!-- 3. 资金净提取 / 流向 -->
       <div class="fund-card" onclick="showTabAndScroll('cash')" style="cursor: pointer;">
         <div>
           <div class="fund-title">⚖️ 资金净提取 / 流向 (Net Outflow)</div>
@@ -644,7 +654,39 @@
         <div class="fund-icon">⚖️</div>
       </div>
 
-      <!-- 4. 账户现金资产结余 (人手录入) -->
+      <!-- 4. Internal Transfer 累计转入 -->
+      <div class="fund-card" onclick="showTabAndScroll('cash')" style="cursor: pointer; border-color: #8b5cf6;">
+        <div>
+          <div class="fund-title" style="color: #c4b5fd;">🔄 Internal Transfer 累计转入</div>
+          <div class="fund-val number-font" id="val-internal-in" style="color: #c4b5fd;">HK$ 0.00</div>
+          <div class="fund-sub">开户累计: <span id="val-internal-in-all" style="color: #e2e8f0; font-weight: 600;">HK$ 0.00</span></div>
+        </div>
+        <div class="fund-icon" style="background: rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.3);">🔄</div>
+      </div>
+
+      <!-- 5. Internal Transfer 累计转出 -->
+      <div class="fund-card" onclick="showTabAndScroll('cash')" style="cursor: pointer; border-color: #f97316;">
+        <div>
+          <div class="fund-title" style="color: #fed7aa;">🔁 Internal Transfer 累计转出</div>
+          <div class="fund-val number-font" id="val-internal-out" style="color: #fdba74;">HK$ 0.00</div>
+          <div class="fund-sub">开户累计: <span id="val-internal-out-all" style="color: #e2e8f0; font-weight: 600;">HK$ 0.00</span></div>
+        </div>
+        <div class="fund-icon" style="background: rgba(249, 115, 22, 0.15); border-color: rgba(249, 115, 22, 0.3);">🔁</div>
+      </div>
+    </div>
+
+    <div class="stat-grid-row-3" style="margin-bottom: 16px;">
+      <!-- 6. Internal Transfer 资金净流动 -->
+      <div class="fund-card" onclick="showTabAndScroll('cash')" style="cursor: pointer; border-color: #06b6d4;">
+        <div>
+          <div class="fund-title" style="color: #a5f3fc;">⚖️ Internal Transfer 资金净流动 (Net Flow)</div>
+          <div class="fund-val number-font" id="val-internal-net" style="color: #67e8f9;">HK$ 0.00</div>
+          <div class="fund-sub">开户累计: <span id="val-internal-net-all" style="color: #e2e8f0; font-weight: 600;">HK$ 0.00</span> (转入 - 转出)</div>
+        </div>
+        <div class="fund-icon" style="background: rgba(6, 182, 212, 0.15); border-color: rgba(6, 182, 212, 0.3);">⚖️</div>
+      </div>
+
+      <!-- 7. 账户现金资产结余 (人手录入) -->
       <div class="fund-card" style="border-color: #3b82f6;">
         <div style="flex: 1;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-right: 4px;">
@@ -659,7 +701,7 @@
         <div class="fund-icon" style="background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.3);">🪙</div>
       </div>
 
-      <!-- 5. 综合账户盈亏金额 (出金 + 现金结余 + 持仓市值 - 入金) -->
+      <!-- 8. 综合账户盈亏金额 (出金 + 现金结余 + 持仓市值 - 入金) -->
       <div class="fund-card" id="card-account-pnl" style="border-color: #e11d48;">
         <div>
           <div class="fund-title" style="color: #fda4af;">🏆 综合账户盈亏 (Account P&L)</div>

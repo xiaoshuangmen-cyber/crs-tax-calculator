@@ -234,17 +234,15 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
             is_div = 'DIVIDEND' in remarks_upper or 'DIV ' in remarks_upper or '股息' in remarks or '分红' in remarks
             is_int = ('INT.' in remarks_upper or 'INTEREST' in remarks_upper or '利息' in remarks or '结息' in remarks) and not any(k in remarks_upper for k in ['LOAN INT', 'EIPO', 'IPO'])
 
-            # 基金赎回/申购、佣金/手续费返还、新股业务、各项税费规费、内部转账与货币兑换
+            # 基金赎回/申购、佣金/手续费返还、新股业务、各项税费规费
             is_redemption = 'REDEMPTION' in remarks_upper or 'REDEEM' in remarks_upper or '赎回' in remarks
             is_subscription = ('SUBSCRIPTION' in remarks_upper or '申购' in remarks) and not is_div
             is_commission_refund = ('COMMISSION' in remarks_upper and ('REFUND' in remarks_upper or 'REBATE' in remarks_upper or io in ['D', 'DEPOSIT', '存入'])) or '佣金返还' in remarks or '佣金回赠' in remarks
             is_fee_refund = ('REFUND' in remarks_upper or '退款' in remarks or '返还' in remarks) and not is_div
             is_ipo = 'IPO' in remarks_upper or 'EIPO' in remarks_upper or 'APP #' in remarks_upper or 'REFUND #' in remarks_upper or 'LOAN INT' in remarks_upper or 'ALLOTMENT' in remarks_upper or '新股' in remarks
             is_regular_charge = 'CHARGE' in remarks_upper or 'CHG' in remarks_upper or 'FEE' in remarks_upper or 'SERVICE' in remarks_upper or 'POSTAGE' in remarks_upper or 'SCRIP' in remarks_upper or 'TAX' in remarks_upper or '手续费' in remarks or '收费' in remarks or '服务费' in remarks or '邮费' in remarks or '过户费' in remarks
-            is_internal_transfer = ('INTERNAL' in remarks_upper or 'INTERNAL' in rt or '内部转' in remarks or '内部划转' in remarks or '内部调拨' in remarks or '内部往来' in remarks or 'INT TRF' in remarks_upper or 'INT TRANSFER' in remarks_upper or 'INTERNAL TRF' in remarks_upper or 'INTERNAL TRANSFER' in remarks_upper)
-            is_convert = ('CONVERT' in remarks_upper or 'CONVERT' in rt or 'CONVERSION' in remarks_upper or 'CONVERSION' in rt or 'FX CONVERT' in remarks_upper or 'FX CONVERSION' in remarks_upper or 'FX ' in remarks_upper or '货币兑换' in remarks or '汇率兑换' in remarks or '兑换' in remarks or '换汇' in remarks)
 
-            is_other_operation = is_redemption or is_subscription or is_commission_refund or is_fee_refund or is_ipo or is_regular_charge or is_internal_transfer or is_convert
+            is_other_operation = is_redemption or is_subscription or is_commission_refund or is_fee_refund or is_ipo or is_regular_charge
 
             if is_div:
                 dividend_logs.append({
@@ -271,11 +269,7 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
             elif is_other_operation:
                 amt = deduct if io in ['W', 'WITHDRAW', '提取', '出金'] else deposit
                 c_type = '规费扣除'
-                if is_internal_transfer:
-                    c_type = '内部转账'
-                elif is_convert:
-                    c_type = '货币兑换'
-                elif is_redemption:
+                if is_redemption:
                     c_type = '基金赎回'
                 elif is_subscription:
                     c_type = '基金申购'
@@ -301,19 +295,25 @@ def calculate_tax_and_pnl(records, start_date=None, end_date=None):
                 elif 'TAX' in remarks_upper:
                     c_type = '税费扣除'
 
-                if not (is_internal_transfer or is_convert):
-                    yearly_stats[yr]['dividend_charges'] += (deduct - deposit)
+                yearly_stats[yr]['dividend_charges'] += (deduct - deposit)
                 charge_logs.append({'date': rec['date_str'], 'type': c_type, 'amount': amt, 'io': io, 'remarks': remarks, 'year': yr})
 
             else:
+                is_internal = 'INTERNAL' in remarks_upper or '内部转账' in remarks or '内部划转' in remarks or '资金划转' in remarks or '内部调拨' in remarks or 'INTERNAL' in rt
                 if io in ['D', 'DEPOSIT', '存入', '入金']:
-                    all_time_deposit += deposit
-                    yearly_stats[yr]['deposits'] += deposit
-                    cash_logs.append({'date': rec['date_str'], 'type': '入金', 'amount': deposit, 'remarks': remarks, 'year': yr})
+                    if is_internal:
+                        cash_logs.append({'date': rec['date_str'], 'type': '内部转入', 'amount': deposit, 'remarks': remarks, 'year': yr})
+                    else:
+                        all_time_deposit += deposit
+                        yearly_stats[yr]['deposits'] += deposit
+                        cash_logs.append({'date': rec['date_str'], 'type': '入金', 'amount': deposit, 'remarks': remarks, 'year': yr})
                 elif io in ['W', 'WITHDRAW', '提取', '出金']:
-                    all_time_withdraw += deduct
-                    yearly_stats[yr]['withdrawals'] += deduct
-                    cash_logs.append({'date': rec['date_str'], 'type': '出金', 'amount': deduct, 'remarks': remarks, 'year': yr})
+                    if is_internal:
+                        cash_logs.append({'date': rec['date_str'], 'type': '内部转出', 'amount': deduct, 'remarks': remarks, 'year': yr})
+                    else:
+                        all_time_withdraw += deduct
+                        yearly_stats[yr]['withdrawals'] += deduct
+                        cash_logs.append({'date': rec['date_str'], 'type': '出金', 'amount': deduct, 'remarks': remarks, 'year': yr})
 
         elif is_trade:
             raw_code = rec['code']

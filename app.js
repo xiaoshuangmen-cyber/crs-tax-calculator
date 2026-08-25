@@ -96,6 +96,13 @@ function resetToEmptyState() {
   document.getElementById('val-withdraw-all').innerText = 'HK$ 0.00';
   document.getElementById('val-net-deposit-all').innerText = 'HK$ 0.00';
 
+  var elIntIn = document.getElementById('val-internal-in'); if (elIntIn) elIntIn.innerText = 'HK$ 0.00';
+  var elIntOut = document.getElementById('val-internal-out'); if (elIntOut) elIntOut.innerText = 'HK$ 0.00';
+  var elIntNet = document.getElementById('val-internal-net'); if (elIntNet) { elIntNet.innerText = 'HK$ 0.00'; elIntNet.style.color = '#67e8f9'; }
+  var elIntInAll = document.getElementById('val-internal-in-all'); if (elIntInAll) elIntInAll.innerText = 'HK$ 0.00';
+  var elIntOutAll = document.getElementById('val-internal-out-all'); if (elIntOutAll) elIntOutAll.innerText = 'HK$ 0.00';
+  var elIntNetAll = document.getElementById('val-internal-net-all'); if (elIntNetAll) elIntNetAll.innerText = 'HK$ 0.00';
+
   // 现金结余与综合账户盈亏归零
   userCashBalance = 0;
   var elCashBal = document.getElementById('val-cash-balance'); if (elCashBal) elCashBal.innerText = 'HK$ 0.00';
@@ -426,8 +433,15 @@ function recalculate() {
     : sells.reduce(function(acc, cur) { return acc + cur.realized_pnl_fifo; }, 0);
   var depLogs = cash.filter(function(c) { return c.type === '入金'; });
   var withLogs = cash.filter(function(c) { return c.type === '出金'; });
+  var intInLogs = cash.filter(function(c) { return c.type === '内部转入'; });
+  var intOutLogs = cash.filter(function(c) { return c.type === '内部转出'; });
+
   var depSum = depLogs.reduce(function(acc, cur) { return acc + cur.amount; }, 0);
   var withSum = withLogs.reduce(function(acc, cur) { return acc + cur.amount; }, 0);
+  var intInSum = intInLogs.reduce(function(acc, cur) { return acc + cur.amount; }, 0);
+  var intOutSum = intOutLogs.reduce(function(acc, cur) { return acc + cur.amount; }, 0);
+  var intNetSum = intInSum - intOutSum;
+  var intNetSign = intNetSum >= 0 ? '+' : '';
 
   document.getElementById('val-dividend').innerText = fmt(divSum);
   document.getElementById('cnt-dividend').innerText = divs.length;
@@ -449,12 +463,32 @@ function recalculate() {
   document.getElementById('val-withdraw').innerText = fmt(withSum);
   document.getElementById('val-net-deposit').innerText = fmt(withSum - depSum);
 
-  var all = appData.all_time_totals;
+  var elIntIn = document.getElementById('val-internal-in'); if (elIntIn) elIntIn.innerText = fmt(intInSum);
+  var elIntOut = document.getElementById('val-internal-out'); if (elIntOut) elIntOut.innerText = fmt(intOutSum);
+  var elIntNet = document.getElementById('val-internal-net');
+  if (elIntNet) {
+    elIntNet.innerText = intNetSign + fmt(intNetSum);
+    elIntNet.style.color = intNetSum >= 0 ? '#67e8f9' : '#f87171';
+  }
+
   var allWithLogs = appData.cash_logs.filter(function(c) { return c.type === '出金'; });
   var allDepLogs = appData.cash_logs.filter(function(c) { return c.type === '入金'; });
-  document.getElementById('val-deposit-all').innerText = fmt(all.deposit_total) + ' (' + allDepLogs.length + ' 笔入账)';
-  document.getElementById('val-withdraw-all').innerText = fmt(all.withdrawal_total) + ' (' + allWithLogs.length + ' 笔出金)';
-  document.getElementById('val-net-deposit-all').innerText = fmt(all.withdrawal_total - all.deposit_total);
+  var allIntInLogs = appData.cash_logs.filter(function(c) { return c.type === '内部转入'; });
+  var allIntOutLogs = appData.cash_logs.filter(function(c) { return c.type === '内部转出'; });
+  var allIntInSum = allIntInLogs.reduce(function(acc, cur) { return acc + cur.amount; }, 0);
+  var allIntOutSum = allIntOutLogs.reduce(function(acc, cur) { return acc + cur.amount; }, 0);
+  var allIntNetSum = allIntInSum - allIntOutSum;
+
+  var allDepSum = allDepLogs.reduce(function(a, b) { return a + b.amount; }, 0);
+  var allWithSum = allWithLogs.reduce(function(a, b) { return a + b.amount; }, 0);
+
+  document.getElementById('val-deposit-all').innerText = fmt(allDepSum) + ' (' + allDepLogs.length + ' 笔入账)';
+  document.getElementById('val-withdraw-all').innerText = fmt(allWithSum) + ' (' + allWithLogs.length + ' 笔出金)';
+  document.getElementById('val-net-deposit-all').innerText = fmt(allWithSum - allDepSum);
+
+  var elIntInAll = document.getElementById('val-internal-in-all'); if (elIntInAll) elIntInAll.innerText = fmt(allIntInSum) + ' (' + allIntInLogs.length + ' 笔)';
+  var elIntOutAll = document.getElementById('val-internal-out-all'); if (elIntOutAll) elIntOutAll.innerText = fmt(allIntOutSum) + ' (' + allIntOutLogs.length + ' 笔)';
+  var elIntNetAll = document.getElementById('val-internal-net-all'); if (elIntNetAll) elIntNetAll.innerText = (allIntNetSum >= 0 ? '+' : '') + fmt(allIntNetSum);
 
   var bTrades = document.getElementById('tab-badge-trades'); if (bTrades) bTrades.innerText = trades.length;
   var bDiv = document.getElementById('tab-badge-div'); if (bDiv) bDiv.innerText = divs.length;
@@ -1110,17 +1144,25 @@ function renderCashTable() {
   pageList.forEach(function(c) {
     var isDep = c.type === '入金';
     var isWith = c.type === '出金';
+    var isIntIn = c.type === '内部转入';
+    var isIntOut = c.type === '内部转出';
 
-    var tagBg = isDep ? '#d1fae5' : '#ffe4e6';
-    var tagColor = isDep ? '#065f46' : '#be123c';
-    var amtColor = isDep ? '#059669' : '#e11d48';
-    var sign = isDep ? '+' : '-';
+    var tagBg = '#f1f5f9', tagColor = '#475569', amtColor = '#64748b', sign = '+', tagLabel = c.type;
+    if (isDep) {
+      tagBg = '#d1fae5'; tagColor = '#065f46'; amtColor = '#059669'; sign = '+'; tagLabel = '📥 转账存入';
+    } else if (isWith) {
+      tagBg = '#ffe4e6'; tagColor = '#be123c'; amtColor = '#e11d48'; sign = '-'; tagLabel = '📤 提取出金';
+    } else if (isIntIn) {
+      tagBg = '#f3e8ff'; tagColor = '#7e22ce'; amtColor = '#7e22ce'; sign = '+'; tagLabel = '🔄 内部转入';
+    } else if (isIntOut) {
+      tagBg = '#ffedd5'; tagColor = '#c2410c'; amtColor = '#ea580c'; sign = '-'; tagLabel = '🔁 内部转出';
+    }
 
     var tr = document.createElement('tr');
     tr.innerHTML = '<td style="font-family:monospace; font-weight:600;">' + c.date + '</td>' +
-      '<td class="text-center"><span class="tag" style="background:' + tagBg + '; color:' + tagColor + '; font-weight:700;">' + (isWith ? '📤 提取出金' : '📥 转账存入') + '</span></td>' +
+      '<td class="text-center"><span class="tag" style="background:' + tagBg + '; color:' + tagColor + '; font-weight:700;">' + tagLabel + '</span></td>' +
       '<td class="text-right number-font" style="font-weight:700; color:' + amtColor + ';">' + sign + fmt(c.amount) + '</td>' +
-      '<td style="color:' + (isWith ? '#9f1239; font-weight:600;' : 'inherit;') + '">' + c.remarks + '</td>';
+      '<td style="color:' + ((isWith || isIntOut) ? '#9f1239; font-weight:600;' : 'inherit;') + '">' + c.remarks + '</td>';
     tbody.appendChild(tr);
   });
 
@@ -1151,10 +1193,6 @@ function renderChargesTable() {
 
     if (isIncoming) {
       tagBg = '#d1fae5'; tagColor = '#065f46'; amtColor = '#059669'; sign = '+';
-    } else if (c.type.includes('内部转账')) {
-      tagBg = '#f3e8ff'; tagColor = '#6b21a8'; amtColor = '#7e22ce'; sign = '-';
-    } else if (c.type.includes('货币兑换')) {
-      tagBg = '#e0f2fe'; tagColor = '#0369a1'; amtColor = '#0284c7'; sign = '-';
     } else if (c.type.includes('利息')) {
       tagBg = '#fef3c7'; tagColor = '#92400e'; amtColor = '#b45309'; sign = '-';
     } else if (c.type.includes('申购')) {
@@ -1163,7 +1201,7 @@ function renderChargesTable() {
       tagBg = '#fee2e2'; tagColor = '#991b1b'; amtColor = '#dc2626'; sign = '-';
     }
 
-    var icon = isIncoming ? '📥 ' : (c.type.includes('内部转账') ? '🔄 ' : (c.type.includes('货币兑换') ? '💱 ' : (c.type.includes('利息') ? '📈 ' : (c.type.includes('税') ? '🏛️ ' : '🏷️ '))));
+    var icon = isIncoming ? '📥 ' : (c.type.includes('利息') ? '📈 ' : (c.type.includes('税') ? '🏛️ ' : '🏷️ '));
 
     var tr = document.createElement('tr');
     tr.innerHTML = '<td style="font-family:monospace; font-weight:600;">' + c.date + '</td>' +
@@ -1567,17 +1605,14 @@ function calculateAllFromRecords(records) {
       var isDiv = remarksUpper.includes('DIVIDEND') || remarksUpper.includes('DIV ') || remarks.includes('股息') || remarks.includes('分红');
       var isInt = (remarksUpper.includes('INT.') || remarksUpper.includes('INTEREST') || remarks.includes('利息') || remarks.includes('结息')) && !remarksUpper.includes('LOAN INT') && !remarksUpper.includes('EIPO') && !remarksUpper.includes('IPO');
 
-      // 基金赎回/申购、佣金/手续费返还、新股业务、各项税费规费、内部转账与货币兑换
       var isRedemption = remarksUpper.includes('REDEMPTION') || remarksUpper.includes('REDEEM') || remarks.includes('赎回');
       var isSubscription = (remarksUpper.includes('SUBSCRIPTION') || remarks.includes('申购')) && !isDiv;
       var isCommissionRefund = (remarksUpper.includes('COMMISSION') && (remarksUpper.includes('REFUND') || remarksUpper.includes('REBATE') || ['D', 'DEPOSIT', '存入'].includes(io))) || remarks.includes('佣金返还') || remarks.includes('佣金回赠');
       var isFeeRefund = (remarksUpper.includes('REFUND') || remarks.includes('退款') || remarks.includes('返还')) && !isDiv;
       var isIpo = remarksUpper.includes('IPO') || remarksUpper.includes('EIPO') || remarksUpper.includes('APP #') || remarksUpper.includes('REFUND #') || remarksUpper.includes('LOAN INT') || remarksUpper.includes('ALLOTMENT') || remarks.includes('新股');
       var isRegularCharge = remarksUpper.includes('CHARGE') || remarksUpper.includes('CHG') || remarksUpper.includes('FEE') || remarksUpper.includes('SERVICE') || remarksUpper.includes('POSTAGE') || remarksUpper.includes('SCRIP') || remarksUpper.includes('TAX') || remarks.includes('手续费') || remarks.includes('收费') || remarks.includes('服务费') || remarks.includes('邮费') || remarks.includes('过户费');
-      var isInternalTransfer = remarksUpper.includes('INTERNAL') || rt.includes('INTERNAL') || remarks.includes('内部转') || remarks.includes('内部划转') || remarks.includes('内部调拨') || remarks.includes('内部往来') || remarksUpper.includes('INT TRF') || remarksUpper.includes('INT TRANSFER') || remarksUpper.includes('INTERNAL TRF') || remarksUpper.includes('INTERNAL TRANSFER');
-      var isConvert = remarksUpper.includes('CONVERT') || rt.includes('CONVERT') || remarksUpper.includes('CONVERSION') || rt.includes('CONVERSION') || remarksUpper.includes('FX CONVERT') || remarksUpper.includes('FX CONVERSION') || remarksUpper.includes('FX ') || remarks.includes('货币兑换') || remarks.includes('汇率兑换') || remarks.includes('兑换') || remarks.includes('换汇');
 
-      var isOtherOp = isRedemption || isSubscription || isCommissionRefund || isFeeRefund || isIpo || isRegularCharge || isInternalTransfer || isConvert;
+      var isOtherOp = isRedemption || isSubscription || isCommissionRefund || isFeeRefund || isIpo || isRegularCharge;
 
       if (isDiv) {
         divLogs.push({ date: rec.date_str, amount: deposit, remarks: remarks, year: yr });
@@ -1594,9 +1629,7 @@ function calculateAllFromRecords(records) {
       } else if (isOtherOp) {
         var amt = ['W', 'WITHDRAW', '提取', '出金'].includes(io) ? deduct : deposit;
         var cType = '规费扣除';
-        if (isInternalTransfer) cType = '内部转账';
-        else if (isConvert) cType = '货币兑换';
-        else if (isRedemption) cType = '基金赎回';
+        if (isRedemption) cType = '基金赎回';
         else if (isSubscription) cType = '基金申购';
         else if (isCommissionRefund) cType = '佣金返还';
         else if (isIpo) {
@@ -1612,14 +1645,23 @@ function calculateAllFromRecords(records) {
 
         chargeLogs.push({ date: rec.date_str, type: cType, amount: amt, io: io, remarks: remarks, year: yr });
       } else {
+        var isInternal = remarksUpper.includes('INTERNAL') || remarks.includes('内部转账') || remarks.includes('内部划转') || remarks.includes('资金划转') || remarks.includes('内部调拨') || rt.includes('INTERNAL');
         if (['D', 'DEPOSIT', '存入', '入金'].includes(io)) {
-          allDep += deposit;
-          yearly[yr].deposits += deposit;
-          cashLogs.push({ date: rec.date_str, type: '入金', amount: deposit, remarks: remarks, year: yr });
+          if (isInternal) {
+            cashLogs.push({ date: rec.date_str, type: '内部转入', amount: deposit, remarks: remarks, year: yr });
+          } else {
+            allDep += deposit;
+            yearly[yr].deposits += deposit;
+            cashLogs.push({ date: rec.date_str, type: '入金', amount: deposit, remarks: remarks, year: yr });
+          }
         } else if (['W', 'WITHDRAW', '提取', '出金'].includes(io)) {
-          allWith += deduct;
-          yearly[yr].withdrawals += deduct;
-          cashLogs.push({ date: rec.date_str, type: '出金', amount: deduct, remarks: remarks, year: yr });
+          if (isInternal) {
+            cashLogs.push({ date: rec.date_str, type: '内部转出', amount: deduct, remarks: remarks, year: yr });
+          } else {
+            allWith += deduct;
+            yearly[yr].withdrawals += deduct;
+            cashLogs.push({ date: rec.date_str, type: '出金', amount: deduct, remarks: remarks, year: yr });
+          }
         }
       }
     } else if (isTrade) {
