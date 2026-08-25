@@ -205,7 +205,7 @@ function resetToEmptyState() {
   var elNetAssets = document.getElementById('val-account-net-assets'); if (elNetAssets) elNetAssets.innerText = 'HK$ 0.00';
   var subNetAssets = document.getElementById('sub-account-net-assets'); if (subNetAssets) subNetAssets.innerText = '持仓结余 + 现金结余 (HKD)';
   var elAccPnl = document.getElementById('val-account-pnl'); if (elAccPnl) { elAccPnl.innerText = 'HK$ 0.00'; elAccPnl.style.color = '#fb7185'; }
-  var subAccPnl = document.getElementById('sub-account-pnl'); if (subAccPnl) subAccPnl.innerText = '出金 + 现金结余 + 持仓市值 - 入金';
+  var subAccPnl = document.getElementById('sub-account-pnl'); if (subAccPnl) subAccPnl.innerText = '最新净资产 + 资金净提取 / 流向';
 
   // 持仓汇总条归零
   var elHoldCost = document.getElementById('val-hold-cost');
@@ -479,7 +479,9 @@ function updateAccountPnLCard() {
 
   var totalHoldMarket = getTotalHoldingMarket();
   var cashBal = userCashBalance || 0;
-  var accountPnl = withSum + cashBal + totalHoldMarket - depSum;
+  var netAssets = totalHoldMarket + cashBal; // 账户最新净资产 (Total NAV)
+  var netOutflow = withSum - depSum;          // 资金净提取 / 流向 (Net Outflow)
+  var accountPnl = netAssets + netOutflow;    // 综合账户盈亏金额 = 账户最新净资产 + 资金净提取 / 流向
   var accountRoi = depSum > 0 ? (accountPnl / depSum * 100) : 0;
   var pnlSign = accountPnl >= 0 ? '+' : '';
   var roiSign = accountRoi >= 0 ? '+' : '';
@@ -502,7 +504,6 @@ function updateAccountPnLCard() {
   }
 
   // 更新账户最新净资产卡片 (持仓结余 + 现金资产结余)
-  var netAssets = totalHoldMarket + cashBal;
   var elNetAssets = document.getElementById('val-account-net-assets');
   var subNetAssets = document.getElementById('sub-account-net-assets');
   if (elNetAssets) elNetAssets.innerText = fmt(netAssets);
@@ -526,7 +527,7 @@ function updateAccountPnLCard() {
     }
   }
   if (subAccPnl) {
-    subAccPnl.innerText = '总收益率: ' + roiSign + accountRoi.toFixed(2) + '% (出金+结余+市值-入金)';
+    subAccPnl.innerText = '总收益率: ' + roiSign + accountRoi.toFixed(2) + '% (最新净资产 + 资金净提取)';
   }
 }
 
