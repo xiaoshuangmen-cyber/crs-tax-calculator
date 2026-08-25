@@ -266,11 +266,6 @@ function initApp() {
   var welcomeCard = document.getElementById('empty-welcome-card');
   if (welcomeCard) welcomeCard.style.display = 'none';
 
-  // 读取当前客户账号在本地保存的现金结余
-  var accNo = (appData.client_info && appData.client_info.account_no) || 'default';
-  var savedCash = localStorage.getItem('crs_cash_balance_' + accNo);
-  userCashBalance = (savedCash !== null && !isNaN(parseFloat(savedCash))) ? parseFloat(savedCash) : 0;
-
   renderClientInfo();
   renderYearPills();
   recalculate();
@@ -449,9 +444,6 @@ function saveCashBalanceFromModal() {
   var input = document.getElementById('input-cash-balance');
   var val = parseFloat(input ? input.value : 0);
   userCashBalance = (!isNaN(val) && val >= 0) ? val : 0;
-
-  var accNo = (appData && appData.client_info && appData.client_info.account_no) || 'default';
-  localStorage.setItem('crs_cash_balance_' + accNo, userCashBalance);
 
   closeCashBalanceModal();
   updateAccountPnLCard();
@@ -1538,6 +1530,22 @@ function setupDragAndDrop() {
   });
 }
 
+function clearCustomInputsOnNewImport() {
+  userCashBalance = 0;
+  userCustomNav = null;
+  userNavAdjustment = 0;
+  customPrices = {};
+
+  var inpCash = document.getElementById('input-cash-balance');
+  if (inpCash) inpCash.value = '';
+  var inpNav = document.getElementById('input-custom-nav');
+  if (inpNav) inpNav.value = '';
+  var rowNavAdj = document.getElementById('row-nav-adjustment');
+  if (rowNavAdj) rowNavAdj.style.display = 'none';
+
+  tradePage = 1; divPage = 1; intPage = 1; cashPage = 1; chargesPage = 1; internalPage = 1;
+}
+
 function handleFileInput(e) {
   if (e.target.files && e.target.files.length > 0) {
     processFile(e.target.files[0]);
@@ -1545,6 +1553,7 @@ function handleFileInput(e) {
 }
 
 async function processFile(file) {
+  clearCustomInputsOnNewImport();
   showToast('正在解析上传的流水: ' + file.name + '...', 'info');
 
   // 优先通过 Web API 上传解析
