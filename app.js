@@ -808,9 +808,7 @@ function renderStockTable() {
 
   allList.forEach(function(st) {
     if (st.status === '持仓中') {
-      var hCost = costMethod === 'DILUTED'
-        ? (st.total_buy_amount - st.total_sell_amount - (st.dividends_total || 0))
-        : st.current_cost_total;
+      var hCost = st.current_cost_total;
       var eff = getEffectivePrice(st);
       var curP = eff.price;
       var mVal = st.current_qty * curP;
@@ -851,16 +849,16 @@ function renderStockTable() {
     var eff = getEffectivePrice(st);
     var curP = eff.price;
     var mVal = isHold ? (st.current_qty * curP) : 0;
-    var hCost = costMethod === 'DILUTED'
-      ? (st.total_buy_amount - st.total_sell_amount - (st.dividends_total || 0))
-      : st.current_cost_total;
+    var hCost = isHold ? st.current_cost_total : 0;
     var uPnl = isHold ? (mVal - hCost) : 0;
-    var uRoi = (isHold && hCost !== 0) ? (uPnl / Math.abs(hCost) * 100) : 0;
+    var uRoi = (isHold && hCost > 0) ? (uPnl / hCost * 100) : 0;
     var uPnlClass = uPnl >= 0 ? 'text-gain' : 'text-loss';
     var uSign = uPnl >= 0 ? '+' : '';
 
     var totalCompPnl = pnl + (isHold ? uPnl : 0) + (st.dividends_total || 0);
-    var compRoi = st.total_buy_amount > 0 ? (totalCompPnl / st.total_buy_amount * 100) : 0;
+    var netInvested = isHold ? (st.total_buy_amount - st.total_sell_amount) : st.total_buy_amount;
+    var compBase = netInvested > 0 ? netInvested : (st.total_buy_amount > 0 ? st.total_buy_amount : 1);
+    var compRoi = totalCompPnl / compBase * 100;
     var compPnlClass = totalCompPnl >= 0 ? 'text-gain' : 'text-loss';
     var compSign = totalCompPnl >= 0 ? '+' : '';
 
@@ -985,16 +983,14 @@ function openStockModal(code) {
   document.getElementById('m-stock-title').innerText = st.code + ' ' + st.name;
   document.getElementById('m-stock-sub').innerText = '市场: ' + st.market + ' | 当前状态: ' + st.status + quoteInfo + (isInitialOnly ? ' (⚠️ 期初存量股票)' : '');
 
-  var pnl = costMethod === 'WAC' ? st.realized_pnl_wac : st.realized_pnl_fifo;
+  var pnl = st.realized_pnl_wac;
   var pnlClass = pnl >= 0 ? 'text-gain' : 'text-loss';
   var isHold = st.status === '持仓中';
 
   var mVal = isHold ? (st.current_qty * curP) : 0;
-  var hCost = costMethod === 'DILUTED'
-    ? (st.total_buy_amount - st.total_sell_amount - (st.dividends_total || 0))
-    : st.current_cost_total;
+  var hCost = isHold ? st.current_cost_total : 0;
   var uPnl = isHold ? (mVal - hCost) : 0;
-  var uRoi = (isHold && hCost !== 0) ? (uPnl / Math.abs(hCost) * 100) : 0;
+  var uRoi = (isHold && hCost > 0) ? (uPnl / hCost * 100) : 0;
   var uPnlClass = uPnl >= 0 ? 'text-gain' : 'text-loss';
   var uSign = uPnl >= 0 ? '+' : '';
 
@@ -1003,7 +999,9 @@ function openStockModal(code) {
   var dilutedC = isHold ? ((st.total_buy_amount - st.total_sell_amount - (st.dividends_total || 0)) / st.current_qty) : 0;
 
   var totalCompPnl = pnl + (isHold ? uPnl : 0) + (st.dividends_total || 0);
-  var compRoi = st.total_buy_amount > 0 ? (totalCompPnl / st.total_buy_amount * 100) : 0;
+  var netInvested = isHold ? (st.total_buy_amount - st.total_sell_amount) : st.total_buy_amount;
+  var compBase = netInvested > 0 ? netInvested : (st.total_buy_amount > 0 ? st.total_buy_amount : 1);
+  var compRoi = totalCompPnl / compBase * 100;
   var compPnlClass = totalCompPnl >= 0 ? 'text-gain' : 'text-loss';
   var compSign = totalCompPnl >= 0 ? '+' : '';
 
@@ -1025,7 +1023,7 @@ function openStockModal(code) {
 
     // 3. 已实现盈亏
     '<div style="background:var(--slate-50); padding:12px; border-radius:8px; border:1px solid var(--slate-200);">' +
-      '<div style="font-size:11px; color:#64748b; font-weight:600;">🎯 已实现盈亏 (' + costMethod + ' 结转)</div>' +
+      '<div style="font-size:11px; color:#64748b; font-weight:600;">🎯 账户已实现盈亏 (CRS)</div>' +
       '<div class="number-font ' + pnlClass + '" style="font-size:16px; font-weight:700; margin-top:4px;">' + (pnl >= 0 ? '+' : '') + fmt(pnl) + '</div>' +
       '<div style="font-size:11px; color:#64748b; margin-top:4px;">结转买入成本: <span class="number-font">' + fmt(st.total_sell_amount - pnl) + '</span></div>' +
     '</div>' +
