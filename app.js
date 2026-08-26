@@ -1162,8 +1162,7 @@ function renderYearlyTable() {
       '<td class="text-right number-font ' + (y.realized_pnl_wac >= 0 ? 'text-gain' : 'text-loss') + '">' + fmt(y.realized_pnl_wac, '') + '</td>' +
       '<td class="text-right number-font" style="color:#4338ca; font-weight:700;">' + fmt(y.sales_proceeds, '') + '</td>' +
       '<td class="text-right number-font">' + fmt(y.deposits, '') + '</td>' +
-      '<td class="text-right number-font">' + fmt(y.withdrawals, '') + '</td>' +
-      '<td class="text-center no-print"><button onclick="setYear(' + y.year + ')" style="padding:4px 10px; font-size:11px; background:#e0f2fe; color:#0369a1; border:none; border-radius:6px; cursor:pointer; font-weight:700;">定位年份</button></td>';
+      '<td class="text-right number-font">' + fmt(y.withdrawals, '') + '</td>';
     tbody.appendChild(tr);
   });
 
@@ -1173,8 +1172,7 @@ function renderYearlyTable() {
     '<td class="text-right number-font ' + (sWac >= 0 ? 'text-gain' : 'text-loss') + '">' + fmt(sWac, '') + '</td>' +
     '<td class="text-right number-font" style="color:#4338ca;">' + fmt(sSales, '') + '</td>' +
     '<td class="text-right number-font">' + fmt(sDep, '') + '</td>' +
-    '<td class="text-right number-font">' + fmt(sWith, '') + '</td>' +
-    '<td class="no-print"></td></tr>';
+    '<td class="text-right number-font">' + fmt(sWith, '') + '</td></tr>';
 }
 
 function renderTradesTable() {
