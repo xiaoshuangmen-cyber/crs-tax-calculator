@@ -920,7 +920,7 @@
 
   <!-- 单只股票全景穿透模态框 (Modal) -->
   <div id="stock-modal" class="modal-overlay" onclick="closeStockModalOnOutside(event)">
-    <div class="modal-card">
+    <div class="modal-card" style="max-width: 1240px; width: 96%;">
       <div class="modal-header">
         <div>
           <h3 id="m-stock-title" style="font-size: 16px; font-weight: 700; color: var(--slate-900);">股票名称</h3>
@@ -929,9 +929,9 @@
         <button class="modal-close" onclick="closeStockModal()">✕</button>
       </div>
       <div class="modal-body">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;" id="m-stats-box"></div>
-        <div style="font-size: 13px; font-weight: 700; color: var(--slate-800); margin-top: 8px;">📑 该股票逐笔买卖与成本结转明细：</div>
-        <div class="table-wrap" style="max-height: 380px; overflow-y: auto;">
+        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;" id="m-stats-box"></div>
+        <div style="font-size: 13px; font-weight: 700; color: var(--slate-800); margin-top: 4px;">📑 该股票逐笔买卖与成本结转明细：</div>
+        <div class="table-wrap" style="max-height: 400px; overflow-y: auto;">
           <table>
             <thead>
               <tr>
@@ -1087,6 +1087,6 @@
     CRS 涉税金融资产与证券交易盈亏智能核算系统 &copy; 2026 证券投资顾问专用工作台
   </footer>
 
-  <script src="app.js?v=20260826_v45"></script>
+  <script src="app.js?v=20260826_v46"></script>
 </body>
 </html>

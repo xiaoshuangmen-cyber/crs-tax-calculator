@@ -1008,47 +1008,47 @@ function openStockModal(code) {
   var statsBox = document.getElementById('m-stats-box');
   var htmlStats =
     // 1. 累计买入
-    '<div style="background:var(--slate-50); padding:12px; border-radius:8px; border:1px solid var(--slate-200);">' +
-      '<div style="font-size:11px; color:#64748b; font-weight:600;">📥 累计买入金额 (含交易规费)</div>' +
-      '<div class="number-font" style="font-size:16px; font-weight:700; color:#0f172a; margin-top:4px;">' + fmt(st.total_buy_amount) + '</div>' +
-      '<div style="font-size:11px; color:#64748b; margin-top:4px;">买入均价: <strong class="number-font">' + (avgBuyP > 0 ? avgBuyP.toFixed(4) : '-') + '</strong> (共 ' + fmtQty(st.total_buy_qty) + ' 股)</div>' +
+    '<div style="background:var(--slate-50); padding:10px 12px; border-radius:8px; border:1px solid var(--slate-200); min-width: 0;">' +
+      '<div style="font-size:11px; color:#64748b; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="累计买入金额 (含交易规费)">📥 累计买入 (含规费)</div>' +
+      '<div class="number-font" style="font-size:15px; font-weight:700; color:#0f172a; margin-top:4px;">' + fmt(st.total_buy_amount) + '</div>' +
+      '<div style="font-size:11px; color:#64748b; margin-top:4px; line-height:1.3;">买入均价: <strong class="number-font">' + (avgBuyP > 0 ? avgBuyP.toFixed(3) : '-') + '</strong> (' + fmtQty(st.total_buy_qty) + '股)</div>' +
     '</div>' +
 
     // 2. 累计卖出
-    '<div style="background:var(--slate-50); padding:12px; border-radius:8px; border:1px solid var(--slate-200);">' +
-      '<div style="font-size:11px; color:#64748b; font-weight:600;">📤 累计卖出净回款 (扣除规费)</div>' +
-      '<div class="number-font" style="font-size:16px; font-weight:700; color:#0f172a; margin-top:4px;">' + fmt(st.total_sell_amount) + '</div>' +
-      '<div style="font-size:11px; color:#64748b; margin-top:4px;">卖出均价: <strong class="number-font">' + (avgSellP > 0 ? avgSellP.toFixed(4) : '-') + '</strong> (共 ' + fmtQty(st.total_sell_qty) + ' 股)</div>' +
+    '<div style="background:var(--slate-50); padding:10px 12px; border-radius:8px; border:1px solid var(--slate-200); min-width: 0;">' +
+      '<div style="font-size:11px; color:#64748b; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="累计卖出净回款 (扣除规费)">📤 累计卖出 (净回款)</div>' +
+      '<div class="number-font" style="font-size:15px; font-weight:700; color:#0f172a; margin-top:4px;">' + fmt(st.total_sell_amount) + '</div>' +
+      '<div style="font-size:11px; color:#64748b; margin-top:4px; line-height:1.3;">卖出均价: <strong class="number-font">' + (avgSellP > 0 ? avgSellP.toFixed(3) : '-') + '</strong> (' + fmtQty(st.total_sell_qty) + '股)</div>' +
     '</div>' +
 
     // 3. 已实现盈亏
-    '<div style="background:var(--slate-50); padding:12px; border-radius:8px; border:1px solid var(--slate-200);">' +
-      '<div style="font-size:11px; color:#64748b; font-weight:600;">🎯 账户已实现盈亏 (CRS)</div>' +
-      '<div class="number-font ' + pnlClass + '" style="font-size:16px; font-weight:700; margin-top:4px;">' + (pnl >= 0 ? '+' : '') + fmt(pnl) + '</div>' +
-      '<div style="font-size:11px; color:#64748b; margin-top:4px;">结转买入成本: <span class="number-font">' + fmt(st.total_sell_amount - pnl) + '</span></div>' +
+    '<div style="background:var(--slate-50); padding:10px 12px; border-radius:8px; border:1px solid var(--slate-200); min-width: 0;">' +
+      '<div style="font-size:11px; color:#64748b; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="账户已实现盈亏 (CRS 涉税申报口径)">🎯 已实现盈亏 (CRS)</div>' +
+      '<div class="number-font ' + pnlClass + '" style="font-size:15px; font-weight:700; margin-top:4px;">' + (pnl >= 0 ? '+' : '') + fmt(pnl) + '</div>' +
+      '<div style="font-size:11px; color:#64748b; margin-top:4px; line-height:1.3;">结转成本: <span class="number-font">' + fmt(st.total_sell_amount - pnl) + '</span></div>' +
     '</div>' +
 
     // 4. 当前持仓与双成本价
-    '<div style="background:var(--slate-50); padding:12px; border-radius:8px; border:1px solid var(--slate-200);">' +
-      '<div style="font-size:11px; color:#64748b; font-weight:600;">📦 当前持仓股数 / 成本价</div>' +
-      '<div class="number-font" style="font-size:16px; font-weight:700; color:' + (isHold ? '#0369a1' : '#94a3b8') + '; margin-top:4px;">' + (isHold ? fmtQty(st.current_qty) + ' 股' : '已全部清仓') + '</div>' +
-      '<div style="font-size:11px; color:#64748b; margin-top:4px;">' +
-        (isHold ? '平均成本: <strong class="number-font">' + st.avg_cost.toFixed(4) + '</strong> | 摊薄保本价: <strong class="number-font" style="color:#d97706;">' + dilutedC.toFixed(4) + '</strong>' : '无存量持仓') +
+    '<div style="background:var(--slate-50); padding:10px 12px; border-radius:8px; border:1px solid var(--slate-200); min-width: 0;">' +
+      '<div style="font-size:11px; color:#64748b; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">📦 当前持仓 / 成本价</div>' +
+      '<div class="number-font" style="font-size:15px; font-weight:700; color:' + (isHold ? '#0369a1' : '#94a3b8') + '; margin-top:4px;">' + (isHold ? fmtQty(st.current_qty) + ' 股' : '已清仓') + '</div>' +
+      '<div style="font-size:11px; color:#64748b; margin-top:4px; line-height:1.3;">' +
+        (isHold ? '均价: <strong class="number-font">' + st.avg_cost.toFixed(3) + '</strong> | 保本: <strong class="number-font" style="color:#d97706;">' + dilutedC.toFixed(3) + '</strong>' : '无存量持仓') +
       '</div>' +
     '</div>' +
 
     // 5. 累计现金分红
-    '<div style="background:var(--slate-50); padding:12px; border-radius:8px; border:1px solid var(--slate-200);">' +
-      '<div style="font-size:11px; color:#64748b; font-weight:600;">🎁 累计现金股息分红</div>' +
-      '<div class="number-font" style="font-size:16px; font-weight:700; color:#d97706; margin-top:4px;">+' + fmt(st.dividends_total || 0) + '</div>' +
-      '<div style="font-size:11px; color:#64748b; margin-top:4px;">已收现金派息总和</div>' +
+    '<div style="background:var(--slate-50); padding:10px 12px; border-radius:8px; border:1px solid var(--slate-200); min-width: 0;">' +
+      '<div style="font-size:11px; color:#64748b; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">🎁 累计现金分红</div>' +
+      '<div class="number-font" style="font-size:15px; font-weight:700; color:#d97706; margin-top:4px;">+' + fmt(st.dividends_total || 0) + '</div>' +
+      '<div style="font-size:11px; color:#64748b; margin-top:4px; line-height:1.3;">已收现金派息总和</div>' +
     '</div>' +
 
-    // 6. 综合总收益 (富途个股总盈亏)
-    '<div style="background:' + (totalCompPnl >= 0 ? '#fef2f2' : '#f0fdf4') + '; padding:12px; border-radius:8px; border:1px solid ' + (totalCompPnl >= 0 ? '#fecaca' : '#bbf7d0') + ';">' +
-      '<div style="font-size:11px; color:#475569; font-weight:700;">🏆 累计综合总盈亏 (已实现+浮动+分红)</div>' +
-      '<div class="number-font ' + compPnlClass + '" style="font-size:18px; font-weight:700; margin-top:4px;">' + compSign + fmt(totalCompPnl) + '</div>' +
-      '<div class="' + compPnlClass + '" style="font-size:11px; font-weight:600; margin-top:4px;">综合收益率: ' + compSign + compRoi.toFixed(2) + '% ' + (isHold ? ('(浮动: ' + uSign + fmt(uPnl) + ')') : '') + '</div>' +
+    // 6. 综合总收益
+    '<div style="background:' + (totalCompPnl >= 0 ? '#fef2f2' : '#f0fdf4') + '; padding:10px 12px; border-radius:8px; border:1px solid ' + (totalCompPnl >= 0 ? '#fecaca' : '#bbf7d0') + '; min-width: 0;">' +
+      '<div style="font-size:11px; color:#475569; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="累计综合总盈亏 (已实现+未实现浮动+分红)">🏆 累计综合总盈亏</div>' +
+      '<div class="number-font ' + compPnlClass + '" style="font-size:15px; font-weight:700; margin-top:4px;">' + compSign + fmt(totalCompPnl) + '</div>' +
+      '<div class="' + compPnlClass + '" style="font-size:11px; font-weight:600; margin-top:4px; line-height:1.3;">收益率: ' + compSign + compRoi.toFixed(2) + '%</div>' +
     '</div>';
 
   if (isInitialOnly) {
